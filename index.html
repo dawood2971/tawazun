@@ -604,6 +604,7 @@ textarea.field{height:auto;min-height:80px;width:100%;resize:vertical}
 :root[data-page="masai"] .add .dp{border-radius:16px;background:var(--bg);border-color:transparent;height:52px}
 .dp:focus-within{outline:2px solid var(--accent);outline-offset:1px}
 .ev-paid{margin-top:8px}
+.ev-d{display:flex;gap:8px;align-items:center;margin-top:6px}.ev-d .dp.field{width:auto;flex:1 1 0;margin-top:0}.ev-d .icon-btn{flex:none}
 .ev-share{font-size:.78rem;color:var(--muted);margin-top:4px;padding:4px 8px;border-radius:8px;background:var(--sunk)}
 </style>
 </head>
@@ -1349,7 +1350,9 @@ const evCache={};
 function eventNext(ev){const today=new Date();today.setHours(0,0,0,0);
   if(ev.kind==='hijri'){if(!hijriFmt||!ev.h)return null;const key=ev.h+dkey(today);if(evCache[key]!==undefined)return evCache[key];const[hm,hd]=ev.h.split('-').map(Number);
     let r=null;for(let i=0;i<400;i++){const d=addDays(today,i),pt=hijriFmt.formatToParts(d);const mm=+pt.find(x=>x.type==='month').value,dd=+pt.find(x=>x.type==='day').value;if(mm===hm&&dd===hd){r=d;break}}return evCache[key]=r}
-  if(!ev.date)return null;const d=parseD(ev.date);if(!ev.once){d.setFullYear(today.getFullYear());if(d<today)d.setFullYear(today.getFullYear()+1)}return d}
+  const all=[ev.date,...(ev.dates||[])].filter(Boolean);if(!all.length)return null;
+  const next=k=>{const d=parseD(k);if(!ev.once){d.setFullYear(today.getFullYear());if(d<today)d.setFullYear(today.getFullYear()+1)}return d};
+  const c=all.map(next),up=c.filter(d=>d>=today).sort((a,b)=>a-b);return up[0]||c.sort((a,b)=>b-a)[0]}
 /* occasions sharing one حصالة item: the nearest takes its cost first, the next gets what is left */
 function fundShares(fund){const bal=(S.funds||{})[fund]||0,list=(S.events||[]).filter(e=>e.fund===fund).map(e=>{const d=eventNext(e);return{e,d,paid:e.paid&&e.paid.for===(d?dkey(d):'')}}).filter(x=>!x.paid)
   .sort((a,b)=>(a.d?a.d-0:9e15)-(b.d?b.d-0:9e15));let left=Math.max(0,bal);const out={};list.forEach(x=>{const take=Math.min(left,+x.e.cost||0);out[x.e.id]={take,before:list.filter(y=>y!==x&&out[y.e.id]&&out[y.e.id].take>0).map(y=>[y.e.name,out[y.e.id].take])};left-=take});
@@ -1360,16 +1363,17 @@ function eventsSection(){const evs=(S.events||[]).map(e=>[e,eventInfo(e)]).sort(
   return `<section class="sec" id="g-events"><div class="sec-h"><h2>المناسبات القادمة</h2><button class="link" data-act="ev-new">+ مناسبة</button></div>
     <div class="evs" role="list">${evs.map(([e,i])=>{const near=!i.paid&&i.days!=null&&i.days<=30&&i.need>0,ready=i.cost>0&&i.need<=0;
       return `<button class="ev ${near?'near':''} ${i.days==null?'nodate':''}" role="listitem" data-act="ev-edit" data-id="${e.id}"><span class="ev-dot"></span><div class="ev-top"><b>${esc(e.name)}</b>${i.days==null?'<span class="ev-days none">حدد التاريخ</span>':`<span class="ev-days ${near?'bad':i.days<=60?'warn':'ok'} num">${i.days===0?'اليوم':`<b>${i.days}</b> يوم`}</span>`}</div>
-        <div class="sub num">${i.d?fmtDay(i.d):e.kind==='hijri'?'':'—'}${e.fund?` · من حصالة «${esc(e.fund)}»`:''}</div>
+        <div class="sub num">${i.d?fmtDay(i.d):e.kind==='hijri'?'':'—'}${(e.dates||[]).length?` (+${e.dates.length} ${e.dates.length>1?'أيام':'يوم'})`:''}${e.fund?` · من حصالة «${esc(e.fund)}»`:''}</div>
         ${i.others.length?`<div class="ev-share num">محجوز من «${esc(e.fund)}»: ${i.others.map(([n,a])=>`${fmtMoney(a)} لـ${esc(n)}`).join('، ')}</div>`:''}
         ${i.paid?`${bar(100,'good')}<div class="ev-tip ok">✓ صرفت لها <b class="num">${fmtMoney(i.paid.amount)}</b>${e.fund?` من «${esc(e.fund)}»`:''}</div>`:i.cost?`${bar(i.saved/i.cost*100,ready?'good':near?'bad':'acc')}<div class="ev-nums num"><span>جاهز ${fmtMoney(Math.min(i.saved,i.cost))} من ${fmtMoney(i.cost)}</span><span>${ready?'✓ مغطّى':`ناقص ${fmtMoney(i.need)}`}</span></div>
           ${!ready&&i.months&&e.fund&&planAmt(e.fund)>=Math.ceil(i.perMonth)?`<div class="ev-tip ok">✓ محجوز <b class="num">${fmtMoney(planAmt(e.fund))}</b> كل شهر في الحصالة</div>`:!ready&&i.months?`<div class="ev-tip">احجز <b class="num">${fmtMoney(Math.ceil(i.perMonth))}</b> شهرياً لمدة ${i.months} ${i.months<11&&i.months>2?'أشهر':'شهر'}</div>`:''}`:'<div class="sub">حدد التكلفة المتوقعة عشان نخطط لها</div>'}
       </button>`}).join('')}</div></section>`}
+const evDateRow=(k,rm)=>`<div class="ev-d"><input class="field" type="date" name="date" value="${k}">${rm?'<button type="button" class="icon-btn" data-act="ev-drm" aria-label="شيل اليوم">×</button>':''}</div>`;
 function openEvent(id){const e=id?find(S.events,id):{name:'',kind:'date',date:'',cost:'',fund:''};if(!e)return;const i=id?eventInfo(e):null;
   const funds=(S.plan||PLAN_DEF).fixed.map(([n])=>n);
   openSheet(`<form data-form="ev" data-id="${id||''}" class="plan-f">
     <div class="fld"><label>المناسبة</label><input class="field" name="name" value="${esc(e.name)}" required autocomplete="off"></div>
-    ${e.kind==='hijri'?`<p class="sub num">التاريخ يتحسب تلقائياً بالتقويم الهجري: ${i&&i.d?fmtDay(i.d):'—'}</p>`:`<div class="fld"><label>التاريخ</label><input class="field" type="date" name="date" value="${e.date||''}"></div><label class="chk-l"><input type="checkbox" name="once" value="1" ${e.once?'checked':''}> مرة وحدة (مب كل سنة)</label>`}
+    ${e.kind==='hijri'?`<p class="sub num">التاريخ يتحسب تلقائياً بالتقويم الهجري: ${i&&i.d?fmtDay(i.d):'—'}</p>`:`<div class="fld"><label>التاريخ</label><div id="ev-dates">${[e.date||'',...(e.dates||[])].map((k,j)=>evDateRow(k,j>0)).join('')}</div><button type="button" class="link" data-act="ev-dadd">+ يوم آخر</button></div><label class="chk-l"><input type="checkbox" name="once" value="1" ${e.once?'checked':''}> مرة وحدة (مب كل سنة)</label>`}
     <div class="fld"><label>التكلفة المتوقعة</label><input class="field num" name="cost" inputmode="decimal" value="${e.cost||''}" placeholder="مثال: 120"></div>
     <div class="fld"><label>تتموّل من بند في الحصالة</label><select class="field" name="fund"><option value="">بدون</option>${funds.map(n=>`<option ${e.fund===n?'selected':''}>${esc(n)}</option>`).join('')}<option value="__new" >بند جديد باسم المناسبة</option></select></div>
     ${i&&i.cost&&i.need>0&&i.months?`<div class="card note-card"><b>الحجز المسبق</b><p class="sub num">ناقصك ${fmtMoney(i.need)}. لو حجزت ${fmtMoney(Math.ceil(i.perMonth))} كل شهر توصل قبل الموعد.</p><button type="button" class="btn line" data-act="ev-reserve" data-id="${e.id}">احجزه في الحصالة كل شهر</button></div>`:''}
@@ -1738,6 +1742,8 @@ const A={
   'funds-edit':()=>openFundsEdit(),
   'fund-open':d=>openFund(d.n),
   'ev-new':()=>openEvent(null),
+  'ev-dadd':()=>{const w=$('#ev-dates');w.insertAdjacentHTML('beforeend',evDateRow('',true));enhanceDates(w);const i=w.lastElementChild.querySelector('input');try{i.showPicker()}catch(e){}},
+  'ev-drm':(d,el)=>el.closest('.ev-d').remove(),
   'ev-edit':d=>openEvent(d.id),
   'ev-unspend':d=>{const e=find(S.events,d.id);if(!e||!e.paid)return;const p=e.paid;S.funds[e.fund]=(S.funds[e.fund]||0)+p.amount;S.fundTx=(S.fundTx||[]).filter(t=>t.id!==p.tx);delete e.paid;closeSheet();commit();toast('رجّعت المبلغ للحصالة')},
   'ev-del':d=>{rm('events',d.id);closeSheet();commit();toast('انحذفت المناسبة')},
@@ -1806,7 +1812,7 @@ const F={
     e.paid={for:d?dkey(d):'',amount:a,tx:id};closeSheet();toast(`خصمت ${fmtMoney(a)} من «${e.fund}». رصيده ${fmtMoney(S.funds[e.fund])}`)},
   ev:(v,f)=>{const id=f.dataset.id,cost=v.cost?num(v.cost):0;if(v.cost&&!(cost>=0)){toast('اكتب التكلفة رقماً');return false}S.events=S.events||[];
     let e=id?find(S.events,id):null;if(!e){e={id:uid(),kind:'date',h:'',fund:''};S.events.push(e)}
-    e.name=v.name.trim();e.cost=cost;if(e.kind!=='hijri'){e.date=v.date||'';e.once=!!v.once}
+    e.name=v.name.trim();e.cost=cost;if(e.kind!=='hijri'){const ds=[...new Set([...f.querySelectorAll('[name=date]')].map(i=>i.value).filter(Boolean))].sort();e.date=ds[0]||'';e.dates=ds.slice(1);e.once=!!v.once}
     if(v.fund==='__new'){S.plan=S.plan||JSON.parse(JSON.stringify(PLAN_DEF));if(!S.plan.fixed.some(r=>r[0]===e.name))S.plan.fixed.push([e.name,0]);e.fund=e.name}else e.fund=v.fund||'';
     closeSheet();toast('انحفظت المناسبة')},
   plan:(v,f)=>{const sal=num(v.salary);if(!(sal>0)){toast('اكتب الراتب رقماً');return false}const bk={rashan:num(v.rashan||'0')||0,cons:num(v.cons||'0')||0,commit:v.commit===''?null:num(v.commit)};
