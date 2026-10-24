@@ -672,6 +672,12 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .ev-panel .ev .bar{background:rgba(255,255,255,.16);margin-top:0}.ev-panel .bar.acc i{background:#4FC3FF}
 .ev-panel .ev-nums{color:#CFE2FF;margin-top:6px}
 .ev-panel .ev-tip{background:rgba(79,195,255,.16);color:#DDF0FF;font-size:.8rem}.ev-panel .ev-tip.ok{background:rgba(80,220,150,.18)}
+
+/* card motion on scroll (غوازي) */
+.fx{transform:perspective(900px) translateY(40px) rotateX(28deg) rotateZ(-4deg) scale(.9);opacity:0;transition:transform .7s cubic-bezier(.2,.9,.25,1),opacity .5s ease;transition-delay:var(--fx-d,0ms);transform-origin:50% 50%;will-change:transform}
+.fx.fx-in{opacity:1;transform:perspective(900px) translateY(var(--fx-y,0)) rotateX(var(--fx-rx,0)) rotateZ(var(--fx-rz,0)) scale(var(--fx-s,1));transition:transform .35s cubic-bezier(.2,.8,.3,1),opacity .5s ease}
+.gcard.cc.fx.fx-in:active{transform:perspective(900px) scale(.97)}
+@media (prefers-reduced-motion:reduce){.fx{transform:none!important;opacity:1!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -1943,6 +1949,16 @@ let page=(location.hash||'').slice(1);if(!PAGES[page])page=(()=>{try{return loca
 function go(p){if(!PAGES[p]||p===page)return;page=p;try{localStorage.setItem(KEY+'.page',p)}catch(e){}if(p==='mahfazti')wMonth=ckey();render();window.scrollTo(0,0)}
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();go(a.dataset.page);try{history.replaceState(null,'','#'+a.dataset.page)}catch(x){}}));
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+/* غوازي: cards tilt on an arc as they scroll by, and settle flat in the middle of the screen */
+const fxReduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let fxRaf=0;
+function cardsFx(){if(fxReduce)return;const els=[...document.querySelectorAll('.gcard.cc,.vault')];
+  const io=cardsFx.io||(cardsFx.io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('fx-in');cardsFx.io.unobserve(e.target)}}),{threshold:.15}));
+  els.forEach((el,i)=>{el.classList.add('fx');el.style.setProperty('--fx-d',(i%2)*70+'ms');io.observe(el)});fxTick()}
+function fxTick(){if(page!=='mahfazti'||fxReduce)return;const vh=innerHeight,vw=innerWidth;
+  document.querySelectorAll('.fx.fx-in').forEach(el=>{const r=el.getBoundingClientRect();if(r.bottom<-50||r.top>vh+50)return;
+    const p=Math.max(-1,Math.min(1,((r.top+r.height/2)-vh*.45)/(vh*.6))),side=(r.left+r.width/2)<vw/2?-1:1,a=Math.abs(p);
+    el.style.setProperty('--fx-rx',(p*-16).toFixed(2)+'deg');el.style.setProperty('--fx-rz',(p*side*-5).toFixed(2)+'deg');el.style.setProperty('--fx-s',(1-a*a*.07).toFixed(3));el.style.setProperty('--fx-y',(a*a*10).toFixed(1)+'px')})}
+addEventListener('scroll',()=>{if(fxRaf)return;fxRaf=requestAnimationFrame(()=>{fxRaf=0;fxTick()})},{passive:true});
 /* dates: a tidy chip (اليوم / السبت 24 أكتوبر) over the native date picker */
 const fmtShort=d=>new Intl.DateTimeFormat(LOC,{weekday:'short',day:'numeric',month:'long'}).format(d);
 function dpLabel(v){if(!v)return 'اختر التاريخ';const diff=Math.round((parseD(v)-parseD(dkey()))/864e5);
@@ -1961,6 +1977,7 @@ function render(){
   document.querySelectorAll('.nav a').forEach(a=>a.dataset.page===page?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
   if(page==='masai')applyHeroMode();
   enhanceDates($('#view'));
+  if(page==='mahfazti')cardsFx();
   if(refocus){const i=document.querySelector(`form[data-form="${refocus}"] input:not([type=hidden]):not([type=time]):not([type=date])`);refocus=null;if(i)try{i.focus({preventScroll:true})}catch(e){}}
 }
 let lastDay=dkey();
