@@ -674,7 +674,8 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .ev-panel .ev-tip{background:rgba(79,195,255,.16);color:#DDF0FF;font-size:.8rem}.ev-panel .ev-tip.ok{background:rgba(80,220,150,.18)}
 
 /* غوازي deck */
-.deck-w{position:relative;margin:18px 0 6px}
+.deck-w{position:relative;margin:4px -16px 6px;padding:14px 16px 0;overflow-x:clip}
+:root[data-page="mahfazti"] #view{overflow-x:clip}
 .deck{position:relative;height:200px;margin:0 16px 0 26px;touch-action:pan-y}
 .deck::before{content:"";position:absolute;inset:-30px -40px;z-index:-1;background:radial-gradient(closest-side,var(--glow,rgba(80,90,220,.45)),transparent);filter:blur(18px);opacity:.75;transition:background .5s}
 .deck>.gcard.cc{position:absolute;inset:0;min-height:0;padding:20px 20px 40px;transition:transform .45s cubic-bezier(.2,.9,.25,1),opacity .35s;transform-origin:50% 100%;will-change:transform;user-select:none;-webkit-user-select:none}
@@ -1962,7 +1963,7 @@ window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 /* غوازي: the sections are a stacked deck; swipe (or tap the arrows) to send the top card to the back */
 function deckInit(){const d=$('#deck');if(!d)return;const cards=[...d.children],n=cards.length;let top=((walletUI.deckTop||0)%n+n)%n;
   const place=()=>{cards.forEach((c,i)=>{const j=(i-top+n)%n;c.style.zIndex=n-j;c.classList.toggle('top',j===0);c.setAttribute('aria-hidden',j?'true':'false');c.tabIndex=j?-1:0;
-      c.style.transform=j===0?'':`translate(${j*-9}px,${j*-7}px) rotate(${-j*3.2}deg) scale(${1-j*.045})`;c.style.opacity=j>3?0:1});
+      const q=Math.min(j,3);c.style.transform=j===0?'':`translate(${q*-8}px,${q*-7}px) rotate(${-q*3}deg) scale(${1-q*.045})`;c.style.opacity=j>3?0:1});
     const t=cards[top];d.style.setProperty('--glow',getComputedStyle(t).getPropertyValue('--cc-sh')||'rgba(80,90,220,.5)');
     const dots=$('#deck-dots');if(dots)dots.innerHTML=cards.map((_,i)=>`<i class="${i===top?'on':''}"></i>`).join('');const k=$('#deck-k');if(k)k.textContent=`${top+1} من ${n}`;walletUI.deckTop=top};
   const go=dir=>{const c=cards[top];c.classList.add(dir>0?'leave':'leave-b');setTimeout(()=>{c.classList.remove('leave','leave-b');top=(top+dir+n)%n;place()},dir>0?260:10);if(dir<0){top=(top+dir+n)%n;place()}};
