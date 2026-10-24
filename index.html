@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#1D4F53">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="تَوازُن">
+<meta name="apple-mobile-web-app-title" content="توازن">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
-<title>تَوازُن</title>
+<title>توازن</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;700&family=Baloo+Bhaijaan+2:wght@500;700&family=El+Messiri:wght@500;700&family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@400;500;600;700&display=swap">
@@ -1049,7 +1049,7 @@ function focusFinished(){const f=S.focus,t=f.taskId&&S.tasks.find(x=>x.id===f.ta
   S.garden.push({id:uid(),date:k,min:f.dur,task:t?t.title:'',seed:f.seed});
   S.focus={...f,mode:'ask'};holdWake(false);notify('خلصت جلسة التركيز، وكبرت شجرتك');commit()}
 function interruptFocus(){const f=S.focus;if(f.mode!=='focus')return;S.focus={...f,mode:'broken',p:Math.min(1,(Date.now()-f.start)/(f.dur*6e4))};holdWake(false);save()}
-function notify(msg){toast(msg,6000);beep();try{if(!framed&&'Notification' in window&&Notification.permission==='granted')new Notification('تَوازُن',{body:msg})}catch(e){}}
+function notify(msg){toast(msg,6000);beep();try{if(!framed&&'Notification' in window&&Notification.permission==='granted')new Notification('توازن',{body:msg})}catch(e){}}
 
 /* sections switch like tabs so the bar works even where the page itself can't scroll (inside the app's viewer) */
 function showTab(t){S.ui.mtab=t;commit();const n=$('.qnav');try{if(n&&n.getBoundingClientRect().top<0)n.scrollIntoView({block:'start'})}catch(e){}}
@@ -1651,7 +1651,7 @@ async function rashanImage(){
       ctx.fillStyle=C.ink;ctx.font=IT;ctx.textAlign='right';r.lines.forEach((ln,j)=>ctx.fillText(ln,xr-64,y+j*40));
       if(r.qty){ctx.font=QT;const w=ctx.measureText(r.qty).width+24;ctx.fillStyle=C.soft;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(xl+20,y-28,w,38,19);else ctx.rect(xl+20,y-28,w,38);ctx.fill();ctx.fillStyle=C.pur;ctx.textAlign='center';ctx.fillText(r.qty,xl+20+w/2,y)}
       y+=r.lines.length*40+16})});
-  ctx.textAlign='center';ctx.fillStyle=C.mut;ctx.font=F(500,24);ctx.fillText('بيتي · تَوازُن',W/2,H-50);
+  ctx.textAlign='center';ctx.fillStyle=C.mut;ctx.font=F(500,24);ctx.fillText('بيتي · توازن',W/2,H-50);
   return await new Promise(r=>cv.toBlob(r,'image/png'))}
 async function rashanShare(){const left=S.groceries.filter(g=>!g.done).length;if(!left){toast('ما فيه أغراض باقية للحفظ');return}
   toast('أجهّز الصورة…');const blob=await rashanImage();if(!blob){toast('تعذّر تجهيز الصورة');return}
