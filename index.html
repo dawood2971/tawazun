@@ -673,11 +673,19 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .ev-panel .ev-nums{color:#CFE2FF;margin-top:6px}
 .ev-panel .ev-tip{background:rgba(79,195,255,.16);color:#DDF0FF;font-size:.8rem}.ev-panel .ev-tip.ok{background:rgba(80,220,150,.18)}
 
-/* card motion on scroll (غوازي) */
-.fx{transform:perspective(900px) translateY(40px) rotateX(28deg) rotateZ(-4deg) scale(.9);opacity:0;transition:transform .7s cubic-bezier(.2,.9,.25,1),opacity .5s ease;transition-delay:var(--fx-d,0ms);transform-origin:50% 50%;will-change:transform}
-.fx.fx-in{opacity:1;transform:perspective(900px) translateY(var(--fx-y,0)) rotateX(var(--fx-rx,0)) rotateZ(var(--fx-rz,0)) scale(var(--fx-s,1));transition:transform .35s cubic-bezier(.2,.8,.3,1),opacity .5s ease}
-.gcard.cc.fx.fx-in:active{transform:perspective(900px) scale(.97)}
-@media (prefers-reduced-motion:reduce){.fx{transform:none!important;opacity:1!important;transition:none!important}}
+/* غوازي deck */
+.deck-w{position:relative;margin:18px 0 6px}
+.deck{position:relative;height:200px;margin:0 16px 0 26px;touch-action:pan-y}
+.deck::before{content:"";position:absolute;inset:-30px -40px;z-index:-1;background:radial-gradient(closest-side,var(--glow,rgba(80,90,220,.45)),transparent);filter:blur(18px);opacity:.75;transition:background .5s}
+.deck>.gcard.cc{position:absolute;inset:0;min-height:0;padding:20px 20px 40px;transition:transform .45s cubic-bezier(.2,.9,.25,1),opacity .35s;transform-origin:50% 100%;will-change:transform;user-select:none;-webkit-user-select:none}
+.deck>.gcard.cc .gc-n{font-size:1rem}.deck>.gcard.cc b{font-size:2.1rem}.deck>.gcard.cc .gc-s{font-size:.85rem;-webkit-line-clamp:3}
+.deck>.gcard.cc:not(.top){pointer-events:none;filter:saturate(.85) brightness(.92)}
+.deck>.gcard.cc.leave{transform:translateY(60%) rotate(-14deg) scale(.82)!important;opacity:0!important}
+.deck>.gcard.cc .bar{inset-inline:64px 20px;bottom:20px}.deck>.gcard.cc::after{bottom:15px;inset-inline-start:18px}
+.deck-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px}
+.deck-dots{display:flex;gap:6px}.deck-dots i{width:7px;height:7px;border-radius:99px;background:rgba(74,79,230,.25);transition:width .3s,background .3s}.deck-dots i.on{width:20px;background:var(--accent)}
+.deck-k{font-size:.8rem;color:var(--muted);min-width:34px;text-align:center}
+@media (prefers-reduced-motion:reduce){.deck>.gcard.cc{transition:none}}
 </style>
 </head>
 <body>
@@ -1634,8 +1642,9 @@ function pMahfazti(){
   </section>
   ${nearEv.length?`<div class="card note-card ev-alert" style="margin-top:12px"><b>⏰ مناسبة قريبة وناقصها مبلغ</b><p class="sub num">${nearEv.map(([e,i])=>`${esc(e.name)} بعد ${i.days} يوم، ناقص ${fmtMoney(i.need)}`).join(' · ')}</p></div>`:''}
   <div class="vwrap">${vaultHTML(c,fundTot,m)}</div>
+  <div class="deck-w"><div class="deck" id="deck">${BUCKETS.map(bcard).join('')}</div>
+    <div class="deck-nav"><button class="icon-btn" data-act="deck-go" data-d="-1" aria-label="السابقة">›</button><div class="deck-dots" id="deck-dots"></div><span class="deck-k num" id="deck-k"></span><button class="icon-btn" data-act="deck-go" data-d="1" aria-label="التالية">‹</button></div></div>
   <div class="ggrid">
-    ${BUCKETS.map(bcard).join('')}
     <button class="gcard cc rest ${c.rest<0?'over':''}" data-act="rest-open"><span class="gc-n">المتبقي</span><b class="num">${fmtMoney(c.rest)}</b><span class="gc-s">${c.rest<0?'صرفت أكثر من الراتب':`اللي يبقى بعد كل الأقسام${cur?`، ${daysLeft} يوم للراتب الجاي`:''}. اضغط وحوّله للحصالة`}</span>${bar(share(Math.max(0,c.rest)),'good')}${c.moved?`<span class="gc-s num">حوّلت ${fmtMoney(c.moved)} للحصالة</span>`:''}</button>
   </div>
 
@@ -1847,6 +1856,7 @@ const A={
   'funds-edit':()=>openFundsEdit(),
   'fund-open':d=>openFund(d.n),
   'ev-new':()=>openEvent(null),
+  'deck-go':d=>{const k=$('#deck');if(k&&k.deckGo)k.deckGo(+d.d)},
   'ev-dadd':()=>{const w=$('#ev-dates');w.insertAdjacentHTML('beforeend',evDateRow('',true));enhanceDates(w);const i=w.lastElementChild.querySelector('input');try{i.showPicker()}catch(e){}},
   'ev-drm':(d,el)=>el.closest('.ev-d').remove(),
   'ev-edit':d=>openEvent(d.id),
@@ -1949,16 +1959,20 @@ let page=(location.hash||'').slice(1);if(!PAGES[page])page=(()=>{try{return loca
 function go(p){if(!PAGES[p]||p===page)return;page=p;try{localStorage.setItem(KEY+'.page',p)}catch(e){}if(p==='mahfazti')wMonth=ckey();render();window.scrollTo(0,0)}
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();go(a.dataset.page);try{history.replaceState(null,'','#'+a.dataset.page)}catch(x){}}));
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
-/* غوازي: cards tilt on an arc as they scroll by, and settle flat in the middle of the screen */
-const fxReduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let fxRaf=0;
-function cardsFx(){if(fxReduce)return;const els=[...document.querySelectorAll('.gcard.cc,.vault')];
-  const io=cardsFx.io||(cardsFx.io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('fx-in');cardsFx.io.unobserve(e.target)}}),{threshold:.15}));
-  els.forEach((el,i)=>{el.classList.add('fx');el.style.setProperty('--fx-d',(i%2)*70+'ms');io.observe(el)});fxTick()}
-function fxTick(){if(page!=='mahfazti'||fxReduce)return;const vh=innerHeight,vw=innerWidth;
-  document.querySelectorAll('.fx.fx-in').forEach(el=>{const r=el.getBoundingClientRect();if(r.bottom<-50||r.top>vh+50)return;
-    const p=Math.max(-1,Math.min(1,((r.top+r.height/2)-vh*.45)/(vh*.6))),side=(r.left+r.width/2)<vw/2?-1:1,a=Math.abs(p);
-    el.style.setProperty('--fx-rx',(p*-16).toFixed(2)+'deg');el.style.setProperty('--fx-rz',(p*side*-5).toFixed(2)+'deg');el.style.setProperty('--fx-s',(1-a*a*.07).toFixed(3));el.style.setProperty('--fx-y',(a*a*10).toFixed(1)+'px')})}
-addEventListener('scroll',()=>{if(fxRaf)return;fxRaf=requestAnimationFrame(()=>{fxRaf=0;fxTick()})},{passive:true});
+/* غوازي: the sections are a stacked deck; swipe (or tap the arrows) to send the top card to the back */
+function deckInit(){const d=$('#deck');if(!d)return;const cards=[...d.children],n=cards.length;let top=((walletUI.deckTop||0)%n+n)%n;
+  const place=()=>{cards.forEach((c,i)=>{const j=(i-top+n)%n;c.style.zIndex=n-j;c.classList.toggle('top',j===0);c.setAttribute('aria-hidden',j?'true':'false');c.tabIndex=j?-1:0;
+      c.style.transform=j===0?'':`translate(${j*-9}px,${j*-7}px) rotate(${-j*3.2}deg) scale(${1-j*.045})`;c.style.opacity=j>3?0:1});
+    const t=cards[top];d.style.setProperty('--glow',getComputedStyle(t).getPropertyValue('--cc-sh')||'rgba(80,90,220,.5)');
+    const dots=$('#deck-dots');if(dots)dots.innerHTML=cards.map((_,i)=>`<i class="${i===top?'on':''}"></i>`).join('');const k=$('#deck-k');if(k)k.textContent=`${top+1} من ${n}`;walletUI.deckTop=top};
+  const go=dir=>{const c=cards[top];c.classList.add(dir>0?'leave':'leave-b');setTimeout(()=>{c.classList.remove('leave','leave-b');top=(top+dir+n)%n;place()},dir>0?260:10);if(dir<0){top=(top+dir+n)%n;place()}};
+  d.deckGo=go;place();
+  let x0=null,dx=0,moved=false;
+  d.onpointerdown=e=>{const c=e.target.closest('.gcard');if(!c||c!==cards[top])return;x0=e.clientX;dx=0;moved=false;c.style.transition='none'};
+  d.onpointermove=e=>{if(x0==null)return;dx=e.clientX-x0;if(Math.abs(dx)>6)moved=true;if(moved)cards[top].style.transform=`translateX(${dx}px) rotate(${dx/18}deg)`};
+  const up=()=>{if(x0==null)return;const c=cards[top];c.style.transition='';x0=null;if(Math.abs(dx)>60){d.dataset.drag='1';setTimeout(()=>delete d.dataset.drag,50);go(dx<0?1:-1)}else{c.style.transform='';if(moved){d.dataset.drag='1';setTimeout(()=>delete d.dataset.drag,50)}}};
+  d.onpointerup=up;d.onpointercancel=up;d.onpointerleave=up;
+  d.addEventListener('click',e=>{if(d.dataset.drag){e.stopPropagation();e.preventDefault()}},true)}
 /* dates: a tidy chip (اليوم / السبت 24 أكتوبر) over the native date picker */
 const fmtShort=d=>new Intl.DateTimeFormat(LOC,{weekday:'short',day:'numeric',month:'long'}).format(d);
 function dpLabel(v){if(!v)return 'اختر التاريخ';const diff=Math.round((parseD(v)-parseD(dkey()))/864e5);
@@ -1977,7 +1991,7 @@ function render(){
   document.querySelectorAll('.nav a').forEach(a=>a.dataset.page===page?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
   if(page==='masai')applyHeroMode();
   enhanceDates($('#view'));
-  if(page==='mahfazti')cardsFx();
+  if(page==='mahfazti')deckInit();
   if(refocus){const i=document.querySelector(`form[data-form="${refocus}"] input:not([type=hidden]):not([type=time]):not([type=date])`);refocus=null;if(i)try{i.focus({preventScroll:true})}catch(e){}}
 }
 let lastDay=dkey();
