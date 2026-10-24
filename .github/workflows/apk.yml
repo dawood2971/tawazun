@@ -2,6 +2,10 @@ name: Build Android APK
 
 on:
   workflow_dispatch:
+    inputs:
+      app:
+        description: tawazun or bawsala
+        default: tawazun
 
 permissions:
   contents: write
@@ -13,29 +17,39 @@ jobs:
       - name: Request package from PWABuilder
         run: |
           # A throwaway signing key for each build; it is never stored.
+          if [ "${{ inputs.app }}" = "bawsala" ]; then
+            ID=io.github.dawood2971.bawsala; NAME="بوصلة"; PATH_=/school-health-planner/
+            THEME="#0f766e"; BG="#f8fafc"; MASK=icons/icon-512.png
+          else
+            ID=io.github.dawood2971.tawazun; NAME="توازن"; PATH_=/tawazun-app/
+            THEME="$THEME"; BG="$BG"; MASK=icons/icon-maskable-512.png
+          fi
+          BASE="https://dawood2971.github.io$PATH_"
+          echo "APP=${{ inputs.app }}" >> "$GITHUB_ENV"
+          echo "NAME=$NAME" >> "$GITHUB_ENV"
           PW=$(openssl rand -hex 16)
           echo "::add-mask::$PW"
           cat > req.json <<JSON
           {
-            "packageId": "io.github.dawood2971.tawazun",
-            "name": "توازن",
-            "launcherName": "توازن",
+            "packageId": "$ID",
+            "name": "$NAME",
+            "launcherName": "$NAME",
             "appVersion": "1.0.${{ github.run_number }}",
             "appVersionCode": ${{ github.run_number }},
             "host": "https://dawood2971.github.io",
-            "startUrl": "/tawazun-app/",
-            "fullScopeUrl": "https://dawood2971.github.io/tawazun-app/",
-            "webManifestUrl": "https://dawood2971.github.io/tawazun-app/manifest.webmanifest",
-            "iconUrl": "https://dawood2971.github.io/tawazun-app/icons/icon-512.png",
-            "maskableIconUrl": "https://dawood2971.github.io/tawazun-app/icons/icon-maskable-512.png",
+            "startUrl": "$PATH_",
+            "fullScopeUrl": "$BASE",
+            "webManifestUrl": "${BASE}manifest.webmanifest",
+            "iconUrl": "${BASE}icons/icon-512.png",
+            "maskableIconUrl": "${BASE}$MASK",
             "monochromeIconUrl": null,
-            "themeColor": "#1D4F53",
-            "themeColorDark": "#1D4F53",
-            "backgroundColor": "#F5F4EF",
-            "navigationColor": "#1D4F53",
-            "navigationColorDark": "#1D4F53",
-            "navigationDividerColor": "#1D4F53",
-            "navigationDividerColorDark": "#1D4F53",
+            "themeColor": "$THEME",
+            "themeColorDark": "$THEME",
+            "backgroundColor": "$BG",
+            "navigationColor": "$THEME",
+            "navigationColorDark": "$THEME",
+            "navigationDividerColor": "$THEME",
+            "navigationDividerColorDark": "$THEME",
             "display": "standalone",
             "orientation": "portrait",
             "fallbackType": "customtabs",
@@ -74,8 +88,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           apk=$(ls pkg/*.apk | head -1)
-          cp "$apk" tawazun.apk
-          gh release create "v1.0.${{ github.run_number }}" tawazun.apk \
+          cp "$apk" "$APP.apk"
+          gh release create "$APP-v1.0.${{ github.run_number }}" "$APP.apk" \
             --repo "${{ github.repository }}" \
-            --title "توازن 1.0.${{ github.run_number }}" \
-            --notes "نزّل tawazun.apk وثبّته على الجوال."
+            --title "$NAME 1.0.${{ github.run_number }}" \
+            --notes "نزّل $APP.apk وثبّته على الجوال."
