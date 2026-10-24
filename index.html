@@ -647,6 +647,31 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .gcard.cc.rest{grid-column:1/-1;--cc-sh:rgba(17,153,142,.5);background:radial-gradient(ellipse 45% 120% at 105% 50%,rgba(255,255,255,.22) 0 55%,transparent 55.6%),radial-gradient(circle at 70% -30%,rgba(255,255,255,.16) 0 30%,transparent 30.6%),linear-gradient(120deg,#0F9B8E,#2BCB7F)}
 .gcard.cc.rest.over{--cc-sh:rgba(200,40,60,.5);background:radial-gradient(ellipse 45% 120% at 105% 50%,rgba(255,255,255,.2) 0 55%,transparent 55.6%),linear-gradient(120deg,#C2185B,#F0353B)}
 .gcard.cc:active{transform:scale(.98)}
+
+/* المناسبات القادمة: deep-blue panel with glowing hexagons and glass cards */
+.ev-panel{position:relative;overflow:hidden;isolation:isolate;border-radius:24px;padding:16px 14px 6px;color:#EAF3FF;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cg fill='none' stroke='%2346B4FF' stroke-width='2.2'%3E%3Cpath d='M300 -40l70 40v80l-70 40-70-40V0z' opacity='.75'/%3E%3Cpath d='M60 60l60 35v70l-60 35-60-35V95z' opacity='.45'/%3E%3Cpath d='M330 200l55 32v64l-55 32-55-32v-64z' opacity='.6'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat,
+  radial-gradient(60% 50% at 90% 0%,rgba(40,150,255,.45),transparent 70%),linear-gradient(160deg,#0B3A9E 0%,#082B7A 55%,#061E5C 100%);
+  box-shadow:0 18px 40px -18px rgba(8,40,130,.7),inset 0 0 0 1px rgba(110,180,255,.18)}
+.ev-panel .sec-h h2{color:#fff}.ev-panel .sec-h .link{color:#6CCBFF}
+.ev-panel .evs{align-items:flex-start;padding:6px 2px 14px}
+.ev-panel .evs>.ev::before,.ev-panel .ev-dot{display:none}
+.ev-panel .evs>.ev:nth-child(even){margin-top:30px}
+.ev-panel .ev{position:relative;align-items:center;text-align:center;gap:6px;padding:14px 14px 0;border-radius:20px;color:#fff;overflow:hidden;
+  background:linear-gradient(165deg,rgba(38,108,228,.62),rgba(12,52,150,.7));border:1px solid rgba(120,190,255,.32);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 16px 30px -16px rgba(0,10,50,.8),inset 0 1px 0 rgba(255,255,255,.12)}
+.ev-panel .ev.near{border-color:rgba(255,120,140,.7)}
+.ev-panel .ev-days{align-self:flex-start;background:rgba(10,40,120,.55)!important;color:#CFE6FF!important;border:1px solid rgba(120,190,255,.45);letter-spacing:.02em}
+.ev-panel .ev-days.bad{color:#FFB3BE!important;border-color:rgba(255,130,150,.6)}.ev-panel .ev-days.warn{color:#FFE29A!important;border-color:rgba(255,215,120,.55)}
+.ev-ic{color:#4FC3FF;filter:drop-shadow(0 0 6px rgba(79,195,255,.55));margin-top:2px}
+.ev-name{font-family:var(--f-display);font-size:1.18rem;line-height:1.25;color:#fff}
+.ev-panel .sub{color:#B9D3F5;font-size:.8rem;line-height:1.5}
+.ev-panel .ev-share{background:rgba(5,25,80,.45);color:#CFE2FF}
+.ev-foot{align-self:stretch;margin:8px -14px 0;padding:10px 14px 12px;border-top:1px solid rgba(120,190,255,.25);text-align:start;
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.06) 0 2px,transparent 2px 7px) left/38% 100% no-repeat,rgba(4,24,80,.35)}
+.ev-panel .ev .bar{background:rgba(255,255,255,.16);margin-top:0}.ev-panel .bar.acc i{background:#4FC3FF}
+.ev-panel .ev-nums{color:#CFE2FF;margin-top:6px}
+.ev-panel .ev-tip{background:rgba(79,195,255,.16);color:#DDF0FF;font-size:.8rem}.ev-panel .ev-tip.ok{background:rgba(80,220,150,.18)}
 </style>
 </head>
 <body>
@@ -1410,14 +1435,26 @@ function fundShares(fund){const bal=(S.funds||{})[fund]||0,list=(S.events||[]).f
   list.forEach(x=>{if(!(+x.e.cost)){out[x.e.id]={take:left,before:list.filter(y=>out[y.e.id]&&out[y.e.id].take>0&&+y.e.cost).map(y=>[y.e.name,out[y.e.id].take])}}});return out}
 function eventInfo(ev){const d=eventNext(ev),paid=ev.paid&&ev.paid.for===(d?dkey(d):"")?ev.paid:null,share=ev.fund&&!paid?fundShares(ev.fund)[ev.id]:null,days=d?Math.round((d-new Date(new Date().setHours(0,0,0,0)))/864e5):null,saved=share?share.take:0,cost=+ev.cost||0;
   const need=Math.max(0,cost-saved),months=days==null?null:Math.max(1,Math.ceil(days/30)),perMonth=months?need/months:0;return{d,days,saved,cost,need,months,perMonth,paid,others:share?share.before:[]}}
+/* occasion icons, picked from the name */
+const EV_IC={car:'<path d="M5 16V12l2-5h10l2 5v4M3 16h18v3h-3v-1H6v1H3zM5 12h14"/><circle cx="7.5" cy="14.5" r="1"/><circle cx="16.5" cy="14.5" r="1"/>',
+  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/><path d="M17 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/>',
+  gift:'<rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M2.5 9h19M12 9v11M12 9c-1-3-5-4.5-5-2s4 2 5 2zm0 0c1-3 5-4.5 5-2s-4 2-5 2z"/>',
+  plane:'<path d="M10.5 13.5 3 11l1.5-1.5 8 1 4.5-4.5a2 2 0 0 1 3 3l-4.5 4.5 1 8L15 23l-2.5-7.5L9 19v3l-1.5 1L6 19l-4-1.5 1-1.5h3z"/>',
+  book:'<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 21.5V5.5M8 7h8"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h3"/>'};
+function evIcon(n){const k=/سيار|تجديد|تأمين|ملكية/.test(n)?'car':/رمضان|عيد|حج|عمرة/.test(n)?'moon':/ميلاد|زواج|هدي|عرس/.test(n)?'gift':/سفر|رحل/.test(n)?'plane':/مدارس|مدرس|دراس|كتب/.test(n)?'book':/نزه|ترفي|تدليل|بحر/.test(n)?'sun':'cal';
+  return `<svg class="ev-ic" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${EV_IC[k]}</svg>`}
 function eventsSection(){const evs=(S.events||[]).map(e=>[e,eventInfo(e)]).sort((a,b)=>(a[1].days??9999)-(b[1].days??9999));
-  return `<section class="sec" id="g-events"><div class="sec-h"><h2>المناسبات القادمة</h2><button class="link" data-act="ev-new">+ مناسبة</button></div>
+  return `<section class="sec ev-panel" id="g-events"><div class="sec-h"><h2>المناسبات القادمة</h2><button class="link" data-act="ev-new">+ مناسبة</button></div>
     <div class="evs" role="list">${evs.map(([e,i])=>{const near=!i.paid&&i.days!=null&&i.days<=30&&i.need>0,ready=i.cost>0&&i.need<=0;
-      return `<button class="ev ${near?'near':''} ${i.days==null?'nodate':''}" role="listitem" data-act="ev-edit" data-id="${e.id}"><span class="ev-dot"></span><div class="ev-top"><b>${esc(e.name)}</b>${i.days==null?'<span class="ev-days none">حدد التاريخ</span>':`<span class="ev-days ${near?'bad':i.days<=60?'warn':'ok'} num">${i.days===0?'اليوم':`<b>${i.days}</b> يوم`}</span>`}</div>
-        <div class="sub num">${i.d?fmtDay(i.d):e.kind==='hijri'?'':'—'}${(e.dates||[]).length?` (+${e.dates.length} ${e.dates.length>1?'أيام':'يوم'})`:''}${e.fund?` · من حصالة «${esc(e.fund)}»`:''}</div>
+      return `<button class="ev ${near?'near':''} ${i.days==null?'nodate':''}" role="listitem" data-act="ev-edit" data-id="${e.id}">
+        ${i.days==null?'<span class="ev-days none">حدد التاريخ</span>':`<span class="ev-days ${near?'bad':i.days<=60?'warn':'ok'} num">${i.days===0?'اليوم':`<b>${i.days}</b> يوم`}</span>`}
+        ${evIcon(e.name)}<b class="ev-name">${esc(e.name)}</b>
+        <div class="sub num">${i.d?fmtDay(i.d):e.kind==='hijri'?'':'—'}${(e.dates||[]).length?` (+${e.dates.length} ${e.dates.length>1?'أيام':'يوم'})`:''}${e.fund?`<br>من حصالة «${esc(e.fund)}»`:''}</div>
         ${i.others.length?`<div class="ev-share num">محجوز من «${esc(e.fund)}»: ${i.others.map(([n,a])=>`${fmtMoney(a)} لـ${esc(n)}`).join('، ')}</div>`:''}
-        ${i.paid?`${bar(100,'good')}<div class="ev-tip ok">✓ صرفت لها <b class="num">${fmtMoney(i.paid.amount)}</b>${e.fund?` من «${esc(e.fund)}»`:''}</div>`:i.cost?`${bar(i.saved/i.cost*100,ready?'good':near?'bad':'acc')}<div class="ev-nums num"><span>جاهز ${fmtMoney(Math.min(i.saved,i.cost))} من ${fmtMoney(i.cost)}</span><span>${ready?'✓ مغطّى':`ناقص ${fmtMoney(i.need)}`}</span></div>
-          ${!ready&&i.months&&e.fund&&planAmt(e.fund)>=Math.ceil(i.perMonth)?`<div class="ev-tip ok">✓ محجوز <b class="num">${fmtMoney(planAmt(e.fund))}</b> كل شهر في الحصالة</div>`:!ready&&i.months?`<div class="ev-tip">احجز <b class="num">${fmtMoney(Math.ceil(i.perMonth))}</b> شهرياً لمدة ${i.months} ${i.months<11&&i.months>2?'أشهر':'شهر'}</div>`:''}`:'<div class="sub">حدد التكلفة المتوقعة عشان نخطط لها</div>'}
+        <div class="ev-foot">${i.paid?`${bar(100,'good')}<div class="ev-tip ok">✓ صرفت لها <b class="num">${fmtMoney(i.paid.amount)}</b></div>`:i.cost?`${bar(i.saved/i.cost*100,ready?'good':near?'bad':'acc')}<div class="ev-nums num"><span>جاهز ${fmtMoney(Math.min(i.saved,i.cost))} من ${fmtMoney(i.cost)}</span><span>${ready?'✓ مغطّى':`ناقص ${fmtMoney(i.need)}`}</span></div>
+          ${!ready&&i.months&&e.fund&&planAmt(e.fund)>=Math.ceil(i.perMonth)?`<div class="ev-tip ok">✓ محجوز <b class="num">${fmtMoney(planAmt(e.fund))}</b> كل شهر</div>`:!ready&&i.months?`<div class="ev-tip">احجز <b class="num">${fmtMoney(Math.ceil(i.perMonth))}</b> شهرياً لمدة ${i.months} ${i.months<11&&i.months>2?'أشهر':'شهر'}</div>`:''}`:'<div class="ev-tip">حدد التكلفة المتوقعة عشان نخطط لها</div>'}</div>
       </button>`}).join('')}</div></section>`}
 const evDateRow=(k,rm)=>`<div class="ev-d"><input class="field" type="date" name="date" value="${k}">${rm?'<button type="button" class="icon-btn" data-act="ev-drm" aria-label="شيل اليوم">×</button>':''}</div>`;
 function openEvent(id){const e=id?find(S.events,id):{name:'',kind:'date',date:'',cost:'',fund:''};if(!e)return;const i=id?eventInfo(e):null;
