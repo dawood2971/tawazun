@@ -275,6 +275,10 @@
 .r-paste textarea{width:100%;min-height:76px;resize:vertical;border:0;border-radius:12px;background:var(--r-bg);color:var(--r-ink);padding:10px 12px;font:inherit;font-size:16px;line-height:1.6}
 .r-paste textarea:focus{outline:2px solid var(--r-pur)}
 .r-btn{background:var(--r-pur)!important;color:#fff!important;border-color:var(--r-pur)!important;align-self:stretch}
+.r-pay{display:flex;flex-direction:column;gap:8px;margin:4px 0 12px;background:var(--r-pur);color:#fff;border-radius:18px;padding:12px}
+.r-pay label{font-weight:700;font-size:.92rem}.r-pay p{margin:0;font-size:.78rem;opacity:.8}
+.r-pay-row{display:flex;gap:8px}.r-pay input{flex:1;min-width:0;border:0;border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;background:#fff;color:var(--r-ink)}
+.r-pay .btn{background:var(--r-or)!important;color:#2E1A00!important;border-color:var(--r-or)!important;white-space:nowrap}
 .r-tools{display:flex;gap:14px;align-items:center;justify-content:flex-end;flex-wrap:wrap;margin:10px 2px 0}.r-img{position:relative;display:flex;width:100%;justify-content:center;gap:8px;margin:4px 0 12px;background:var(--r-or)!important;color:#2E1A00!important;border-color:var(--r-or)!important;font-weight:800;min-height:50px;font-size:1rem}.r-img::before{content:'⬇'}
 .ric{display:inline-block;margin-inline-end:6px;font-size:1.05em}.r-tools .link{color:var(--r-pur)}
 .rgroup{margin-top:16px}
@@ -1770,6 +1774,7 @@ function rashanView(){const items=S.groceries.map(g=>{if(!g.cat||(g.cat!=='meat'
     return `<div class="rgroup"><div class="rg-band"><b><span class="ric" aria-hidden="true">${RICON['g_'+gid]}</span>${gname}</b><span class="num">${cats.reduce((n,[,l])=>n+l.filter(g=>!g.done).length,0)}</span></div>
       <div class="rcats">${cats.map(([c,l])=>`<div class="rcat"><h3><span class="ric" aria-hidden="true">${RICON[c[0]]}</span>${c[2]}</h3>${l.map(g=>`<div class="ritem ${g.done?'done':''}">${chk(g.done,'g-toggle',g.id,g.text)}<button class="rt" data-act="g-move" data-id="${g.id}">${esc(g.text)}</button>${g.qty?`<span class="rq num">${esc(g.qty)}</span>`:''}${del('g-del',g.id)}</div>`).join('')}</div>`).join('')}</div></div>`}).join('');
   return `<div class="rashan"><div class="r-head"><div><p class="r-eye">بيتي</p><h2>راشن البيت</h2><p class="r-sub num">${left?`${left} غرض باقي`:items.length?'اشتريت كل شي':'القائمة فاضية'}</p></div><span class="r-dia" aria-hidden="true"></span></div>
+    ${items.some(g=>g.done)?`<form class="r-pay" data-form="rashan-pay"><label for="r-amt">${left?'اشتريت جزء؟':'خلصت الراشن؟'} اكتب المبلغ ويتسجل في غوازي</label><div class="r-pay-row"><input id="r-amt" name="amount" inputmode="decimal" placeholder="المبلغ" required><button class="btn">أرسله لغوازي</button></div><p class="num">${items.filter(g=>g.done).length} غرض مشترى بينمسح من القائمة</p></form>`:''}
     ${left?'<button class="btn r-img" data-act="g-img">تحميل القائمة كصورة PNG</button>':''}
     <form class="r-paste" data-form="grocery-bulk"><label for="r-in">الصق قائمتك أو اكتب غرض</label><textarea id="r-in" name="raw" rows="3" placeholder="مثال:&#10;2 حليب&#10;جبن مثلثات، طماط، كلينكس&#10;صدور دجاج 1 كيلو" required></textarea>
       <button class="btn r-btn">رتّبها وأضف</button></form>
@@ -1965,6 +1970,8 @@ const F={
     const read=k=>[...f.querySelectorAll(`[data-row="${k}"]`)].map(r=>[r.querySelector('[name=n]').value.trim(),num(r.querySelector('[name=a]').value)]).filter(([n,a])=>n&&a>0);
     S.plan={salary:sal,jamiya:(S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya,mine:mineCap(),gifts:giftsOf(),fixed:read('fixed'),ration:read('ration'),buckets:bk};const mf=(S.monthFixed||{})[wMonth];if(mf)S.plan.fixed.forEach(([n,a])=>{if(!(n in mf))mf[n]=a});closeSheet();toast('انحفظت الإعدادات')},
   budget:v=>{const b=num(v.budget);if(!(b>=0)){toast('اكتب الميزانية رقماً');return false}S.budgets[wMonth]=b},
+  'rashan-pay':v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const n=S.groceries.filter(g=>g.done).length;
+    S.expenses.push({id:uid(),amount,cat:'راشن البيت',sub:'',note:`راشن البيت (${n} غرض)`,date:dkey()});S.groceries=S.groceries.filter(g=>!g.done);spendAlert(amount,'راشن البيت','')},
   expense:v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const cat=CATS.includes(v.cat)?v.cat:'الالتزامات',sub=subsOf(cat)?(subsOf(cat).includes(v.sub)?v.sub:'أخرى'):'';
     S.expenses.push({id:uid(),amount,cat,sub,note:v.note.trim(),date:v.date||dkey()});spendAlert(amount,cat,sub)},
   goal:v=>{const target=num(v.target);if(!(target>0)){toast('اكتب المبلغ المطلوب رقماً');return false}S.goals.push({id:uid(),name:v.name.trim(),target,saved:0})},
