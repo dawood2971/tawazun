@@ -1297,6 +1297,11 @@ function spark(vals){const W=300,H=70,P=8,mn=Math.min(...vals),mx=Math.max(...va
   <div class="row small muted num" style="display:flex;justify-content:space-between"><span>أعلى ${fmt(mx)}</span><span>أقل ${fmt(mn)}</span></div>`}
 
 /* ---------- page: بيتي ---------- */
+/* fixed bills: added once, then recorded as paid on their day every month */
+function autoBills(){const now=new Date(),m=mkey(now),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();let ch=false;
+  (S.bills||[]).forEach(b=>{if(!b.auto||b.paid[m]||b.skip===m)return;const day=Math.min(b.day,dim);if(now.getDate()<day)return;
+    const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey(new Date(now.getFullYear(),now.getMonth(),day)),auto:1};S.expenses.push(e);b.paid[m]=e.id;ch=true});
+  if(ch)save();return ch}
 function billState(b){const now=new Date(),m=mkey(now),paid=!!b.paid[m];if(paid)return['مدفوعة','good'];
   const diff=b.day-now.getDate();if(diff<0)return[`متأخرة ${-diff} يوم`,'bad'];if(diff===0)return['تستحق اليوم','bad'];if(diff<=5)return[`بعد ${diff} أيام`,'warn'];return[`يوم ${b.day}`,'']}
 function pBeiti(){
@@ -1323,9 +1328,10 @@ function pBeiti(){
     const items=S.bills.slice().sort((a,b)=>!!a.paid[m]-!!b.paid[m]||a.day-b.day);
     body=`<div class="sec-h"><h2>فواتير ${fmtMonth(now)}</h2><span class="sub num">${money(paidT)} من ${money(total)}</span></div>
     <div style="margin-bottom:10px">${bar(total?paidT/total*100:0)}</div>
-    <div class="list">${items.map(b=>{const st=billState(b);return `<div class="item ${b.paid[m]?'done':''}">${chk(b.paid[m],'b-toggle',b.id,b.name)}<div class="grow"><div class="t">${esc(b.name)}</div><div class="sub num">${money(b.amount)} · كل شهر يوم ${b.day}</div></div><span class="pill ${st[1]}">${st[0]}</span>${del('b-del',b.id)}</div>`}).join('')||'<div class="empty">أضف فواتيرك الشهرية لتعرف وش المستحق.</div>'}</div>
+    <div class="list">${items.map(b=>{const st=billState(b);return `<div class="item ${b.paid[m]?'done':''}">${chk(b.paid[m],'b-toggle',b.id,b.name)}<div class="grow"><div class="t">${esc(b.name)}</div><div class="sub num">${money(b.amount)} · كل شهر يوم ${b.day}</div></div><button class="pill ${b.auto?'good':''}" data-act="b-auto" data-id="${b.id}" aria-pressed="${!!b.auto}" title="تندفع تلقائياً كل شهر">${b.auto?'⟳ تلقائي':'يدوي'}</button><span class="pill ${st[1]}">${st[0]}</span>${del('b-del',b.id)}</div>`}).join('')||'<div class="empty">أضف فواتيرك الشهرية لتعرف وش المستحق.</div>'}</div>
     <p class="sub" style="margin-top:8px">لما تعلّم الفاتورة مدفوعة تنضاف تلقائياً لمصاريف «غوازي».</p>
-    <form class="add" data-form="bill"><input name="name" placeholder="الفاتورة" required autocomplete="off"><input class="xs" name="amount" inputmode="decimal" placeholder="المبلغ" required autocomplete="off"><input class="xs" name="day" inputmode="numeric" placeholder="يوم" required autocomplete="off"><button class="btn">أضف</button></form>`}
+    <form class="add" data-form="bill"><input name="name" placeholder="الفاتورة" required autocomplete="off"><input class="xs" name="amount" inputmode="decimal" placeholder="المبلغ" required autocomplete="off"><input class="xs" name="day" inputmode="numeric" placeholder="يوم" required autocomplete="off"><button class="btn">أضف</button></form>
+    <label class="chk-l"><input type="checkbox" name="auto" value="1" form="" checked id="bill-auto"> فاتورة ثابتة: تنحسب مدفوعة تلقائياً في يومها كل شهر</label>`}
   const nextKid=upcoming[0],dueSum=unpaid.filter(b=>b.day<=now.getDate()+5).reduce((a,b)=>a+b.amount,0);
   const hero=`<section class="hero" style="margin-bottom:14px"><div class="lbl">البيت اليوم</div><div class="big" style="font-size:1.9rem">${eToday||gLeft?'عندك أشغال':'كل شي تمام'}</div>
     <div class="home-grid"><div><b class="num">${gLeft}</b><span>غرض في راشن البيت</span></div><div><b class="num">${eToday}</b><span>مشوار مستحق</span></div>
@@ -1717,7 +1723,8 @@ const A={
   'kid-del':d=>{rm('kids',d.id);S.kidEvents=S.kidEvents.filter(e=>e.kid!==d.id);commit()},
   'ke-del':d=>{rm('kidEvents',d.id);commit()},
   'ke-clear':()=>{const k=dkey();S.kidEvents=S.kidEvents.filter(e=>e.date>=k);commit()},
-  'b-toggle':d=>{const b=find(S.bills,d.id),m=mkey();if(b.paid[m]){rm('expenses',b.paid[m]);delete b.paid[m]}else{const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey()};S.expenses.push(e);b.paid[m]=e.id;toast(`انضافت ${b.name} لمصاريف الشهر`)}commit()},
+  'b-auto':d=>{const b=find(S.bills,d.id);if(!b)return;b.auto=!b.auto;if(b.auto)autoBills();commit();toast(b.auto?`«${b.name}» صارت تلقائية كل شهر`:`«${b.name}» صارت يدوية`)},
+  'b-toggle':d=>{const b=find(S.bills,d.id),m=mkey();if(b.paid[m]){rm('expenses',b.paid[m]);delete b.paid[m];if(b.auto)b.skip=m}else{const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey()};S.expenses.push(e);b.paid[m]=e.id;toast(`انضافت ${b.name} لمصاريف الشهر`)}commit()},
   'b-del':d=>{rm('bills',d.id);commit()},
   /* محفظتي */
   'm-prev':()=>{const d=parseD(wMonth+'-01');d.setMonth(d.getMonth()-1);wMonth=mkey(d);render()},
@@ -1758,7 +1765,7 @@ const A={
     closeSheet();commit();toast(`صار «${n}» يتجنّب ${fmtMoney(row?row[1]:amt)} كل شهر في الحصالة`)},
   'plan-row':d=>{const box=$('#pf-'+d.k);if(box){box.insertAdjacentHTML('beforeend',planRow(d.k));box.lastElementChild.querySelector('input').focus()}},
   'plan-rowdel':(d,el)=>{const r=el.closest('.pf-row');if(r)r.remove()},
-  'x-del':d=>{rm('expenses',d.id);S.bills.forEach(b=>{for(const m in b.paid)if(b.paid[m]===d.id)delete b.paid[m]});commit()},
+  'x-del':d=>{rm('expenses',d.id);S.bills.forEach(b=>{for(const m in b.paid)if(b.paid[m]===d.id){delete b.paid[m];if(b.auto)b.skip=m}});commit()},
   'goal-del':d=>{rm('goals',d.id);commit()},
 };
 const F={
@@ -1771,7 +1778,7 @@ const F={
   errand:v=>{S.errands.push({id:uid(),text:v.text.trim(),date:v.date,done:false})},
   kid:v=>{S.kids.push({id:uid(),name:v.name.trim()})},
   kidEvent:v=>{S.kidEvents.push({id:uid(),kid:v.kid,text:v.text.trim(),date:v.date,time:v.time})},
-  bill:v=>{const amount=num(v.amount),day=Math.round(num(v.day));if(!(amount>0)||!(day>=1&&day<=31)){toast('اكتب المبلغ ويوم الاستحقاق من 1 إلى 31');return false}S.bills.push({id:uid(),name:v.name.trim(),amount,day,paid:{}})},
+  bill:v=>{const amount=num(v.amount),day=Math.round(num(v.day));if(!(amount>0)||!(day>=1&&day<=31)){toast('اكتب المبلغ ويوم الاستحقاق من 1 إلى 31');return false}const auto=!!(document.getElementById('bill-auto')||{}).checked;S.bills.push({id:uid(),name:v.name.trim(),amount,day,paid:{},auto});autoBills()},
   'fixed-month':(v,f)=>{const m=wMonth;S.monthFixed=S.monthFixed||{};const mf={};
     for(const i of f.querySelectorAll('[name=a]')){const n=i.dataset.n,a=num(i.value);if(!(a>=0)){toast(`اكتب مبلغ ${n} رقماً`);return false}mf[n]=a}
     S.monthFixed[m]=mf;if(v.keep){S.plan=S.plan||JSON.parse(JSON.stringify(PLAN_DEF));S.plan.fixed=Object.entries(mf)}closeSheet();toast('انحفظت مبالغ هذا الشهر')},
@@ -1840,6 +1847,7 @@ function enhanceDates(root){(root||document).querySelectorAll('input[type=date]'
     i.addEventListener('click',()=>{try{i.showPicker()}catch(e){}});['input','change'].forEach(ev=>i.addEventListener(ev,()=>{w.querySelector('.dp-t').textContent=dpLabel(i.value)}))}
   w.querySelector('.dp-t').textContent=dpLabel(i.value)})}
 function render(){
+  autoBills();
   document.documentElement.dataset.page=page;
   const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=getComputedStyle(document.documentElement).getPropertyValue('--hero-bg').trim();
   $('#view').innerHTML=banner()+PAGES[page]();
