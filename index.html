@@ -1550,12 +1550,13 @@ function openSettings(){const s=S.settings,el=$('#sheet');
     <p class="sub">بياناتك محفوظة في هذا الجهاز فقط. عشان تنقلها لجهاز ثاني: انسخها أو نزّلها كملف من هنا، وفي الجهاز الثاني الصقها أو اختر الملف واضغط «استرجع».</p>
     <div class="add"><button class="btn ghost" data-act="backup-copy">انسخ بياناتي</button><button class="btn ghost" data-act="backup-dl">نزّلها كملف</button></div>
     <textarea class="field" id="s-import" placeholder="الصق البيانات المنسوخة هنا" style="margin-top:10px"></textarea>
-    <div class="add"><label class="btn ghost" style="cursor:pointer">اختر ملف<input type="file" id="s-file" accept=".json,application/json,text/plain" hidden></label><button class="btn" data-act="backup-import">استرجع البيانات</button></div>
+    <div class="add"><label class="btn ghost" style="cursor:pointer">اختر ملف<input type="file" id="s-file" accept=".json,application/json,text/plain" hidden></label><button class="btn" data-act="backup-import" id="s-import-btn">استرجع البيانات</button></div>
+    <p class="sub" id="s-import-note" hidden style="color:var(--bad)">بتنمسح بيانات هذا الجهاز وتحل محلها البيانات الملصوقة.</p>
     <h2 style="margin-top:22px">مسح</h2>
     <div class="add">${s.sample?'<button class="btn ghost" data-act="clear-sample">امسح الأمثلة</button>':'<button class="btn ghost" data-act="load-sample">جرّب ببيانات أمثلة</button>'}<button class="btn danger" data-act="reset" id="reset-btn">امسح كل شي</button></div>
   </div></div>`;el.hidden=false}
-/* importing replaces this device's data; a second tap within 4s confirms (no blocking dialogs) */
-let importArm=0;function confirmImport(){if(S.settings.sample||Date.now()-importArm<4000)return true;importArm=Date.now();toast('بتنمسح بيانات هذا الجهاز وتحل محلها المنسوخة. اضغط «استرجع» مرة ثانية للتأكيد',4000);return false}
+/* importing replaces this device's data; the button turns into a confirm button first (no blocking dialogs) */
+function confirmImport(){const b=$('#s-import-btn');if(S.settings.sample||!b||b.dataset.armed)return true;b.dataset.armed='1';b.textContent='متأكد؟ اضغط للاسترجاع';b.classList.add('danger');const n=$('#s-import-note');if(n)n.hidden=false;return false}
 document.addEventListener('change',e=>{if(e.target.id!=='s-file'||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{const ta=$('#s-import');if(ta)ta.value=String(r.result||'');toast('جاهز، اضغط «استرجع البيانات»')};r.readAsText(e.target.files[0])});
 function closeSheet(){$('#sheet').hidden=true;$('#sheet').innerHTML=''}
 
