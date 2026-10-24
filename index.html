@@ -687,6 +687,8 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .deck-dots{display:flex;gap:6px}.deck-dots i{width:7px;height:7px;border-radius:99px;background:rgba(74,79,230,.25);transition:width .3s,background .3s}.deck-dots i.on{width:20px;background:var(--accent)}
 .deck-k{font-size:.8rem;color:var(--muted);min-width:34px;text-align:center}
 @media (prefers-reduced-motion:reduce){.deck>.gcard.cc{transition:none}}
+.ex-tog{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:12px 14px;font:inherit;color:inherit;cursor:pointer;text-align:start;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.ex-tog h2{margin:0;flex:1}.ex-tog .v-chev{transition:transform .25s;font-size:1.2rem;color:var(--muted)}.ex-tog[aria-expanded="true"] .v-chev{transform:rotate(180deg)}.ex-tog+.list{margin-top:10px}
 </style>
 </head>
 <body>
@@ -1663,8 +1665,8 @@ function pMahfazti(){
   ${cur?weekReport(c,dim):''}
 
   <section class="sec">
-    <div class="sec-h"><h2>المصاريف</h2><span class="sub num">${c.ex.length} عملية</span></div>
-    <div class="list">${Object.keys(groups).map(d=>`<div class="day-h num">${fmtDay(parseD(d))} · ${money(groups[d].reduce((a,e)=>a+e.amount,0))}</div>${groups[d].map(e=>`<div class="item"><div class="grow"><div>${esc(e.note||e.sub||e.cat)}</div><div class="sub">${e.cat}${e.sub?` · ${e.sub}`:''}</div></div><b class="num">${money(e.amount)}</b>${del('x-del',e.id)}</div>`).join('')}`).join('')||'<div class="empty">سجّل أول مصروف من النموذج فوق.</div>'}</div>
+    <button class="ex-tog" data-act="ex-toggle" aria-expanded="${!!walletUI.exOpen}"><h2>المصاريف</h2><span class="sub num">${c.ex.length} عملية · ${money(c.spent)}</span><span class="v-chev" aria-hidden="true">⌄</span></button>
+    <div class="list" ${walletUI.exOpen?'':'hidden'}>${Object.keys(groups).map(d=>`<div class="day-h num">${fmtDay(parseD(d))} · ${money(groups[d].reduce((a,e)=>a+e.amount,0))}</div>${groups[d].map(e=>`<div class="item"><div class="grow"><div>${esc(e.note||e.sub||e.cat)}</div><div class="sub">${e.cat}${e.sub?` · ${e.sub}`:''}</div></div><b class="num">${money(e.amount)}</b>${del('x-del',e.id)}</div>`).join('')}`).join('')||'<div class="empty">سجّل أول مصروف من النموذج فوق.</div>'}</div>
   </section>
 
   <section class="sec">
@@ -1856,6 +1858,7 @@ const A={
   'fixed-month':()=>openFixedMonth(),
   'funds-edit':()=>openFundsEdit(),
   'fund-open':d=>openFund(d.n),
+  'ex-toggle':()=>{walletUI.exOpen=!walletUI.exOpen;render()},
   'ev-new':()=>openEvent(null),
   'deck-go':d=>{const k=$('#deck');if(k&&k.deckGo)k.deckGo(+d.d)},
   'ev-dadd':()=>{const w=$('#ev-dates');w.insertAdjacentHTML('beforeend',evDateRow('',true));enhanceDates(w);const i=w.lastElementChild.querySelector('input');try{i.showPicker()}catch(e){}},
