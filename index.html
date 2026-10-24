@@ -663,9 +663,9 @@ function relDay(k){const diff=Math.round((parseD(k)-parseD(dkey()))/864e5);
 const DEF={city:'ibri',lat:23.2257,lng:56.5157,method:'oman',currency:'ر.ع.',budget:600,waterGoal:8,focusMin:25,breakMin:5,sample:false,omr:true,ibri:true,prayerRemind:0};
 /* غوازي: Dawood's salary is split into حصالة (fixed + savings, set aside on payday) and three spending sections */
 const SUBS=['فواتير','بترولي','مقاهي','أخرى'];
-/* «مصروفي»: Dawood's own allowance from عطايا; حلاق and دوبي are paid out of it, so they don't count against the salary again */
+/* «مصروفي»: Dawood's own monthly allowance (its own section); حلاق and دوبي are paid out of it */
 const MINE='مصروفي',MINE_SUBS=['حلاق','دوبي','أخرى'],subsOf=c=>c==='الالتزامات'?SUBS:c===MINE?MINE_SUBS:null;
-const BUCKETS=[{k:'jam',cat:'الجمعية',name:'الجمعية',hint:'مبلغ ثابت كل شهر وما يتأجل'},{k:'gift',cat:'عطايا',name:'عطايا',hint:'أمي، زوجتي، عمتي، بناتي، أنا، مصروف مدرسي'},{k:'rashan',cat:'راشن البيت',name:'راشن البيت',hint:'المقاضي والأغراض والأغذية أول الشهر'},
+const BUCKETS=[{k:'jam',cat:'الجمعية',name:'الجمعية',hint:'مبلغ ثابت كل شهر وما يتأجل'},{k:'gift',cat:'عطايا',name:'عطايا',hint:'أمي، زوجتي، عمتي، بناتي، مصروف مدرسي'},{k:'mine',cat:'مصروفي',name:'مصروفي',hint:'حلاق، دوبي وأغراضي'},{k:'rashan',cat:'راشن البيت',name:'راشن البيت',hint:'المقاضي والأغراض والأغذية أول الشهر'},
   {k:'commit',cat:'الالتزامات',name:'الالتزامات',hint:'الفواتير، بترولي، الحلاق، الدوبي'},
   {k:'cons',cat:'المواد الاستهلاكية',name:'المصاريف الإضافية للمواد الاستهلاكية',hint:'تتراوح بين 88 و 90 شهرياً'},
   {k:'visa',cat:'الفيزا',name:'الفيزا',hint:'سداد بطاقة الفيزا'},{k:'zakat',cat:'الزكاة',name:'الزكاة',hint:'الزكاة والصدقات'}];
@@ -677,12 +677,12 @@ const cTo=m=>{const d=parseD(m+'-01');return new Date(d.getFullYear(),d.getMonth
 const cDays=m=>Math.round((cTo(m)-cFrom(m))/864e5)+1;
 const dm=d=>new Intl.DateTimeFormat(LOC,{day:'numeric',month:'long'}).format(d);
 const inCycle=(e,m)=>e.date>=dkey(cFrom(m))&&e.date<=dkey(cTo(m));
-const CATS=[...BUCKETS.map(b=>b.cat),'مصروفي'];
+const CATS=BUCKETS.map(b=>b.cat);
 /* big planned payments reduce what is left but are not "today's spending" */
 const PLANNED_SUBS=['فواتير'];
 /* daily spending = الالتزامات (except bills) and المواد الاستهلاكية; the rest are planned payments */
 const isDaily=e=>(e.cat==='الالتزامات'&&!PLANNED_SUBS.includes(e.sub))||e.cat==='المواد الاستهلاكية';
-const PLAN_DEF={salary:720,jamiya:50,gifts:[['أمي',30],['زوجتي',30],['عمتي',10],['بناتي',10],['مصروفي',20],['مصروف مدرسي',6]],fixed:[['ديون',40],['عيد أضحى',15],['عيد الفطر',15],['طوارئ',15],['سفر',15],['التجديد',10],['رمضان',8],['صيانة السيارات',5],['عيد ميلاد / زواج',5],['المدارس',4],['ادخار',3]],
+const PLAN_DEF={salary:720,jamiya:50,gifts:[['أمي',30],['زوجتي',30],['عمتي',10],['بناتي',10],['مصروف مدرسي',6]],fixed:[['ديون',40],['عيد أضحى',15],['عيد الفطر',15],['طوارئ',15],['سفر',15],['التجديد',10],['رمضان',8],['صيانة السيارات',5],['عيد ميلاد / زواج',5],['المدارس',4],['ادخار',3]],
   ration:[['خضار وفواكه',28],['سمك',14],['دجاج',8.5],['لحوم',6],['روب',4],['صمون',5],['مياه',13.5],['حليب فراولة',2.3],['كروسون',4.5],['قاشع',3]],
   buckets:{rashan:90,cons:90,commit:null}};
 const EVENTS_DEF=[['تجديد السيارة','date','','التجديد'],['تأمين السيارة','date','',''],['نزهة وتدليل وترفيه','date','',''],['أعياد الميلاد','date','','عيد ميلاد / زواج'],
@@ -692,13 +692,15 @@ const planAmt=n=>+((S.plan||PLAN_DEF).fixed.find(r=>r[0]===n)||[0,0])[1];
 const fixedFor=m=>{const p=S.plan||PLAN_DEF,mf=(S.monthFixed||{})[m];return mf?Object.entries(mf):p.fixed};
 const salaryOf=m=>{const r=(S.salaries||{})[m];return r?+r.amount:(S.plan||PLAN_DEF).salary};
 /* one month in numbers: budgets, what each section spent, and what is left of that month's salary */
+const mineCap=()=>+((S.plan||{}).mine??20);
 const giftsOf=()=>((S.plan||{}).gifts||PLAN_DEF.gifts);
 const hPaidOf=m=>((S.hPaid||{})[m]||{});
 function monthCalc(m){const salary=salaryOf(m),applied=!!(S.salaries||{})[m],hasala=Object.values(hPaidOf(m)).reduce((a,v)=>a+v,0);
-  const all=S.expenses.filter(e=>inCycle(e,m)),ex=all.filter(e=>e.cat!==MINE),mineEx=all.filter(e=>e.cat===MINE),mineSpent=mineEx.reduce((a,e)=>a+e.amount,0),sp={};BUCKETS.forEach(b=>sp[b.k]=ex.filter(e=>e.cat===b.cat).reduce((a,e)=>a+e.amount,0));
+  const ex=S.expenses.filter(e=>inCycle(e,m)),sp={};BUCKETS.forEach(b=>sp[b.k]=ex.filter(e=>e.cat===b.cat).reduce((a,e)=>a+e.amount,0));
   const spent=ex.reduce((a,e)=>a+e.amount,0),moves=((S.moved||{})[m]||[]),moved=moves.reduce((a,x)=>a+x.amount,0),rest=salary-hasala-spent-moved;
   const jam=+((S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya),jamLeft=Math.max(0,jam-sp.jam),gifts=giftsOf(),given=Object.fromEntries(gifts.map(([n])=>[n,ex.filter(e=>e.cat==='عطايا'&&e.sub===n).reduce((a,e)=>a+e.amount,0)])),giftTot=sumRows(gifts),giftLeft=gifts.reduce((a,[n,v])=>a+Math.max(0,+v-given[n]),0);
-  return{salary,hasala,applied,sp,ex,mineEx,mineSpent,spent,left:rest,rest,moves,moved,jam,jamLeft,gifts,given,giftTot,giftLeft,owed:jamLeft+giftLeft}}
+  const mine=mineCap(),mineLeft=Math.max(0,mine-sp.mine);
+  return{mine,mineLeft,salary,hasala,applied,sp,ex,spent,left:rest,rest,moves,moved,jam,jamLeft,gifts,given,giftTot,giftLeft,owed:jamLeft+giftLeft+mineLeft}}
 const planCalc=(m=ckey())=>{const c=monthCalc(m);return{salary:c.salary,fixed:c.hasala,avail:c.salary-c.hasala}};
 /* payday: record the month's salary, set aside حصالة and add each item to its collected total */
 function applyMonth(m,amount){S.monthFixed=S.monthFixed||{};S.salaries=S.salaries||{};S.salaries[m]={amount:amount??salaryOf(m),at:dkey()};
@@ -710,7 +712,8 @@ const OLD2NEW={'راشن البيت':['راشن البيت'],'مقاضي الب�
   'سداد الفيزا':['الالتزامات','سداد الفيزا'],'مطاعم وقهوة':['الالتزامات','مقاهي'],'الصرف اليومي':['الالتزامات',''],'أخرى':['الالتزامات','أخرى'],'الأولاد':['الالتزامات','أخرى'],'صحة':['الالتزامات','أخرى'],'ترفيه':['الالتزامات','أخرى']};
 function walletMigrate8(s){if(s.wallet8)return;const g=s.plan&&s.plan.gifts;if(g)g.forEach(r=>{if(r[0]==='أنا')r[0]=MINE});
   (s.expenses||[]).forEach(e=>{if(e.cat==='عطايا'&&e.sub==='أنا')e.sub=MINE;if(e.cat==='الالتزامات'&&(e.sub==='حلاق'||e.sub==='دوبي'))e.cat=MINE});s.wallet8=1}
-function walletMigrate(s){walletMigrate5(s);walletMigrate6(s);walletMigrate7(s);walletMigrate8(s);if(s.wallet4)return;s.plan=s.plan||JSON.parse(JSON.stringify(PLAN_DEF));s.plan.buckets=s.plan.buckets||{...PLAN_DEF.buckets};
+function walletMigrate9(s){if(s.wallet9)return;const p=s.plan;if(p&&p.gifts){const r=p.gifts.find(x=>x[0]===MINE||x[0]==='أنا');if(r)p.mine=+r[1];p.gifts=p.gifts.filter(x=>x[0]!==MINE&&x[0]!=='أنا')}s.wallet9=1}
+function walletMigrate(s){walletMigrate5(s);walletMigrate6(s);walletMigrate7(s);walletMigrate8(s);walletMigrate9(s);if(s.wallet4)return;s.plan=s.plan||JSON.parse(JSON.stringify(PLAN_DEF));s.plan.buckets=s.plan.buckets||{...PLAN_DEF.buckets};
   (s.expenses||[]).forEach(e=>{const t=OLD2NEW[e.cat];if(!t)return;e.cat=t[0];if(t[0]==='الالتزامات')e.sub=t[1]||(SUBS.includes(e.note)?e.note:'أخرى')});
   s.salaries=s.salaries||{};const m=mkey();if(s.monthFixed&&s.monthFixed[m]&&!s.salaries[m])s.salaries[m]={amount:s.plan.salary,at:dkey()};
   s.events=s.events||EVENTS_DEF.map(([name,kind,when,fund])=>({id:uid(),name,kind,date:kind==='date'?when:'',h:kind==='hijri'?when:'',cost:0,fund}));s.wallet4=1}
@@ -1435,7 +1438,7 @@ function openZakat(){const z=S.zakat||{},zx=S.expenses.filter(e=>e.cat==='الز
 /* عطايا: a fixed list of people; tick each one when the money is given this month */
 function openGifts(){const m=wMonth,c=monthCalc(m),cur=esc(S.settings.currency);
   openSheet(`<p class="sub num">أعطيت ${fmtMoney(c.sp.gift)} من ${fmtMoney(c.giftTot)} ${cur} اضغط الزر لما تعطي الشخص، وغيّر المبلغ من الخانة.</p>
-    <div class="list gifts">${c.gifts.map(([n,v],i)=>{const g=c.given[n],ok=g>=+v&&+v>0;return `<div class="item"><div class="grow">${esc(n)}${g&&!ok?`<div class="sub num">أعطيت ${fmtMoney(g)}</div>`:''}${n===MINE?`<div class="sub num">صرفت منه ${fmtMoney(c.mineSpent)}${c.mineEx.length?` (${[...new Set(c.mineEx.map(e=>e.sub))].join('، ')})`:''} · باقي ${fmtMoney(+v-c.mineSpent)}</div>`:''}</div>
+    <div class="list gifts">${c.gifts.map(([n,v],i)=>{const g=c.given[n],ok=g>=+v&&+v>0;return `<div class="item"><div class="grow">${esc(n)}${g&&!ok?`<div class="sub num">أعطيت ${fmtMoney(g)}</div>`:''}</div>
       <input class="field num gf-a" data-i="${i}" inputmode="decimal" value="${+v}" aria-label="مبلغ ${esc(n)}"><button class="hp ${ok?'ok':''} num" data-act="gift-give" data-i="${i}" aria-pressed="${ok}">${ok?'✓ أعطيت':'أعطيته'}</button>${del('gift-rm',String(i))}</div>`}).join('')}</div>
     <form data-form="gift-add" class="add" style="margin-top:10px"><input name="n" placeholder="اسم جديد" required autocomplete="off"><input name="a" class="num sm" inputmode="decimal" placeholder="المبلغ" required><button class="btn">أضف</button></form>`,'عطايا');
   document.querySelectorAll('.gf-a').forEach(el=>el.addEventListener('change',()=>{const a=num(el.value);if(!(a>=0)){toast('اكتب المبلغ رقماً');return}giftsSet(l=>{l[+el.dataset.i][1]=a});commit();openGifts()}))}
@@ -1485,7 +1488,7 @@ function openPlanEdit(){const p=S.plan||PLAN_DEF,bk=p.buckets||PLAN_DEF.buckets;
 const planRow=(k,n='',a='')=>`<div class="pf-row" data-row="${k}"><input class="field" name="n" value="${esc(n)}" placeholder="البند" aria-label="البند"><input class="field num" name="a" inputmode="decimal" value="${a}" placeholder="المبلغ" aria-label="المبلغ"><button type="button" class="del" data-act="plan-rowdel" aria-label="حذف البند">×</button></div>`;
 /* after each expense: what's left in its section, and a firm but kind warning when a limit is crossed */
 function spendAlert(amount,cat,sub){const now=new Date(),m=ckey(now),c=monthCalc(m),bk=BUCKETS.find(b=>b.cat===cat);
-  if(cat===MINE){const cap=+((giftsOf().find(r=>r[0]===MINE)||[])[1]||0),left=cap-c.mineSpent;toast(left<0?`⚠️ سجّلت ${fmtMoney(amount)} ${sub} من مصروفي، وتعديته بـ ${fmtMoney(-left)}`:`سجّلت ${fmtMoney(amount)} ${sub} من مصروفي. باقي فيه ${fmtMoney(left)}`);return}
+  if(cat===MINE){const left=c.mine-c.sp.mine;toast(left<0?`⚠️ سجّلت ${fmtMoney(amount)} ${sub} من مصروفي، وتعديته بـ ${fmtMoney(-left)}`:`سجّلت ${fmtMoney(amount)} ${sub} من مصروفي. باقي فيه ${fmtMoney(left)}`);return}
   const daysLeft=Math.max(1,Math.round((cTo(m)-parseD(dkey(now)))/864e5)+1),td=dkey(now),tSpent=c.ex.filter(e=>e.date===td&&isDaily(e)).reduce((a,e)=>a+e.amount,0);
   const allow=Math.max(0,(c.rest-c.owed+tSpent)/daysLeft),nm=bk?bk.name.replace('المصاريف الإضافية للمواد الاستهلاكية','المواد الاستهلاكية'):cat;
   let msg=`سجّلت ${fmtMoney(amount)} في ${sub||nm}. صار مجموع ${nm} ${fmtMoney(c.sp[bk?bk.k:'commit'])}، والمتبقي ${fmtMoney(c.rest)}`;
@@ -1493,7 +1496,7 @@ function spendAlert(amount,cat,sub){const now=new Date(),m=ckey(now),c=monthCalc
   else if(bk&&isDaily({cat,sub})&&tSpent>allow)msg=`⚠️ تعديت حدك اليوم (${fmtMoney(allow)}). المتبقي ${fmtMoney(c.rest)} لـ ${daysLeft} يوم. خفّف بكرة.`;
   toast(msg,msg.startsWith('⚠️')?6000:2800)}
 /* the salary as a ring: one arc per section, the empty part is what's left; tap an arc to read it */
-const RING_C={jam:'#F09AB8',gift:'#B9E07A',hasala:'#E3B65A',rashan:'#E58A6B',commit:'#7FC4A4',cons:'#F2D58F',visa:'#A99BFF',zakat:'#79CBEA',moved:'#C9CED6'};
+const RING_C={jam:'#F09AB8',gift:'#B9E07A',mine:'#F4A261',hasala:'#E3B65A',rashan:'#E58A6B',commit:'#7FC4A4',cons:'#F2D58F',visa:'#A99BFF',zakat:'#79CBEA',moved:'#C9CED6'};
 function vaultHTML(c,fundTot,m){const target=sumRows(fixedFor(m)),got=c.hasala,pc=target?Math.min(100,got/target*100):0,tone=pc>=100?'good':pc>=75?'acc':pc>=40?'warn':'bad',open=!!walletUI.hOpen;
   return `<button class="vault ${tone}" data-act="h-toggle" aria-expanded="${open}"><div class="v-top"><span class="v-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5V7M12 17v-1.5M15.5 12H17M7 12h1.5M7 20v1.5M17 20v1.5"/></svg></span><div class="grow"><span class="gc-n">الحصالة</span><b class="num">${fmtMoney(fundTot)} <small>${esc(S.settings.currency)}</small></b></div><span class="v-pc num">${Math.round(pc)}%</span><span class="v-chev" aria-hidden="true">⌄</span></div>
     <div class="v-bar"><i style="width:${pc}%"></i></div>
@@ -1512,7 +1515,7 @@ function pMahfazti(){
   const applied=c.applied,used=c.salary-c.rest,pct=c.salary?used/c.salary*100:0,elapsed=gone/dim*100;
   const tSpent=c.ex.filter(e=>e.date===td&&isDaily(e)).reduce((a,e)=>a+e.amount,0);
   const commitLeft=c.rest-c.owed+tSpent,allow=cur?Math.max(0,commitLeft/daysLeft):0;
-  const groups={};[...c.ex,...c.mineEx].sort((a,b)=>b.date.localeCompare(a.date)).forEach(e=>(groups[e.date]=groups[e.date]||[]).push(e));
+  const groups={};c.ex.slice().sort((a,b)=>b.date.localeCompare(a.date)).forEach(e=>(groups[e.date]=groups[e.date]||[]).push(e));
   const saved=S.goals.reduce((a,g)=>a+g.saved,0),funds=S.funds||{},fundTot=fixedFor(m).reduce((a,[n])=>a+(funds[n]||0),0);
   const nearEv=(S.events||[]).map(e=>[e,eventInfo(e)]).filter(([,i])=>i.days!=null&&i.days<=30&&i.need>0);
   const share=v=>c.salary?v/c.salary*100:0,tops=b=>Object.entries(c.ex.filter(e=>e.cat===b.cat).reduce((o,e)=>(o[e.sub||'أخرى']=(o[e.sub||'أخرى']||0)+e.amount,o),{})).sort((x,y)=>y[1]-x[1]).slice(0,2);
@@ -1520,6 +1523,7 @@ function pMahfazti(){
     const s2=!sp?'تتحدد بعد ما تدفع':b.k==='commit'?tops(b).map(([k,v])=>`${k} ${fmtMoney(v)}`).join('، '):b.k==='cons'&&cur?`مفتوحة للإضافة لين ${dm(cTo(m))}`:`${n} ${n>2&&n<11?'دفعات':'دفعة'} · ${Math.round(share(sp))}% من الراتب`;
     if(b.k==='jam'){const ok=c.jamLeft<=0,J=jamInfo(),all=J.total>0&&!J.left;return `<button class="gcard jam-card ${J.total?all?'done':'open':ok?'done':''}" data-act="jam-open"><span class="gc-n">الجمعية <small>ثابت</small></span><b class="num">${fmtMoney(J.total?J.left:c.jam)}</b><span class="gc-s num">${J.total?(all?'✓ تم سداد كامل الجمعية':`متبقي · دفعت ${Math.round(J.paid/J.total*100)}% من ${fmtMoney(J.total)}`):'القسط الشهري · اضغط واكتب المبلغ الكلي'}</span><span class="gc-s num">${ok?'✓ قسط هذا الشهر مدفوع':`قسط هذا الشهر: باقي ${fmtMoney(c.jamLeft)}`}</span>${bar(J.total?J.paid/J.total*100:(c.jam?sp/c.jam*100:0),all||(!J.total&&ok)?'good':'warn')}</button>`}
     if(b.k==='gift'){const ok=c.giftTot>0&&c.giftLeft<=0,n=c.gifts.filter(([x,v])=>c.given[x]<+v).length;return `<button class="gcard gift-card ${ok?'done':''}" data-act="gift-open"><span class="gc-n">عطايا</span><b class="num">${fmtMoney(sp)}</b><span class="gc-s num">${ok?`✓ أعطيت الكل (${fmtMoney(c.giftTot)})`:`من ${fmtMoney(c.giftTot)} · باقي ${n} ${n>2&&n<11?'أسماء':'اسم'} (${fmtMoney(c.giftLeft)})`}</span>${bar(c.giftTot?sp/c.giftTot*100:0,ok?'good':'warn')}</button>`}
+    if(b.k==='mine'){const left=c.mine-sp,over=left<0,by=tops(b);return `<button class="gcard mine-card ${!over&&sp>=c.mine&&c.mine?'done':''}" data-act="g-pick" data-c="${MINE}"><span class="gc-n">مصروفي <small class="num">${fmtMoney(c.mine)}</small></span><b class="num">${fmtMoney(left)}</b><span class="gc-s num">${over?`تعديته بـ ${fmtMoney(-left)}`:sp?`باقي · صرفت ${by.map(([k,v])=>`${k} ${fmtMoney(v)}`).join('، ')}`:'باقي كله · حلاق، دوبي وأغراضك'}</span>${bar(c.mine?sp/c.mine*100:0,over?'bad':'warn')}</button>`}
     if(b.k==='zakat'){const z=zakatInfo(m),done=z.due>0&&!z.left;return `<button class="gcard zk-card ${z.due?done?'done':'open':''}" data-act="zakat-open"><span class="gc-n">الزكاة</span><b class="num">${z.due?fmtMoney(z.left):'—'}</b><span class="gc-s num">${!z.due?'اضغط واكتب إجمالي المستحق':done?'✓ تم إخراج كامل الزكاة':`متبقي · دفعت ${Math.round(z.paid/z.due*100)}% من ${fmtMoney(z.due)}`}</span>${bar(z.due?z.paid/z.due*100:0,done?'good':'warn')}</button>`}
     return `<button class="gcard" data-act="g-pick" data-c="${b.cat}"><span class="gc-n">${b.k==='cons'?'المواد الاستهلاكية':b.name}</span><b class="num">${fmtMoney(sp)}</b><span class="gc-s num">${s2}</span>${bar(share(sp),'acc')}</button>`};
   return head('غوازي','الراتب والحصالة والمصاريف')+`
@@ -1542,7 +1546,7 @@ function pMahfazti(){
   <section class="sec">
     <div class="sec-h"><h2>أضف مصروف</h2></div>
     <form class="card" data-form="expense">
-      <div class="chips" id="cat-chips">${BUCKETS.filter(b=>b.k!=='jam'&&b.k!=='gift').map(b=>`<button type="button" class="chip-b" aria-pressed="${walletUI.cat===b.cat}" data-act="cat-pick" data-v="${b.cat}">${b.k==='cons'?'المواد الاستهلاكية':b.name}</button>`).join('')}<button type="button" class="chip-b" aria-pressed="${walletUI.cat===MINE}" data-act="cat-pick" data-v="${MINE}">مصروفي</button></div>
+      <div class="chips" id="cat-chips">${BUCKETS.filter(b=>b.k!=='jam'&&b.k!=='gift').map(b=>`<button type="button" class="chip-b" aria-pressed="${walletUI.cat===b.cat}" data-act="cat-pick" data-v="${b.cat}">${b.k==='cons'?'المواد الاستهلاكية':b.name}</button>`).join('')}</div>
       <input type="hidden" name="cat" id="exp-cat" value="${walletUI.cat}"><input type="hidden" name="sub" id="exp-sub" value="${walletUI.sub}">
       <div class="chips subs" id="sub-chips" ${subsOf(walletUI.cat)?'':'hidden'}>${(subsOf(walletUI.cat)||SUBS).map(x=>`<button type="button" class="chip-b" aria-pressed="${walletUI.sub===x}" data-act="sub-pick" data-v="${x}">${x}</button>`).join('')}</div>
       <div class="add"><input name="amount" id="exp-amount" inputmode="decimal" placeholder="المبلغ" required autocomplete="off"><input name="note" id="exp-note" placeholder="ملاحظة (اختياري)" autocomplete="off"><input class="sm" type="date" name="date" value="${cur?td:dkey(cFrom(m))}" aria-label="التاريخ"><button class="btn">سجّل</button></div>
@@ -1822,7 +1826,7 @@ const F={
     closeSheet();toast('انحفظت المناسبة')},
   plan:(v,f)=>{const sal=num(v.salary);if(!(sal>0)){toast('اكتب الراتب رقماً');return false}const bk={rashan:num(v.rashan||'0')||0,cons:num(v.cons||'0')||0,commit:v.commit===''?null:num(v.commit)};
     const read=k=>[...f.querySelectorAll(`[data-row="${k}"]`)].map(r=>[r.querySelector('[name=n]').value.trim(),num(r.querySelector('[name=a]').value)]).filter(([n,a])=>n&&a>0);
-    S.plan={salary:sal,jamiya:(S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya,fixed:read('fixed'),ration:read('ration'),buckets:bk};const mf=(S.monthFixed||{})[wMonth];if(mf)S.plan.fixed.forEach(([n,a])=>{if(!(n in mf))mf[n]=a});closeSheet();toast('انحفظت الإعدادات')},
+    S.plan={salary:sal,jamiya:(S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya,mine:mineCap(),gifts:giftsOf(),fixed:read('fixed'),ration:read('ration'),buckets:bk};const mf=(S.monthFixed||{})[wMonth];if(mf)S.plan.fixed.forEach(([n,a])=>{if(!(n in mf))mf[n]=a});closeSheet();toast('انحفظت الإعدادات')},
   budget:v=>{const b=num(v.budget);if(!(b>=0)){toast('اكتب الميزانية رقماً');return false}S.budgets[wMonth]=b},
   expense:v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const cat=CATS.includes(v.cat)?v.cat:'الالتزامات',sub=subsOf(cat)?(subsOf(cat).includes(v.sub)?v.sub:'أخرى'):'';
     S.expenses.push({id:uid(),amount,cat,sub,note:v.note.trim(),date:v.date||dkey()});spendAlert(amount,cat,sub)},
