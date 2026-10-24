@@ -22,7 +22,7 @@ jobs:
             THEME="#0f766e"; BG="#f8fafc"; MASK=icons/icon-512.png
           else
             ID=io.github.dawood2971.tawazun; NAME="توازن"; PATH_=/tawazun-app/
-            THEME="$THEME"; BG="$BG"; MASK=icons/icon-maskable-512.png
+            THEME="#1D4F53"; BG="#F5F4EF"; MASK=icons/icon-maskable-512.png
           fi
           BASE="https://dawood2971.github.io$PATH_"
           echo "APP=${{ inputs.app }}" >> "$GITHUB_ENV"
