@@ -1546,14 +1546,17 @@ function openSettings(){const s=S.settings,el=$('#sheet');
     <p class="sub" style="margin-top:6px">الأوقات محسوبة على الجهاز بدون إنترنت، وقد تختلف دقيقة أو دقيقتين عن التقويم الرسمي.</p>
     <div class="grid2"><div class="fld"><label for="s-cur">العملة</label><input class="field" id="s-cur" data-set="currency" value="${esc(s.currency)}"></div><div class="fld"><label for="s-bud">الميزانية الشهرية الافتراضية</label><input class="field" id="s-bud" data-set="budget" inputmode="decimal" value="${s.budget}"></div></div>
     <div class="grid2"><div class="fld"><label for="s-water">هدف الماء (أكواب)</label><input class="field" id="s-water" data-set="waterGoal" inputmode="numeric" value="${s.waterGoal}"></div><div class="fld"><label for="s-break">الاستراحة (دقائق)</label><input class="field" id="s-break" data-set="breakMin" inputmode="numeric" value="${s.breakMin}"></div></div>
-    <h2 style="margin-top:22px">نسخة احتياطية</h2>
-    <p class="sub">بياناتك محفوظة في هذا المتصفح فقط. انسخ النسخة الاحتياطية واحفظها في الملاحظات، وتقدر ترجعها هنا على أي جهاز.</p>
-    <div class="add"><button class="btn ghost" data-act="backup-copy">انسخ النسخة الاحتياطية</button>${framed?'':'<button class="btn ghost" data-act="backup-dl">نزّلها كملف</button>'}</div>
-    <textarea class="field" id="s-import" placeholder="الصق النسخة الاحتياطية هنا" style="margin-top:10px"></textarea>
-    <div class="add"><button class="btn" data-act="backup-import">استرجع البيانات</button></div>
+    <h2 style="margin-top:22px">نقل البيانات ونسخة احتياطية</h2>
+    <p class="sub">بياناتك محفوظة في هذا الجهاز فقط. عشان تنقلها لجهاز ثاني: انسخها أو نزّلها كملف من هنا، وفي الجهاز الثاني الصقها أو اختر الملف واضغط «استرجع».</p>
+    <div class="add"><button class="btn ghost" data-act="backup-copy">انسخ بياناتي</button><button class="btn ghost" data-act="backup-dl">نزّلها كملف</button></div>
+    <textarea class="field" id="s-import" placeholder="الصق البيانات المنسوخة هنا" style="margin-top:10px"></textarea>
+    <div class="add"><label class="btn ghost" style="cursor:pointer">اختر ملف<input type="file" id="s-file" accept=".json,application/json,text/plain" hidden></label><button class="btn" data-act="backup-import">استرجع البيانات</button></div>
     <h2 style="margin-top:22px">مسح</h2>
     <div class="add">${s.sample?'<button class="btn ghost" data-act="clear-sample">امسح الأمثلة</button>':'<button class="btn ghost" data-act="load-sample">جرّب ببيانات أمثلة</button>'}<button class="btn danger" data-act="reset" id="reset-btn">امسح كل شي</button></div>
   </div></div>`;el.hidden=false}
+/* importing replaces this device's data; a second tap within 4s confirms (no blocking dialogs) */
+let importArm=0;function confirmImport(){if(S.settings.sample||Date.now()-importArm<4000)return true;importArm=Date.now();toast('بتنمسح بيانات هذا الجهاز وتحل محلها المنسوخة. اضغط «استرجع» مرة ثانية للتأكيد',4000);return false}
+document.addEventListener('change',e=>{if(e.target.id!=='s-file'||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{const ta=$('#s-import');if(ta)ta.value=String(r.result||'');toast('جاهز، اضغط «استرجع البيانات»')};r.readAsText(e.target.files[0])});
 function closeSheet(){$('#sheet').hidden=true;$('#sheet').innerHTML=''}
 
 /* ---------- actions ---------- */
@@ -1666,8 +1669,10 @@ const A={
   'load-sample':()=>{const st=S.settings;S=sample();S.settings={...st,sample:true};closeSheet();commit()},
   reset:(d,el)=>{if(Date.now()-resetArm>4000){resetArm=Date.now();el.textContent='اضغط مرة ثانية للتأكيد';return}S=blank();closeSheet();commit();toast('مسحت كل البيانات')},
   'backup-copy':()=>copy(JSON.stringify(S),'نسخت النسخة الاحتياطية'),
-  'backup-dl':()=>{saveFile(`after-work-backup-${dkey()}.json`,new Blob([JSON.stringify(S)],{type:'application/json'})).then(r=>{if(r==='failed')toast('تعذّر التنزيل، استخدم النسخ')})},
-  'backup-import':()=>{const v=$('#s-import').value.trim();try{const o=JSON.parse(v);if(!o||o.v!==1||!o.settings)throw 0;S=o;const b=blank();for(const k in b)if(S[k]===undefined)S[k]=b[k];closeSheet();commit();toast('رجعت البيانات')}catch(e){toast('النص غير صالح، تأكد أنك نسخته كاملاً')}},
+  'backup-dl':()=>{saveFile(`tawazun-backup-${dkey()}.json`,new Blob([JSON.stringify(S)],{type:'application/json'})).then(r=>{if(r==='failed')toast('تعذّر التنزيل، استخدم النسخ')})},
+  'backup-import':()=>{const v=$('#s-import').value.trim();if(!v){toast('الصق البيانات أو اختر الملف أول');return}let o;try{o=JSON.parse(v)}catch(e){o=null}
+    if(!o||o.v!==1||!o.settings){toast('النص غير صالح، تأكد أنك نسخته كاملاً');return}
+    if(!confirmImport()){return}try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}S=o;S=load();save();closeSheet();render();toast('رجعت بياناتك كاملة ✓',4000)},
   ...MA,
   /* واحة */
   'hab-toggle':d=>{const h=find(S.habits,d.id),k=dkey();if(h){h.log[k]?delete h.log[k]:h.log[k]=true;commit()}},
