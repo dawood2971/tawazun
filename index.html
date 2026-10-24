@@ -531,9 +531,22 @@ textarea.field{height:auto;min-height:80px;width:100%;resize:vertical}
 .ring-w{display:flex;align-items:center;gap:14px;margin:8px 0 2px}
 .ring{position:relative;flex:0 0 132px;width:132px;height:132px;border:0;background:none;padding:0;cursor:pointer;color:inherit;font:inherit}
 .ring svg{width:100%;height:100%;display:block}
-.rg-arc{cursor:pointer;transition:opacity .2s,stroke-width .2s}.rg-arc.dim,.ring-k.dim{opacity:.3}
-.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center}
-.ring-c b{font-family:var(--f-display);font-size:1.25rem;line-height:1.2}.ring-c small{font-size:.68rem;color:var(--hero-muted)}
+.ring{flex-basis:148px;width:148px;height:148px}
+.rg-rim{fill:rgba(255,255,255,.07);stroke:rgba(255,255,255,.18);stroke-width:1}.rg-track{fill:rgba(255,255,255,.09)}
+.rg-core{fill:#fff}
+.rg-arc{cursor:pointer;transform-box:view-box;transform-origin:64px 64px;transition:opacity .25s,transform .35s cubic-bezier(.2,1.4,.4,1)}
+.rg-arc.on{transform:translate(var(--dx),var(--dy))}.rg-arc.dim,.ring-k.dim{opacity:.3}
+.ring.spin .rg-g{animation:rg-swirl 1.2s cubic-bezier(.2,.9,.25,1) both;transform-origin:64px 64px;transform-box:view-box}
+.ring.spin .rg-arc{animation:rg-pop .7s cubic-bezier(.2,1.5,.4,1) both;animation-delay:calc(.25s + var(--d))}
+.ring.spin .rg-core{animation:rg-core .6s cubic-bezier(.2,1.6,.4,1) both .1s;transform-origin:64px 64px;transform-box:view-box}
+.ring.spin .ring-c{animation:rg-fade .5s ease both .7s}
+@keyframes rg-swirl{from{transform:rotate(-220deg) scale(.55)}to{transform:none}}
+@keyframes rg-pop{from{opacity:0;transform:scale(.4) rotate(-40deg)}to{opacity:1;transform:none}}
+@keyframes rg-core{from{transform:scale(0)}to{transform:none}}
+@keyframes rg-fade{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.ring.spin .rg-g,.ring.spin .rg-arc,.ring.spin .rg-core,.ring.spin .ring-c{animation:none}}
+.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;color:#1B2340}
+.ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height:1.15}.ring-c small{font-size:.6rem;color:#6B7390}
 .ring-l{flex:1;min-width:0;display:grid;gap:3px}
 .ring-k{display:flex;align-items:center;gap:7px;border:0;background:none;color:var(--hero-ink);font:inherit;font-size:.78rem;padding:2px 0;cursor:pointer;text-align:start;transition:opacity .2s}
 .ring-k i{width:9px;height:9px;border-radius:3px;flex:none}.ring-k span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--hero-muted)}
@@ -1496,19 +1509,28 @@ function spendAlert(amount,cat,sub){const now=new Date(),m=ckey(now),c=monthCalc
   else if(bk&&isDaily({cat,sub})&&tSpent>allow)msg=`⚠️ تعديت حدك اليوم (${fmtMoney(allow)}). المتبقي ${fmtMoney(c.rest)} لـ ${daysLeft} يوم. خفّف بكرة.`;
   toast(msg,msg.startsWith('⚠️')?6000:2800)}
 /* the salary as a ring: one arc per section, the empty part is what's left; tap an arc to read it */
-const RING_C={jam:'#F09AB8',gift:'#B9E07A',mine:'#F4A261',hasala:'#E3B65A',rashan:'#E58A6B',commit:'#7FC4A4',cons:'#F2D58F',visa:'#A99BFF',zakat:'#79CBEA',moved:'#C9CED6'};
+const RING_C={jam:'#E91E78',gift:'#5BC236',mine:'#F7931E',hasala:'#F9C80E',rashan:'#F0353B',commit:'#12C9A6',cons:'#FFB627',visa:'#8E44AD',zakat:'#1E9BE8',moved:'#B8BEC9'};
+const RING_G={jam:'#F45FA0',gift:'#A3E048',mine:'#FFC14D',hasala:'#FFE45C',rashan:'#FF7A59',commit:'#5BE3C4',cons:'#FFE07A',visa:'#C06BF0',zakat:'#3DD6F5',moved:'#DDE1E8'};
+let ringShown=0;
+/* one wedge of the wheel: angles in turns (0 = top, clockwise) */
+function wedge(a0,a1,R,r){const p=(a,rad)=>{const t=a*2*Math.PI;return[(64+rad*Math.sin(t)).toFixed(2),(64-rad*Math.cos(t)).toFixed(2)]},big=a1-a0>.5?1:0,[x0,y0]=p(a0,R),[x1,y1]=p(a1,R),[x2,y2]=p(a1,r),[x3,y3]=p(a0,r);
+  return `M${x0} ${y0}A${R} ${R} 0 ${big} 1 ${x1} ${y1}L${x2} ${y2}A${r} ${r} 0 ${big} 0 ${x3} ${y3}Z`}
 function vaultHTML(c,fundTot,m){const target=sumRows(fixedFor(m)),got=c.hasala,pc=target?Math.min(100,got/target*100):0,tone=pc>=100?'good':pc>=75?'acc':pc>=40?'warn':'bad',open=!!walletUI.hOpen;
   return `<button class="vault ${tone}" data-act="h-toggle" aria-expanded="${open}"><div class="v-top"><span class="v-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5V7M12 17v-1.5M15.5 12H17M7 12h1.5M7 20v1.5M17 20v1.5"/></svg></span><div class="grow"><span class="gc-n">الحصالة</span><b class="num">${fmtMoney(fundTot)} <small>${esc(S.settings.currency)}</small></b></div><span class="v-pc num">${Math.round(pc)}%</span><span class="v-chev" aria-hidden="true">⌄</span></div>
     <div class="v-bar"><i style="width:${pc}%"></i></div>
     <div class="v-nums num"><span>دفعت ${fmtMoney(got)} من ${fmtMoney(target)} هذا الشهر</span><span>${pc>=100?'✓ مكتمل':open?'اضغط للإغلاق':'اضغط لعرض البنود'}</span></div></button>
   ${open?hasalaSection(m):''}`}
 function ringSegs(c){const g=[['hasala','الحصالة',c.hasala],...BUCKETS.map(b=>[b.k,b.k==='cons'?'المواد الاستهلاكية':b.name,c.sp[b.k]]),['moved','حوّلته للحصالة',c.moved]];return g.filter(x=>x[2]>0)}
-function ringHTML(c){const segs=ringSegs(c),used=c.salary-c.rest,tot=Math.max(c.salary,used)||1,r=52,C=2*Math.PI*r;let off=0;
-  const arcs=segs.map(([k,n,v],i)=>{const len=v/tot*C,a=`<circle class="rg-arc" data-act="ring-pick" data-i="${i}" r="${r}" cx="64" cy="64" fill="none" stroke="${RING_C[k]}" stroke-width="14" stroke-dasharray="${Math.max(0,len-1.5)} ${C}" stroke-dashoffset="${-off}"><title>${n}</title></circle>`;off+=len;return a}).join('');
+function ringHTML(c){const segs=ringSegs(c),used=c.salary-c.rest,tot=Math.max(c.salary,used)||1,R=60,r=34,gap=.006;let off=0;
+  const spin=!ringShown;ringShown=1;
+  const defs=segs.map(([k],i)=>`<linearGradient id="rgg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${RING_G[k]}"/><stop offset="1" stop-color="${RING_C[k]}"/></linearGradient>`).join('');
+  const arcs=segs.map(([k,n,v],i)=>{const a0=off,a1=off+v/tot;off=a1;const mid=(a0+a1)/2*2*Math.PI,ln=Math.min(.999,Math.max(gap*2+.002,a1-a0));
+    return `<path class="rg-arc" data-act="ring-pick" data-i="${i}" d="${wedge(a0+gap,a0+ln-gap,R,r)}" fill="url(#rgg${i})" style="--dx:${(Math.sin(mid)*5).toFixed(1)}px;--dy:${(-Math.cos(mid)*5).toFixed(1)}px;--d:${i*80}ms"><title>${n}</title></path>`}).join('');
   const lp=c.salary?Math.round(Math.max(0,c.rest)/c.salary*100):0;
-  return `<div class="ring-w"><button class="ring" data-act="ring-pick" data-i="-1" aria-label="ملخص الراتب"><svg viewBox="0 0 128 128" aria-hidden="true"><circle r="${r}" cx="64" cy="64" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="14"/><g transform="rotate(-90 64 64)">${arcs}</g></svg>
+  return `<div class="ring-w"><button class="ring ${spin?'spin':''}" data-act="ring-pick" data-i="-1" aria-label="ملخص الراتب"><svg viewBox="0 0 128 128" aria-hidden="true"><defs>${defs}<filter id="rg-sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="1.5" stdDeviation="2.2" flood-color="#000" flood-opacity=".28"/></filter></defs>
+      <circle class="rg-rim" r="63" cx="64" cy="64"/><path class="rg-track" d="${wedge(0,.9999,R,r)}"/><g class="rg-g">${arcs}</g><circle class="rg-core" r="${r-3}" cx="64" cy="64" filter="url(#rg-sh)"/></svg>
       <span class="ring-c" id="ring-c"><small>${c.rest<0?'تجاوزت':'المتبقي'}</small><b class="num">${fmtMoney(Math.abs(c.rest))}</b><small class="num">${c.rest<0?'فوق الراتب':lp+'% من الراتب'}</small></span></button>
-    <div class="ring-l">${segs.map(([k,n,v],i)=>`<button class="ring-k" data-act="ring-pick" data-i="${i}"><i style="background:${RING_C[k]}"></i><span>${n}</span><b class="num">${fmtMoney(v)}</b></button>`).join('')||'<p class="lbl">ما صرفت شي للحين</p>'}</div></div>`}
+    <div class="ring-l">${segs.map(([k,n,v],i)=>`<button class="ring-k" data-act="ring-pick" data-i="${i}"><i style="background:linear-gradient(135deg,${RING_G[k]},${RING_C[k]})"></i><span>${n}</span><b class="num">${fmtMoney(v)}</b></button>`).join('')||'<p class="lbl">ما صرفت شي للحين</p>'}</div></div>`}
 function pMahfazti(){
   const now=new Date(),m=wMonth,cur=m===ckey(now),c=monthCalc(m),td=dkey(now);
   const dim=cDays(m),gone=cur?Math.round((parseD(td)-cFrom(m))/864e5)+1:dim,daysLeft=cur?dim-gone+1:0;
@@ -1769,8 +1791,9 @@ const A={
   'h-pay':d=>{const m=wMonth,mf=Object.fromEntries(fixedFor(m)),paid=hPay(m,d.n,+mf[d.n]||0);commit();toast(paid?`دفعت ${fmtMoney(+mf[d.n]||0)} لـ «${d.n}». رصيده ${fmtMoney(S.funds[d.n])}`:`رجّعت «${d.n}» لغير مدفوع`)},
   'h-payall':()=>{const m=wMonth,p=hPaidOf(m);let t=0;fixedFor(m).forEach(([n,a])=>{if(!(n in p)&&+a>0){hPay(m,n,+a);t+=+a}});commit();toast(t?`دفعت ${fmtMoney(t)} لكل بنود الحصالة`:'كل البنود مدفوعة')},
   'ring-pick':d=>{const c=monthCalc(wMonth),segs=ringSegs(c),el=$('#ring-c');if(!el)return;const i=+d.i,cur=+(el.dataset.i??-2);
-    document.querySelectorAll('.rg-arc,.ring-k').forEach(x=>x.classList.toggle('dim',i>=0&&i!==cur&&+x.dataset.i!==i));
-    if(i<0||i===cur){const sp=el.dataset.i==='-1',v=sp?c.rest:c.salary-c.rest;el.dataset.i=sp?'-2':'-1';document.querySelectorAll('.dim').forEach(x=>x.classList.remove('dim'));
+    document.querySelectorAll('.rg-arc,.ring-k').forEach(x=>{x.classList.toggle('dim',i>=0&&i!==cur&&+x.dataset.i!==i);x.classList.toggle('on',i>=0&&i!==cur&&+x.dataset.i===i)});
+    document.querySelectorAll('.ring.spin').forEach(x=>x.classList.remove('spin'));
+    if(i<0||i===cur){const sp=el.dataset.i==='-1',v=sp?c.rest:c.salary-c.rest;el.dataset.i=sp?'-2':'-1';document.querySelectorAll('.dim,.rg-arc.on').forEach(x=>x.classList.remove('dim','on'));
       el.innerHTML=sp?`<small>المتبقي</small><b class="num">${fmtMoney(c.rest)}</b><small class="num">${c.salary?Math.round(Math.max(0,c.rest)/c.salary*100):0}% من الراتب</small>`:`<small>المنفق</small><b class="num">${fmtMoney(v)}</b><small class="num">${c.salary?Math.round(v/c.salary*100):0}% من الراتب</small>`;return}
     const [,n,v]=segs[i];el.dataset.i=i;el.innerHTML=`<small>${n}</small><b class="num">${fmtMoney(v)}</b><small class="num">${c.salary?Math.round(v/c.salary*100):0}% من الراتب</small>`},
   'rest-undo':d=>{const m=wMonth,l=(S.moved||{})[m]||[],x=l.find(t=>t.id===d.id);if(!x)return;S.moved[m]=l.filter(t=>t!==x);S.funds[x.fund]=(S.funds[x.fund]||0)-x.amount;S.fundTx=(S.fundTx||[]).filter(t=>t.id!==x.id);commit();openRest();toast('رجّعت المبلغ للمتبقي')},
@@ -1863,6 +1886,7 @@ function enhanceDates(root){(root||document).querySelectorAll('input[type=date]'
   w.querySelector('.dp-t').textContent=dpLabel(i.value)})}
 function render(){
   autoBills();
+  if(page!=='mahfazti')ringShown=0;
   document.documentElement.dataset.page=page;
   const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=getComputedStyle(document.documentElement).getPropertyValue('--hero-bg').trim();
   $('#view').innerHTML=banner()+PAGES[page]();
