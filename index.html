@@ -595,6 +595,15 @@ textarea.field{height:auto;min-height:80px;width:100%;resize:vertical}
 .nav a svg{width:22px;height:22px}
 .nav a[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 @media (prefers-reduced-motion:no-preference){.nav a,.btn,.check,.cup,.hd{transition:background .15s,color .15s}}
+.dp{position:relative;display:inline-flex;align-items:center;gap:7px;flex:0 1 130px;min-width:0;height:46px;padding:0 12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:.9rem;font-weight:500;white-space:nowrap;cursor:pointer}
+.dp svg{flex:none;color:var(--accent)}.dp-t{overflow:hidden;text-overflow:ellipsis}
+.dp input{position:absolute;inset:0;width:100%!important;height:100%!important;opacity:0;border:0;padding:0;margin:0;cursor:pointer}
+.dp.field{display:flex;width:100%;margin-top:4px;min-height:0}.dp.sm{font-size:.85rem}
+#wk-form .dp{flex:1 1 40%}
+:root[data-page="mahfazti"] .add .dp{border-radius:8px}
+:root[data-page="masai"] .add .dp{border-radius:16px;background:var(--bg);border-color:transparent;height:52px}
+.dp:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+.ev-paid{margin-top:8px}
 </style>
 </head>
 <body>
@@ -1081,7 +1090,7 @@ function delTasks(ids,msg){const set=new Set(ids),gone=S.tasks.filter(t=>set.has
   for(const k in S.top)if(set.has(S.top[k])){top[k]=S.top[k];S.top[k]=null}
   S.tasks=S.tasks.filter(t=>!set.has(t.id));lastDeleted={tasks:gone,top};commit();toastUndo(msg)}
 function openSheet(html,label){const el=$('#sheet');el.innerHTML=`<div class="sheet-wrap" data-act="sheet-close"><div class="sheet" dir="rtl" role="dialog" aria-label="${label}" data-stop="1">
-  <div class="sec-h"><h2>${label}</h2><button class="icon-btn" data-act="sheet-close" aria-label="إغلاق">×</button></div>${html}</div></div>`;el.hidden=false}
+  <div class="sec-h"><h2>${label}</h2><button class="icon-btn" data-act="sheet-close" aria-label="إغلاق">×</button></div>${html}</div></div>`;el.hidden=false;enhanceDates(el)}
 function openPicker(to){const k=to==='today'?todayK():tomorrowK(),list=inboxTasks();
   openSheet(`<p class="sub">اضغط على المهمة لنقلها إلى ${to==='today'?'خطة اليوم':'خطة الغد'}.</p>
     <div class="list" style="margin-top:10px">${list.map(t=>`<button class="item pick-row" data-act="pick-one" data-id="${t.id}" data-to="${to}"><span class="grow">${esc(t.title)}<span class="meta">${taskMeta(t)}</span></span><span class="pill acc">أضف</span></button>`).join('')||'<div class="empty">ما فيه مهام في «لاحقاً».</div>'}</div>`,to==='today'?'اختر لخطة اليوم':'اختر لخطة الغد')}
@@ -1334,14 +1343,14 @@ function eventNext(ev){const today=new Date();today.setHours(0,0,0,0);
   if(ev.kind==='hijri'){if(!hijriFmt||!ev.h)return null;const key=ev.h+dkey(today);if(evCache[key]!==undefined)return evCache[key];const[hm,hd]=ev.h.split('-').map(Number);
     let r=null;for(let i=0;i<400;i++){const d=addDays(today,i),pt=hijriFmt.formatToParts(d);const mm=+pt.find(x=>x.type==='month').value,dd=+pt.find(x=>x.type==='day').value;if(mm===hm&&dd===hd){r=d;break}}return evCache[key]=r}
   if(!ev.date)return null;const d=parseD(ev.date);if(!ev.once){d.setFullYear(today.getFullYear());if(d<today)d.setFullYear(today.getFullYear()+1)}return d}
-function eventInfo(ev){const d=eventNext(ev),days=d?Math.round((d-new Date(new Date().setHours(0,0,0,0)))/864e5):null,saved=ev.fund?(S.funds||{})[ev.fund]||0:0,cost=+ev.cost||0;
-  const need=Math.max(0,cost-saved),months=days==null?null:Math.max(1,Math.ceil(days/30)),perMonth=months?need/months:0;return{d,days,saved,cost,need,months,perMonth}}
+function eventInfo(ev){const d=eventNext(ev),paid=ev.paid&&ev.paid.for===(d?dkey(d):"")?ev.paid:null,days=d?Math.round((d-new Date(new Date().setHours(0,0,0,0)))/864e5):null,saved=ev.fund?(S.funds||{})[ev.fund]||0:0,cost=+ev.cost||0;
+  const need=Math.max(0,cost-saved),months=days==null?null:Math.max(1,Math.ceil(days/30)),perMonth=months?need/months:0;return{d,days,saved,cost,need,months,perMonth,paid}}
 function eventsSection(){const evs=(S.events||[]).map(e=>[e,eventInfo(e)]).sort((a,b)=>(a[1].days??9999)-(b[1].days??9999));
   return `<section class="sec" id="g-events"><div class="sec-h"><h2>المناسبات القادمة</h2><button class="link" data-act="ev-new">+ مناسبة</button></div>
-    <div class="evs" role="list">${evs.map(([e,i])=>{const near=i.days!=null&&i.days<=30&&i.need>0,ready=i.cost>0&&i.need<=0;
+    <div class="evs" role="list">${evs.map(([e,i])=>{const near=!i.paid&&i.days!=null&&i.days<=30&&i.need>0,ready=i.cost>0&&i.need<=0;
       return `<button class="ev ${near?'near':''} ${i.days==null?'nodate':''}" role="listitem" data-act="ev-edit" data-id="${e.id}"><span class="ev-dot"></span><div class="ev-top"><b>${esc(e.name)}</b>${i.days==null?'<span class="ev-days none">حدد التاريخ</span>':`<span class="ev-days ${near?'bad':i.days<=60?'warn':'ok'} num">${i.days===0?'اليوم':`<b>${i.days}</b> يوم`}</span>`}</div>
         <div class="sub num">${i.d?fmtDay(i.d):e.kind==='hijri'?'':'—'}${e.fund?` · من حصالة «${esc(e.fund)}»`:''}</div>
-        ${i.cost?`${bar(i.saved/i.cost*100,ready?'good':near?'bad':'acc')}<div class="ev-nums num"><span>جاهز ${fmtMoney(Math.min(i.saved,i.cost))} من ${fmtMoney(i.cost)}</span><span>${ready?'✓ مغطّى':`ناقص ${fmtMoney(i.need)}`}</span></div>
+        ${i.paid?`${bar(100,'good')}<div class="ev-tip ok">✓ صرفت لها <b class="num">${fmtMoney(i.paid.amount)}</b>${e.fund?` من «${esc(e.fund)}»`:''}</div>`:i.cost?`${bar(i.saved/i.cost*100,ready?'good':near?'bad':'acc')}<div class="ev-nums num"><span>جاهز ${fmtMoney(Math.min(i.saved,i.cost))} من ${fmtMoney(i.cost)}</span><span>${ready?'✓ مغطّى':`ناقص ${fmtMoney(i.need)}`}</span></div>
           ${!ready&&i.months&&e.fund&&planAmt(e.fund)>=Math.ceil(i.perMonth)?`<div class="ev-tip ok">✓ محجوز <b class="num">${fmtMoney(planAmt(e.fund))}</b> كل شهر في الحصالة</div>`:!ready&&i.months?`<div class="ev-tip">احجز <b class="num">${fmtMoney(Math.ceil(i.perMonth))}</b> شهرياً لمدة ${i.months} ${i.months<11&&i.months>2?'أشهر':'شهر'}</div>`:''}`:'<div class="sub">حدد التكلفة المتوقعة عشان نخطط لها</div>'}
       </button>`}).join('')}</div></section>`}
 function openEvent(id){const e=id?find(S.events,id):{name:'',kind:'date',date:'',cost:'',fund:''};if(!e)return;const i=id?eventInfo(e):null;
@@ -1352,7 +1361,9 @@ function openEvent(id){const e=id?find(S.events,id):{name:'',kind:'date',date:''
     <div class="fld"><label>التكلفة المتوقعة</label><input class="field num" name="cost" inputmode="decimal" value="${e.cost||''}" placeholder="مثال: 120"></div>
     <div class="fld"><label>تتموّل من بند في الحصالة</label><select class="field" name="fund"><option value="">بدون</option>${funds.map(n=>`<option ${e.fund===n?'selected':''}>${esc(n)}</option>`).join('')}<option value="__new" >بند جديد باسم المناسبة</option></select></div>
     ${i&&i.cost&&i.need>0&&i.months?`<div class="card note-card"><b>الحجز المسبق</b><p class="sub num">ناقصك ${fmtMoney(i.need)}. لو حجزت ${fmtMoney(Math.ceil(i.perMonth))} كل شهر توصل قبل الموعد.</p><button type="button" class="btn line" data-act="ev-reserve" data-id="${e.id}">احجزه في الحصالة كل شهر</button></div>`:''}
-    <div class="add"><button class="btn">احفظ</button>${id?`<button type="button" class="btn danger" data-act="ev-del" data-id="${id}">حذف</button>`:''}</div></form>`,id?e.name:'مناسبة جديدة')}
+    <div class="add"><button class="btn">احفظ</button>${id?`<button type="button" class="btn danger" data-act="ev-del" data-id="${id}">حذف</button>`:''}</div></form>
+    ${id&&e.fund?(i.paid?`<div class="card note-card ev-paid"><b>✓ صرفت لها ${fmtMoney(i.paid.amount)}</b><p class="sub">انخصمت من رصيد «${esc(e.fund)}».</p><button type="button" class="btn line" data-act="ev-unspend" data-id="${e.id}">تراجع عن الصرف</button></div>`
+      :`<form data-form="ev-spend" data-id="${e.id}" class="card note-card ev-paid"><b>صرفت للمناسبة؟</b><p class="sub num">ينخصم من رصيد «${esc(e.fund)}» (${fmtMoney((S.funds||{})[e.fund]||0)}).</p><div class="add"><input name="amount" class="num" inputmode="decimal" value="${i.cost||''}" placeholder="المبلغ" required autocomplete="off" aria-label="المبلغ المصروف"><button class="btn">اخصم</button></div></form>`):''}`,id?e.name:'مناسبة جديدة')}
 function hasalaSection(m){const fx=fixedFor(m),funds=S.funds||{},prev=S.fundPrev||{},paid=hPaidOf(m),taken={};(S.fundTx||[]).forEach(t=>{if(t.amount>0)taken[t.name]=(taken[t.name]||0)+t.amount});
   const sum=f=>fx.reduce((a,[n,x])=>a+f(n,x),0),left=fx.filter(([n,a])=>!(n in paid)&&+a>0).length;
   return `<section class="hlist" id="g-hasala">
@@ -1715,6 +1726,7 @@ const A={
   'fund-open':d=>openFund(d.n),
   'ev-new':()=>openEvent(null),
   'ev-edit':d=>openEvent(d.id),
+  'ev-unspend':d=>{const e=find(S.events,d.id);if(!e||!e.paid)return;const p=e.paid;S.funds[e.fund]=(S.funds[e.fund]||0)+p.amount;S.fundTx=(S.fundTx||[]).filter(t=>t.id!==p.tx);delete e.paid;closeSheet();commit();toast('رجّعت المبلغ للحصالة')},
   'ev-del':d=>{rm('events',d.id);closeSheet();commit();toast('انحذفت المناسبة')},
   'rest-open':()=>openRest(),
   'zakat-open':()=>openZakat(),
@@ -1776,6 +1788,9 @@ const F={
     const id=uid();S.moved=S.moved||{};(S.moved[m]=S.moved[m]||[]).push({id,fund:n,amount:a,date:dkey()});S.funds=S.funds||{};S.funds[n]=(S.funds[n]||0)+a;S.fundTx=S.fundTx||[];S.fundTx.push({id,name:n,amount:-a,note:'من متبقي '+salaryName(m),date:dkey()});closeSheet();toast(`حوّلت ${fmtMoney(a)} إلى «${n}». رصيده ${fmtMoney(S.funds[n])}`)},
   'fund-take':(v,f,sub)=>{const n=f.dataset.n,a=num(v.amount),dir=sub&&sub.value==='in'?-1:1;if(!(a>0)){toast('اكتب المبلغ رقماً');return false}S.funds=S.funds||{};S.funds[n]=(S.funds[n]||0)-dir*a;S.fundTx=S.fundTx||[];S.fundTx.push({id:uid(),name:n,amount:dir*a,note:(v.note||'').trim(),date:dkey()});closeSheet();toast(`${dir>0?'صرفت':'أودعت'} ${fmtMoney(a)} ${dir>0?'من':'في'} ${n}. الرصيد ${fmtMoney(S.funds[n])}`)},
   payday:v=>{const a=num(v.amount);if(!(a>0)){toast('اكتب الراتب رقماً');return false}applyMonth(wMonth,a);toast(`سجّلت ${salaryName(wMonth)} ${fmtMoney(a)} وتجنّبت الحصالة`)},
+  'ev-spend':(v,f)=>{const e=find(S.events,f.dataset.id),a=num(v.amount);if(!e||!e.fund)return false;if(!(a>0)){toast('اكتب المبلغ رقماً');return false}
+    const d=eventNext(e),id=uid();S.funds=S.funds||{};S.funds[e.fund]=(S.funds[e.fund]||0)-a;S.fundTx=S.fundTx||[];S.fundTx.push({id,name:e.fund,amount:a,note:e.name,date:dkey()});
+    e.paid={for:d?dkey(d):'',amount:a,tx:id};closeSheet();toast(`خصمت ${fmtMoney(a)} من «${e.fund}». رصيده ${fmtMoney(S.funds[e.fund])}`)},
   ev:(v,f)=>{const id=f.dataset.id,cost=v.cost?num(v.cost):0;if(v.cost&&!(cost>=0)){toast('اكتب التكلفة رقماً');return false}S.events=S.events||[];
     let e=id?find(S.events,id):null;if(!e){e={id:uid(),kind:'date',h:'',fund:''};S.events.push(e)}
     e.name=v.name.trim();e.cost=cost;if(e.kind!=='hijri'){e.date=v.date||'';e.once=!!v.once}
@@ -1809,12 +1824,22 @@ let page=(location.hash||'').slice(1);if(!PAGES[page])page=(()=>{try{return loca
 function go(p){if(!PAGES[p]||p===page)return;page=p;try{localStorage.setItem(KEY+'.page',p)}catch(e){}if(p==='mahfazti')wMonth=ckey();render();window.scrollTo(0,0)}
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();go(a.dataset.page);try{history.replaceState(null,'','#'+a.dataset.page)}catch(x){}}));
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+/* dates: a tidy chip (اليوم / السبت 24 أكتوبر) over the native date picker */
+const fmtShort=d=>new Intl.DateTimeFormat(LOC,{weekday:'short',day:'numeric',month:'long'}).format(d);
+function dpLabel(v){if(!v)return 'اختر التاريخ';const diff=Math.round((parseD(v)-parseD(dkey()))/864e5);
+  return diff===0?'اليوم':diff===-1?'أمس':diff===1?'بكرة':fmtShort(parseD(v))+(parseD(v).getFullYear()!==new Date().getFullYear()?' '+parseD(v).getFullYear():'')}
+const DP_IC='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
+function enhanceDates(root){(root||document).querySelectorAll('input[type=date]').forEach(i=>{
+  let w=i.parentElement;if(!w.classList.contains('dp')){w=document.createElement('span');w.className='dp '+i.className;i.before(w);w.innerHTML=DP_IC+'<span class="dp-t"></span>';w.appendChild(i);
+    i.addEventListener('click',()=>{try{i.showPicker()}catch(e){}});['input','change'].forEach(ev=>i.addEventListener(ev,()=>{w.querySelector('.dp-t').textContent=dpLabel(i.value)}))}
+  w.querySelector('.dp-t').textContent=dpLabel(i.value)})}
 function render(){
   document.documentElement.dataset.page=page;
   const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=getComputedStyle(document.documentElement).getPropertyValue('--hero-bg').trim();
   $('#view').innerHTML=banner()+PAGES[page]();
   document.querySelectorAll('.nav a').forEach(a=>a.dataset.page===page?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
   if(page==='masai')applyHeroMode();
+  enhanceDates($('#view'));
   if(refocus){const i=document.querySelector(`form[data-form="${refocus}"] input:not([type=hidden]):not([type=time]):not([type=date])`);refocus=null;if(i)try{i.focus({preventScroll:true})}catch(e){}}
 }
 let lastDay=dkey();
