@@ -826,7 +826,11 @@ const OLD2NEW={'راشن البيت':['راشن البيت'],'مقاضي الب�
 function walletMigrate8(s){if(s.wallet8)return;const g=s.plan&&s.plan.gifts;if(g)g.forEach(r=>{if(r[0]==='أنا')r[0]=MINE});
   (s.expenses||[]).forEach(e=>{if(e.cat==='عطايا'&&e.sub==='أنا')e.sub=MINE;if(e.cat==='الالتزامات'&&(e.sub==='حلاق'||e.sub==='دوبي'))e.cat=MINE});s.wallet8=1}
 function walletMigrate9(s){if(s.wallet9)return;const p=s.plan;if(p&&p.gifts){const r=p.gifts.find(x=>x[0]===MINE||x[0]==='أنا');if(r)p.mine=+r[1];p.gifts=p.gifts.filter(x=>x[0]!==MINE&&x[0]!=='أنا')}s.wallet9=1}
-function walletMigrate(s){walletMigrate5(s);walletMigrate6(s);walletMigrate7(s);walletMigrate8(s);walletMigrate9(s);if(s.wallet4)return;s.plan=s.plan||JSON.parse(JSON.stringify(PLAN_DEF));s.plan.buckets=s.plan.buckets||{...PLAN_DEF.buckets};
+/* bills start counting from a month (b.from, 'YYYY-MM'); Dawood's first bills start the month after he added them */
+const nextMkey=(d=new Date())=>mkey(new Date(d.getFullYear(),d.getMonth()+1,1));
+const billLive=(b,m=mkey())=>!b.from||m>=b.from;
+function billsMigrate10(s){if(s.bills10)return;const m=mkey();(s.bills||[]).forEach(b=>{if(!b.paid||!b.paid[m])b.from=nextMkey()});s.bills10=1}
+function walletMigrate(s){billsMigrate10(s);walletMigrate5(s);walletMigrate6(s);walletMigrate7(s);walletMigrate8(s);walletMigrate9(s);if(s.wallet4)return;s.plan=s.plan||JSON.parse(JSON.stringify(PLAN_DEF));s.plan.buckets=s.plan.buckets||{...PLAN_DEF.buckets};
   (s.expenses||[]).forEach(e=>{const t=OLD2NEW[e.cat];if(!t)return;e.cat=t[0];if(t[0]==='الالتزامات')e.sub=t[1]||(SUBS.includes(e.note)?e.note:'أخرى')});
   s.salaries=s.salaries||{};const m=mkey();if(s.monthFixed&&s.monthFixed[m]&&!s.salaries[m])s.salaries[m]={amount:s.plan.salary,at:dkey()};
   s.events=s.events||EVENTS_DEF.map(([name,kind,when,fund])=>({id:uid(),name,kind,date:kind==='date'?when:'',h:kind==='hijri'?when:'',cost:0,fund}));s.wallet4=1}
@@ -1423,18 +1427,18 @@ function spark(vals){const W=300,H=70,P=8,mn=Math.min(...vals),mx=Math.max(...va
 /* ---------- page: بيتي ---------- */
 /* fixed bills: added once, then recorded as paid on their day every month */
 function autoBills(){const now=new Date(),m=mkey(now),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();let ch=false;
-  (S.bills||[]).forEach(b=>{if(!b.auto||b.paid[m]||b.skip===m)return;const day=Math.min(b.day,dim);if(now.getDate()<day)return;
+  (S.bills||[]).forEach(b=>{if(!b.auto||b.paid[m]||b.skip===m||!billLive(b,m))return;const day=Math.min(b.day,dim);if(now.getDate()<day)return;
     const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey(new Date(now.getFullYear(),now.getMonth(),day)),auto:1};S.expenses.push(e);b.paid[m]=e.id;ch=true});
   if(ch)save();return ch}
-function billState(b){const now=new Date(),m=mkey(now),paid=!!b.paid[m];if(paid)return['مدفوعة','good'];
+function billState(b){const now=new Date(),m=mkey(now),paid=!!b.paid[m];if(paid)return['مدفوعة','good'];if(!billLive(b,m)){const[y,mo]=b.from.split('-');return[`تبدأ ${new Intl.DateTimeFormat(LOC,{month:'long'}).format(new Date(+y,mo-1,1))}`,'']}
   const diff=b.day-now.getDate();if(diff<0)return[`متأخرة ${-diff} يوم`,'bad'];if(diff===0)return['تستحق اليوم','bad'];if(diff<=5)return[`بعد ${diff} أيام`,'warn'];return[`يوم ${b.day}`,'']}
 function pBeiti(){
   const now=new Date(),k=dkey(now),tab=S.ui.beiti||'groceries';
   const gLeft=S.groceries.filter(g=>!g.done).length,eToday=S.errands.filter(e=>!e.done&&e.date&&e.date<=k).length;
   const upcoming=S.kidEvents.filter(e=>e.date>=k).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
   const past=S.kidEvents.filter(e=>e.date<k);
-  const unpaid=S.bills.filter(b=>!b.paid[mkey(now)]);
-  const tabs=[['groceries','راشن البيت',`${gLeft} غرض`],['errands','المشاوير',eToday?`${eToday} مستحق`:`${S.errands.filter(e=>!e.done).length} باقي`],['kids','الأولاد',upcoming.length?`${upcoming.length} موعد`:'لا مواعيد'],['bills','الفواتير',unpaid.length?`${unpaid.length} غير مدفوعة`:'كلها مدفوعة']];
+  const unpaid=S.bills.filter(b=>!b.paid[mkey(now)]&&billLive(b));
+  const tabs=[['groceries','راشن البيت',`${gLeft} غرض`],['errands','المشاوير',eToday?`${eToday} مستحق`:`${S.errands.filter(e=>!e.done).length} باقي`],['kids','الأولاد',upcoming.length?`${upcoming.length} موعد`:'لا مواعيد'],['bills','الفواتير',unpaid.length?`${unpaid.length} غير مدفوعة`:S.bills.length&&!S.bills.some(b=>billLive(b))?'تبدأ الشهر الجاي':'كلها مدفوعة']];
   let body='';
   if(tab==='groceries'){body=rashanView()}
   if(tab==='errands'){const items=S.errands.slice().sort((a,b)=>a.done-b.done||(a.date||'9').localeCompare(b.date||'9'));
@@ -1448,7 +1452,7 @@ function pBeiti(){
     <div class="list">${upcoming.map(e=>{const r=relDay(e.date);return `<div class="item"><div class="grow"><div><b>${esc(kn(e.kid))}</b> · ${esc(e.text)}</div><div class="sub num">${fmtDay(parseD(e.date))}${e.time?` · ${clockStr(e.time)}`:''}</div></div><span class="pill ${r[1]}">${r[0]}</span>${del('ke-del',e.id)}</div>`}).join('')||'<div class="empty">ما فيه مواعيد قادمة.</div>'}</div>
     ${S.kids.length?`<form class="add" data-form="kidEvent"><select class="sm" name="kid" aria-label="الاسم">${S.kids.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select><input name="text" placeholder="الموعد، مثل: تمرين سباحة" required autocomplete="off"><input class="sm" type="date" name="date" value="${k}" required aria-label="التاريخ"><input class="sm" type="time" name="time" aria-label="الوقت"><button class="btn">أضف</button></form>`:'<p class="muted small" style="margin-top:10px">أضف أسماء الأولاد أولاً عشان تسجّل مواعيدهم.</p>'}
     ${past.length?`<p class="small muted" style="margin-top:12px">${past.length} مواعيد انتهت. <button class="link" data-act="ke-clear">امسحها</button></p>`:''}`}
-  if(tab==='bills'){const m=mkey(now),total=S.bills.reduce((a,b)=>a+b.amount,0),paidT=S.bills.filter(b=>b.paid[m]).reduce((a,b)=>a+b.amount,0);
+  if(tab==='bills'){const m=mkey(now),total=S.bills.filter(b=>billLive(b,m)||b.paid[m]).reduce((a,b)=>a+b.amount,0),paidT=S.bills.filter(b=>b.paid[m]).reduce((a,b)=>a+b.amount,0);
     const items=S.bills.slice().sort((a,b)=>!!a.paid[m]-!!b.paid[m]||a.day-b.day);
     body=`<div class="sec-h"><h2>فواتير ${fmtMonth(now)}</h2><span class="sub num">${money(paidT)} من ${money(total)}</span></div>
     <div style="margin-bottom:10px">${bar(total?paidT/total*100:0)}</div>
@@ -1968,7 +1972,7 @@ const F={
   errand:v=>{S.errands.push({id:uid(),text:v.text.trim(),date:v.date,done:false})},
   kid:v=>{S.kids.push({id:uid(),name:v.name.trim()})},
   kidEvent:v=>{S.kidEvents.push({id:uid(),kid:v.kid,text:v.text.trim(),date:v.date,time:v.time})},
-  bill:v=>{const amount=num(v.amount),day=Math.round(num(v.day));if(!(amount>0)||!(day>=1&&day<=31)){toast('اكتب المبلغ ويوم الاستحقاق من 1 إلى 31');return false}const auto=!!(document.getElementById('bill-auto')||{}).checked;S.bills.push({id:uid(),name:v.name.trim(),amount,day,paid:{},auto});autoBills()},
+  bill:v=>{const amount=num(v.amount),day=Math.round(num(v.day));if(!(amount>0)||!(day>=1&&day<=31)){toast('اكتب المبلغ ويوم الاستحقاق من 1 إلى 31');return false}const auto=!!(document.getElementById('bill-auto')||{}).checked;const now=new Date();S.bills.push({id:uid(),name:v.name.trim(),amount,day,paid:{},auto,from:day<now.getDate()?nextMkey(now):mkey(now)});autoBills()},
   'fixed-month':(v,f)=>{const m=wMonth;S.monthFixed=S.monthFixed||{};const mf={};
     for(const i of f.querySelectorAll('[name=a]')){const n=i.dataset.n,a=num(i.value);if(!(a>=0)){toast(`اكتب مبلغ ${n} رقماً`);return false}mf[n]=a}
     S.monthFixed[m]=mf;if(v.keep){S.plan=S.plan||JSON.parse(JSON.stringify(PLAN_DEF));S.plan.fixed=Object.entries(mf)}closeSheet();toast('انحفظت مبالغ هذا الشهر')},
