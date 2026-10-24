@@ -1,0 +1,81 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request package from PWABuilder
+        run: |
+          # A throwaway signing key for each build; it is never stored.
+          PW=$(openssl rand -hex 16)
+          echo "::add-mask::$PW"
+          cat > req.json <<JSON
+          {
+            "packageId": "io.github.dawood2971.tawazun",
+            "name": "توازن",
+            "launcherName": "توازن",
+            "appVersion": "1.0.${{ github.run_number }}",
+            "appVersionCode": ${{ github.run_number }},
+            "host": "https://dawood2971.github.io",
+            "startUrl": "/tawazun-app/",
+            "fullScopeUrl": "https://dawood2971.github.io/tawazun-app/",
+            "webManifestUrl": "https://dawood2971.github.io/tawazun-app/manifest.webmanifest",
+            "iconUrl": "https://dawood2971.github.io/tawazun-app/icons/icon-512.png",
+            "maskableIconUrl": "https://dawood2971.github.io/tawazun-app/icons/icon-maskable-512.png",
+            "monochromeIconUrl": null,
+            "themeColor": "#1D4F53",
+            "themeColorDark": "#1D4F53",
+            "backgroundColor": "#F5F4EF",
+            "navigationColor": "#1D4F53",
+            "navigationColorDark": "#1D4F53",
+            "navigationDividerColor": "#1D4F53",
+            "navigationDividerColorDark": "#1D4F53",
+            "display": "standalone",
+            "orientation": "portrait",
+            "fallbackType": "customtabs",
+            "enableNotifications": true,
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "minSdkVersion": 21,
+            "splashScreenFadeOutDuration": 300,
+            "shortcuts": [],
+            "features": { "locationDelegation": { "enabled": true }, "playBilling": { "enabled": false } },
+            "includeSourceCode": false,
+            "signingMode": "new",
+            "signing": {
+              "file": null,
+              "alias": "tawazun",
+              "fullName": "Dawood",
+              "organization": "Dawood",
+              "organizationalUnit": "Personal",
+              "countryCode": "OM",
+              "keyPassword": "$PW",
+              "storePassword": "$PW"
+            }
+          }
+          JSON
+          code=$(curl -sS -m 600 -o out.bin -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            --data @req.json \
+            https://pwabuilder-cloudapk.azurewebsites.net/generateAppPackage)
+          echo "HTTP $code"
+          if [ "$code" != "200" ]; then head -c 3000 out.bin; exit 1; fi
+          mkdir pkg && cd pkg && unzip -o ../out.bin && ls -la
+
+      - name: Publish APK as a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          apk=$(ls pkg/*.apk | head -1)
+          cp "$apk" tawazun.apk
+          gh release create "v1.0.${{ github.run_number }}" tawazun.apk \
+            --repo "${{ github.repository }}" \
+            --title "توازن 1.0.${{ github.run_number }}" \
+            --notes "نزّل tawazun.apk وثبّته على الجوال."
