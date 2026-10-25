@@ -182,6 +182,33 @@
 @media (prefers-reduced-motion:reduce){.bp-ok,.bp-okc,.bp-okic{animation:none!important}}
 .sh-vis{width:104px!important;height:112px!important}.sh-vis .sh-img{width:84px;height:88px;border-radius:20px 20px 20px 44px}
 .sh-orb i{transform:rotate(var(--a)) translateX(60px) rotate(calc(-1*var(--a)))!important}.sh-orb b{width:24px!important;height:24px!important;margin:-12px 0 0 -12px!important;font-size:.75rem!important}
+/* خلوة (data-page waha) */
+:root[data-page="waha"]:not(#z){--bg:#0A1E16;--surface:#11291F;--sunk:#0E2419;--ink:#ECF7F1;--muted:#93B5A4;--line:#1F3D2F;--accent:#34D399;--accent-soft:#143A2A;--deep:#34D399;--deep-soft:#143A2A;--on-accent:#06281B;--hero-bg:#0A1E16;color-scheme:dark}
+:root[data-page="waha"] body{background:radial-gradient(120% 60% at 100% 0%,#14432F 0,transparent 60%),#0A1E16}
+.kh-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:6px 2px 14px}.kh-head h1{margin:0;font-family:var(--f-hand,inherit);font-size:2.3rem;font-weight:400;line-height:1.2;color:#ECF7F1}.kh-head p{margin:2px 0 0;font-size:.82rem;color:#7FD1A9}
+.kh-gear{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;border:1px solid #24503C;background:#11291F;color:#CDEBDB;cursor:pointer}.kh-gear svg{width:20px;height:20px}
+.kh-timer{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:14px;padding:18px 16px;border-radius:26px;background:linear-gradient(165deg,#133A2A,#0E2A1E);border:1px solid #1F4A37;box-shadow:0 18px 36px -24px rgba(0,0,0,.8)}
+.kh-ringw{position:relative;width:min(220px,62vw);aspect-ratio:1}.kh-svg{width:100%;height:100%}.kh-track{fill:none;stroke:#1B4232;stroke-width:10}.kh-prog{fill:none;stroke:url(#khg);stroke:#34D399;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .9s linear;filter:drop-shadow(0 0 8px rgba(52,211,153,.45))}
+.kh-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}.kh-mid b{font-size:2.6rem;font-weight:800;color:#fff;letter-spacing:.02em;line-height:1.1}.kh-act{font-size:.8rem;color:#A8D9C0}.kh-mid small{font-size:.72rem;color:#7FA893}
+.kh-timer.on .kh-ringw{animation:khBreath 4s ease-in-out infinite}@keyframes khBreath{50%{transform:scale(1.025)}}
+.kh-pre{display:flex;gap:8px}.kh-pre button{min-width:64px;height:40px;border-radius:99px;border:1px solid #24503C;background:#0E2419;color:#CDEBDB;font:inherit;font-weight:800;font-size:1rem;cursor:pointer;transition:transform .15s,background .2s}.kh-pre button small{font-size:.65rem;font-weight:600;margin-inline-start:2px}.kh-pre button[aria-checked="true"]{background:#34D399;border-color:#34D399;color:#06281B}
+.kh-go{width:100%;max-width:320px;height:52px;border:0;border-radius:16px;background:linear-gradient(135deg,#34D399,#10B981);color:#05261A;font:inherit;font-weight:800;font-size:1.05rem;cursor:pointer;box-shadow:0 10px 24px -10px rgba(52,211,153,.7);transition:transform .15s}.kh-go:active,.kh-pre button:active,.kh-ac:active{transform:scale(.95)}.kh-go.sm{width:auto;height:44px;padding:0 18px;font-size:.92rem}
+.kh-btns,.kh-dr{display:flex;gap:8px;width:100%;max-width:320px}.kh-end{flex:1;height:48px;border:0;border-radius:14px;background:#F4B63F;color:#3A2A00;font:inherit;font-weight:800;cursor:pointer}.kh-cancel{height:48px;padding:0 16px;border:1px solid #24503C;border-radius:14px;background:none;color:#A8D9C0;font:inherit;font-weight:700;cursor:pointer}
+.kh-done{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding:16px;border-radius:22px;background:#123526;border:1px solid #2F6B50;animation:shUp .4s ease-out}.kh-dt{margin:0;font-size:1rem;color:#ECF7F1}.kh-dt b{color:#34D399}
+.kh-done input,.kh-done textarea,.kh-nf input,.kh-book input{width:100%;box-sizing:border-box;min-height:46px;padding:10px 12px;border:1px solid #24503C;border-radius:12px;background:#0A1E16;color:#ECF7F1;font:inherit;font-size:16px}.kh-done ::placeholder,.kh-nf ::placeholder,.kh-book ::placeholder{color:#5F8A75}.kh-done .kh-go{flex:1;max-width:none;height:48px}
+.kh-sec{margin-bottom:14px;padding:16px;border-radius:22px;background:#11291F;border:1px solid #1F3D2F}.kh-h{margin:0 0 12px;font-size:1.05rem;font-weight:800;color:#ECF7F1}
+.kh-acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.kh-ac{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px;border-radius:16px;border:1px solid #24503C;background:#0E2419;color:#ECF7F1;font:inherit;text-align:start;cursor:pointer;transition:transform .15s,border-color .2s,background .2s}.kh-ac:disabled{opacity:.45}.kh-ac.on{border-color:#34D399;background:#143A2A;box-shadow:0 0 0 1px #34D399 inset}.kh-ac.on:disabled{opacity:1}
+.kh-ai{display:grid;place-items:center;width:40px;height:40px;margin-bottom:4px;border-radius:12px;background:#183F2E;font-size:1.3rem}.kh-ac b{font-size:.92rem}.kh-ac small{font-size:.7rem;color:#7FA893}
+.kh-book{display:flex;align-items:center;gap:8px;margin-top:10px}.kh-book span{font-size:1.2rem}
+.kh-sr{display:flex;align-items:center;gap:12px;margin-bottom:12px}.kh-fire{flex:none;display:grid;place-items:center;align-content:center;width:62px;height:62px;border-radius:18px;background:radial-gradient(circle at 50% 30%,#F4B63F,#C77A12);color:#2A1A00;box-shadow:0 8px 20px -8px rgba(244,182,63,.6)}.kh-fire b{font-size:1.5rem;line-height:1}.kh-fire small{font-size:.62rem;font-weight:700}
+.kh-st{margin:0;font-size:.98rem;font-weight:800;color:#ECF7F1}.kh-ss{margin:2px 0 0;font-size:.76rem;color:#93B5A4}
+.kh-heat{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}.kh-heat i{aspect-ratio:1;border-radius:5px;background:#173528}.kh-heat i.l1{background:#1F6B4C}.kh-heat i.l2{background:#25A06C}.kh-heat i.l3{background:#34D399;box-shadow:0 0 8px rgba(52,211,153,.5)}.kh-heat i.today{outline:2px solid #F4B63F;outline-offset:1px}
+.kh-note{position:relative;margin-bottom:8px;padding:10px 12px 10px 34px;border-radius:14px;background:#0E2419;border-inline-start:3px solid #34D399}.kh-note p{margin:0;font-size:.9rem;line-height:1.6;color:#ECF7F1}.kh-note small{font-size:.68rem;color:#7FA893}.kh-x{position:absolute;top:6px;left:6px;width:24px;height:24px;border:0;background:none;color:#5F8A75;font-size:1rem;cursor:pointer}
+.kh-empty{margin:0 0 10px;font-size:.8rem;color:#7FA893}.kh-nf{display:flex;gap:8px}.kh-nf input{flex:1;min-width:0}
+:root[data-page="waha"] .nav{background:rgba(10,30,22,.92);border-color:#1F3D2F}:root[data-page="waha"] .nav a{color:#7FA893}:root[data-page="waha"] .nav a[aria-current="page"]{color:#34D399;background:#143A2A}
+:root[data-page="waha"] .banner{background:#143A2A;color:#CDEBDB}
+.sh-enter .kh-timer{animation:shIn .5s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){.kh-timer.on .kh-ringw{animation:none}}
 /* بيتي motion */
 .sh-hero{overflow:hidden}.sh-vis{position:relative;flex:none;display:grid;place-items:center;width:128px;height:140px}
 .sh-vis .sh-img{position:relative;z-index:1;animation:shFloat 5s ease-in-out infinite}
@@ -963,7 +990,7 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 <nav class="nav" dir="rtl" aria-label="الصفحات">
   <div class="nav-in">
     <a href="#masai" data-page="masai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>مَسَار</a>
-    <a href="#waha" data-page="waha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 11c-1-3-4-5-8-5 1 3 4 5 8 5z"/><path d="M12 11c1-3 4-5 8-5-1 3-4 5-8 5z"/><path d="M12 8c0-2.5-1.5-4.5-3-5.5M12 8c0-2.5 1.5-4.5 3-5.5"/></svg>واحة</a>
+    <a href="#waha" data-page="waha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12"/><path d="M7 3c0 5 5 6 5 9s-5 4-5 9"/><path d="M17 3c0 5-5 6-5 9s5 4 5 9"/><path d="M9.5 18.5h5"/></svg>خلوة</a>
     <a href="#beiti" data-page="beiti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>معاش</a>
     <a href="#mahfazti" data-page="mahfazti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/><path d="M16 15h2"/><path d="M6 6l9-3 1 3"/></svg>غوازي</a>
   </div>
@@ -1584,7 +1611,7 @@ const MF={
     if(t.remind!==''&&!t.time)toast('التذكير يحتاج وقت للمهمة');closeSheet()},
 };
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='sp-title'){e.preventDefault();e.target.blur()}});
-document.addEventListener('input',e=>{if(e.target.id==='rc-in'){rcPrev();return}if(e.target.id==='b-q'){const q=rnorm(e.target.value.trim());document.querySelectorAll('.bl-card').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.bp-tile').forEach(t=>{t.classList.toggle('dim',!!q&&!rnorm(t.textContent).includes(q))});return}if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());rSug(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.pgrp').forEach(g=>{g.hidden=!g.querySelector('.pcard:not([hidden])')})});
+document.addEventListener('input',e=>{if(e.target.id==='kh-book'){khS().book=e.target.value;save();return}if(e.target.id==='rc-in'){rcPrev();return}if(e.target.id==='b-q'){const q=rnorm(e.target.value.trim());document.querySelectorAll('.bl-card').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.bp-tile').forEach(t=>{t.classList.toggle('dim',!!q&&!rnorm(t.textContent).includes(q))});return}if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());rSug(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.pgrp').forEach(g=>{g.hidden=!g.querySelector('.pcard:not([hidden])')})});
 document.addEventListener('input',e=>{if(e.target.id!=='inbox-q')return;const q=e.target.value.trim();
   document.querySelectorAll('#m-today .task').forEach(r=>r.hidden=q&&!r.dataset.title.includes(q))});
 document.addEventListener('change',e=>{const id=e.target.id;if(id==='sp-title'){const i=e.target,t=S.tasks.find(x=>x.id===i.dataset.id),v=i.value.trim();if(t&&v&&v!==t.title){spRename();const r=document.querySelector(`.task[data-id="${t.id}"] .task-t`);if(r)r.textContent=v;toast('تعدّل الاسم')}return}if(id==='rate-good'||id==='rate-better'){const r=S.ratings[todayK()]=S.ratings[todayK()]||{};r[id==='rate-good'?'good':'better']=e.target.value.trim();save()}});
@@ -1616,55 +1643,41 @@ function masarTick(){const f=S.focus;
 function mmss(ms){const s=Math.max(0,Math.ceil(ms/1000));return `${pad(Math.floor(s/60))}:${pad(s%60)}`}
 let actx;function beep(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();[0,.35,.7].forEach(o=>{const g=actx.createGain(),os=actx.createOscillator();os.frequency.value=660;os.connect(g);g.connect(actx.destination);const t=actx.currentTime+o;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.3,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.28);os.start(t);os.stop(t+.3)})}catch(e){}try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
 
-/* ---------- page: واحة ---------- */
+
 function streak(h){let n=0,d=new Date();if(!h.log[dkey(d)])d=addDays(d,-1);while(h.log[dkey(d)]){n++;d=addDays(d,-1)}return n}
+/* ---------- page: خلوة (was واحة; old habits/health data kept) ---------- */
+const KH_ACTS=[['read','📖','قراءة كتاب','صفحات'],['lang','🗣️','تعلم لغة','دقيقة'],['skill','💡','مهارة جديدة','جلسة'],['think','🧘','تأمل وتفكير','جلسة']];
+const KH_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12"/><path d="M7 3c0 5 5 6 5 9s-5 4-5 9"/><path d="M17 3c0 5-5 6-5 9s5 4 5 9"/><path d="M9.5 18.5h5"/></svg>';
+function khS(){S.kh=S.kh||{dur:60,act:'read',sessions:[],notes:[],run:null,done:null,book:''};return S.kh}
+function khMonth(d){const m=mkey(d||new Date());return khS().sessions.filter(x=>x.date.startsWith(m))}
+function khStreak(){const set=new Set(khS().sessions.map(x=>x.date));let n=0,d=new Date();if(!set.has(dkey(d)))d=addDays(d,-1);while(set.has(dkey(d))){n++;d=addDays(d,-1)}return n}
+function khLeft(){const r=khS().run;if(!r)return 0;return Math.max(0,r.start+r.dur*60000-Date.now())}
+function khClock(ms){const s=Math.ceil(ms/1000),m=Math.floor(s/60);return `${m}:${String(s%60).padStart(2,'0')}`}
+function khTick(){const k=khS();if(!k.run)return;const left=khLeft();if(left<=0){k.done={act:k.run.act,min:k.run.dur,at:Date.now()};k.run=null;try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}commit();toast('خلصت خلوتك 🌿 سجّل وش تعلمت');return}
+  const c=document.getElementById('kh-clock');if(c)c.textContent=khClock(left);const ring=document.getElementById('kh-ring');if(ring)ring.setAttribute('stroke-dashoffset',(KH_C*(1-left/(k.run.dur*60000))).toFixed(1))}
+const KH_C=2*Math.PI*88;
 function pWaha(){
-  const now=new Date(),k=dkey(now),days=[...Array(7)].map((_,i)=>addDays(now,i-6));
-  const doneN=S.habits.filter(h=>h.log[k]).length,hl=S.health[k]||{},goal=S.settings.waterGoal;
-  const wk=days.map(d=>S.health[dkey(d)]||{}),sl=wk.filter(x=>x.sleep),avgSleep=sl.length?sl.reduce((a,x)=>a+x.sleep,0)/sl.length:0;
-  const st=wk.filter(x=>x.steps),avgSteps=st.length?st.reduce((a,x)=>a+x.steps,0)/st.length:0;
-  const ws=S.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)),last=ws[ws.length-1],first=ws[0];
-  return head('واحة',`عاداتك وصحتك · ${fmtDay(now)}`)+`
-  <section class="hero">
-    <div class="row"><span class="lbl">عادات اليوم</span><span class="lbl num">${S.habits.length?Math.round(doneN/S.habits.length*100):0}%</span></div>
-    <div class="big num" style="margin:4px 0 10px">${doneN} <span style="font-size:1.1rem;font-weight:500">من ${S.habits.length}</span></div>
-    ${bar(S.habits.length?doneN/S.habits.length*100:0)}
-    <div class="row" style="margin-top:12px"><span class="lbl num">الماء ${hl.water||0}/${goal}</span><span class="lbl num">النوم ${hl.sleep||'—'} س</span><span class="lbl num">الخطوات ${hl.steps?fmt(hl.steps):'—'}</span></div>
-  </section>
-
-  <section class="sec">
-    <div class="sec-h"><h2>العادات</h2><span class="sub">اضغط المربع لليوم، أو أيام الأسبوع لتعديلها</span></div>
-    <div class="list">${S.habits.length?S.habits.map(h=>{const s=streak(h);return `<div class="item ${h.log[k]?'done':''}">${chk(h.log[k],'hab-toggle',h.id,h.name)}<div class="grow"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span>${esc(h.name)}</span>${s?`<span class="pill ${s>=5?'good':'acc'} num">سلسلة ${s} ${s<=10&&s>2?'أيام':'يوم'}</span>`:''}</div>
-      <div class="hab-days">${days.map(d=>{const dk=dkey(d);return `<button class="hd ${h.log[dk]?'on':''}" data-act="hab-day" data-id="${h.id}" data-d="${dk}" aria-label="${DAYS[d.getDay()]}">${DAYS[d.getDay()].slice(0,1)}</button>`}).join('')}</div></div>${del('hab-del',h.id)}</div>`}).join(''):'<div class="empty">أضف عادة تبي تثبّتها، مثل أذكار المساء أو قراءة صفحات.</div>'}</div>
-    <form class="add" data-form="habit"><input name="text" placeholder="عادة جديدة" required autocomplete="off"><button class="btn">أضف</button></form>
-  </section>
-
-  <section class="sec">
-    <div class="sec-h"><h2>الماء</h2><span class="sub num">الهدف ${goal} أكواب</span></div>
-    <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-      <div class="cups">${[...Array(goal)].map((_,i)=>`<button class="cup ${i<(hl.water||0)?'on':''}" data-act="water-set" data-n="${i+1}" aria-label="${i+1} أكواب"></button>`).join('')}</div>
-      <div style="display:flex;gap:6px"><button class="btn ghost" data-act="water" data-n="-1" aria-label="أنقص كوب">−</button><button class="btn" data-act="water" data-n="1">+ كوب</button></div>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="sec-h"><h2>صحة اليوم</h2><span class="sub num">متوسط الأسبوع: نوم ${avgSleep?avgSleep.toFixed(1):'—'} س · ${avgSteps?fmt(Math.round(avgSteps)):'—'} خطوة</span></div>
-    <div class="grid2">
-      <div class="stat"><label for="h-sleep">ساعات النوم</label><input id="h-sleep" data-health="sleep" inputmode="decimal" value="${hl.sleep??''}" placeholder="0"></div>
-      <div class="stat"><label for="h-steps">الخطوات</label><input id="h-steps" data-health="steps" inputmode="numeric" value="${hl.steps??''}" placeholder="0"></div>
-      <div class="stat"><label for="h-ex">دقائق الرياضة</label><input id="h-ex" data-health="exercise" inputmode="numeric" value="${hl.exercise??''}" placeholder="0"></div>
-      <div class="stat"><label>الوزن الحالي</label><div style="font-family:var(--f-display);font-size:1.5rem;font-weight:700" class="num">${last?fmt(last.kg):'—'} <small class="muted" style="font-size:.8rem">كجم</small></div>${last&&first&&ws.length>1?`<span class="pill ${last.kg<=first.kg?'good':'warn'} num">${last.kg<=first.kg?'−':'+'}${fmt(Math.abs(last.kg-first.kg))} منذ البداية</span>`:''}</div>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="sec-h"><h2>الوزن</h2><span class="sub num">${ws.length} قراءات</span></div>
-    <div class="card">${ws.length>1?spark(ws.map(w=>w.kg)):'<p class="muted small">سجّل قراءتين أو أكثر ليظهر الرسم.</p>'}
-      <div class="list" style="margin-top:10px">${ws.slice(-4).reverse().map(w=>`<div class="item"><span class="grow">${fmtDay(parseD(w.date))}</span><b class="num">${fmt(w.kg)} كجم</b>${del('w-del',w.id)}</div>`).join('')||'<div class="empty">لا توجد قراءات</div>'}</div>
-      <form class="add" data-form="weight"><input name="kg" inputmode="decimal" placeholder="الوزن بالكجم" required autocomplete="off"><input class="sm" type="date" name="date" value="${k}" aria-label="التاريخ"><button class="btn">سجّل</button></form>
-    </div>
+  const k=khS(),now=new Date(),run=k.run,act=KH_ACTS.find(a=>a[0]===(run?run.act:k.act))||KH_ACTS[0],mon=khMonth(now),mins=mon.reduce((a,x)=>a+x.min,0),streak=khStreak();
+  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),byDay={};mon.forEach(x=>byDay[x.date]=(byDay[x.date]||0)+x.min);
+  const statOf=a=>{const xs=mon.filter(x=>x.act===a);if(a==='read'){const p=xs.reduce((s,x)=>s+(x.pages||0),0);return p?`${p} صفحة`:`${xs.length} جلسة`}if(a==='lang')return `${xs.reduce((s,x)=>s+x.min,0)} دقيقة`;return `${xs.length} جلسة`};
+  const left=run?khLeft():k.dur*60000,frac=run?left/(run.dur*60000):1;
+  const timer=`<section class="kh-timer ${run?'on':''}">
+    <div class="kh-ringw"><svg viewBox="0 0 200 200" class="kh-svg" aria-hidden="true"><circle cx="100" cy="100" r="88" class="kh-track"/><circle id="kh-ring" cx="100" cy="100" r="88" class="kh-prog" stroke-dasharray="${KH_C.toFixed(1)}" stroke-dashoffset="${(KH_C*(1-frac)).toFixed(1)}" transform="rotate(-90 100 100)"/></svg>
+      <div class="kh-mid"><span class="kh-act">${act[1]} ${act[2]}</span><b id="kh-clock" class="num">${khClock(left)}</b><small>${run?'خلوتك شغالة':'دقيقة من الذهب'}</small></div></div>
+    ${run?`<div class="kh-btns"><button class="kh-end" data-act="kh-stop">إنهاء الآن</button><button class="kh-cancel" data-act="kh-cancel">إلغاء</button></div>`
+    :`<div class="kh-pre" role="radiogroup" aria-label="المدة">${[25,45,60].map(m=>`<button role="radio" aria-checked="${k.dur===m}" data-act="kh-dur" data-m="${m}" class="num">${m}<small>د</small></button>`).join('')}</div><button class="kh-go" data-act="kh-start">ابدأ الخلوة</button>`}
   </section>`;
+  const done=k.done?(()=>{const a=KH_ACTS.find(x=>x[0]===k.done.act)||KH_ACTS[0];return `<form class="kh-done" data-form="kh-save"><p class="kh-dt">🌿 خلصت <b class="num">${k.done.min}</b> دقيقة ${a[2]}</p>${a[0]==='read'?`<input name="pages" inputmode="numeric" placeholder="كم صفحة قريت؟" autocomplete="off">`:''}<textarea name="note" rows="2" placeholder="ماذا تعلمت اليوم؟ جملة وحدة تكفي"></textarea><div class="kh-dr"><button class="kh-go">احفظ الخلوة</button><button type="button" class="kh-cancel" data-act="kh-skip">بدون ملاحظة</button></div></form>`})():'';
+  const acts=`<section class="kh-sec"><h2 class="kh-h">ماذا ستثري به عقلك اليوم؟</h2><div class="kh-acts">${KH_ACTS.map(a=>`<button class="kh-ac ${(run?run.act:k.act)===a[0]?'on':''}" data-act="kh-act" data-a="${a[0]}" ${run?'disabled':''}><span class="kh-ai">${a[1]}</span><b>${a[2]}</b><small class="num">${statOf(a[0])} هالشهر</small></button>`).join('')}</div>
+    ${(run?run.act:k.act)==='read'?`<label class="kh-book"><span>📕</span><input id="kh-book" value="${esc(k.book||'')}" placeholder="اسم الكتاب اللي تقراه" autocomplete="off"></label>`:''}</section>`;
+  const heat=`<section class="kh-sec kh-streak"><div class="kh-sr"><div class="kh-fire"><b class="num">${streak}</b><small>${streak===1?'يوم':'أيام'}</small></div><div><p class="kh-st">${streak?`${streak} ${streak===1?'يوم':'أيام متتالية'} من الخلوة`:'ابدأ سلسلتك اليوم'}</p><p class="kh-ss num">${(mins/60).toFixed(1)} ساعة هالشهر · ${mon.length} خلوة</p></div></div>
+    <div class="kh-heat" aria-label="أيام الشهر">${[...Array(dim)].map((_,i)=>{const d=dkey(new Date(now.getFullYear(),now.getMonth(),i+1)),v=byDay[d]||0,l=v>=60?3:v>=30?2:v?1:0;return `<i class="l${l} ${i+1===now.getDate()?'today':''}" title="${i+1}: ${v} د"></i>`}).join('')}</div></section>`;
+  const notes=k.notes.slice(-3).reverse();
+  const note=`<section class="kh-sec"><h2 class="kh-h">مفكرة الخواطر</h2>${notes.map(n=>`<div class="kh-note"><p>${esc(n.text)}</p><small class="num">${fmtDay(parseD(n.date))}${n.act?` · ${(KH_ACTS.find(a=>a[0]===n.act)||['','',''])[2]}`:''}</small><button class="kh-x" data-act="kh-ndel" data-id="${n.id}" aria-label="حذف">×</button></div>`).join('')||'<p class="kh-empty">بعد كل خلوة اكتب جملة وحدة عن اللي تعلمته.</p>'}
+    <form class="kh-nf" data-form="kh-note"><input name="text" placeholder="ماذا تعلمت اليوم؟" required autocomplete="off"><button class="kh-go sm">أضف</button></form></section>`;
+  return `<header class="kh-head"><div><h1>خلوة</h1><p>ساعتك الذهبية للتعلم والارتقاء</p></div><button class="kh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button></header>${done}${timer}${acts}${heat}${note}`;
 }
+
 function spark(vals){const W=300,H=70,P=8,mn=Math.min(...vals),mx=Math.max(...vals),rg=mx-mn||1;
   const pts=vals.map((v,i)=>[P+(W-2*P)*i/(vals.length-1),P+(H-2*P)*(1-(v-mn)/rg)]),last=pts[pts.length-1];
   const line=pts.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ');
@@ -2177,6 +2190,13 @@ const rm=(key,id)=>{S[key]=S[key].filter(x=>x.id!==id)};
 let resetArm=0;
 const A={
   settings:openSettings,'sheet-close':(d,el,e)=>{if(e.target.closest('[data-stop]')&&e.target.closest('[data-act]')!==el)return;if(el.classList.contains('sheet-wrap')&&e.target!==el)return;closeSheet()},
+  'kh-dur':d=>{khS().dur=+d.m;commit()},
+  'kh-act':d=>{khS().act=d.a;commit()},
+  'kh-start':()=>{const k=khS();k.run={start:Date.now(),dur:k.dur,act:k.act};k.done=null;commit();toast(`بدأت خلوتك: ${k.dur} دقيقة`)},
+  'kh-stop':()=>{const k=khS();if(!k.run)return;const min=Math.max(1,Math.round((Date.now()-k.run.start)/60000));k.done={act:k.run.act,min,at:Date.now()};k.run=null;commit()},
+  'kh-cancel':()=>{const k=khS();k.run=null;k.done=null;commit()},
+  'kh-skip':()=>{const k=khS();if(k.done){k.sessions.push({id:uid(),date:dkey(),act:k.done.act,min:k.done.min});k.done=null}commit()},
+  'kh-ndel':d=>{const k=khS();k.notes=k.notes.filter(n=>n.id!==d.id);commit()},
   'clear-sample':()=>{const st={...S.settings,sample:false};S=blank();S.settings=st;closeSheet();commit();toast('مسحت الأمثلة، ابدأ ببياناتك')},
   'load-sample':()=>{const st=S.settings;S=sample();S.settings={...st,sample:true};closeSheet();commit()},
   reset:(d,el)=>{if(Date.now()-resetArm>4000){resetArm=Date.now();el.textContent='اضغط مرة ثانية للتأكيد';return}S=blank();closeSheet();commit();toast('مسحت كل البيانات')},
@@ -2317,6 +2337,8 @@ const F={
     S.plan={salary:sal,jamiya:(S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya,mine:mineCap(),gifts:giftsOf(),fixed:read('fixed'),ration:read('ration'),buckets:bk};const mf=(S.monthFixed||{})[wMonth];if(mf)S.plan.fixed.forEach(([n,a])=>{if(!(n in mf))mf[n]=a});closeSheet();toast('انحفظت الإعدادات')},
   budget:v=>{const b=num(v.budget);if(!(b>=0)){toast('اكتب الميزانية رقماً');return false}S.budgets[wMonth]=b},
   'rc-save':v=>rcApply(v.raw,true),
+  'kh-save':v=>{const k=khS();if(!k.done)return;const pages=Math.max(0,Math.round(num(v.pages)||0)),note=(v.note||'').trim();k.sessions.push({id:uid(),date:dkey(),act:k.done.act,min:k.done.min,pages:pages||undefined,book:k.done.act==='read'?k.book||undefined:undefined});if(note)k.notes.push({id:uid(),text:note,date:dkey(),act:k.done.act});k.done=null;toast('انحفظت خلوتك ✨')},
+  'kh-note':v=>{const t=(v.text||'').trim();if(!t)return false;khS().notes.push({id:uid(),text:t,date:dkey()})},
   'rashan-pay':v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const n=S.groceries.filter(g=>g.done).length;
     S.expenses.push({id:uid(),amount,cat:'راشن البيت',sub:'',note:`راشن البيت (${n} غرض)`,date:dkey()});S.groceries=S.groceries.filter(g=>!g.done);spendAlert(amount,'راشن البيت','')},
   expense:v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const cat=CATS.includes(v.cat)?v.cat:'الالتزامات',sub=subsOf(cat)?(subsOf(cat).includes(v.sub)?v.sub:'أخرى'):'';
@@ -2373,7 +2395,7 @@ function render(){
   document.documentElement.dataset.page=page;
   const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=page==='beiti'?'#F5F6F0':getComputedStyle(document.documentElement).getPropertyValue('--hero-bg').trim();
   $('#view').innerHTML=banner()+PAGES[page]();
-  {const key=page+':'+(page==='beiti'?S.ui.beiti:''),v=$('#view');if(key!==lastView&&page==='beiti'){v.classList.add('sh-enter');clearTimeout(enterT);enterT=setTimeout(()=>v.classList.remove('sh-enter'),1200)}else if(key!==lastView)v.classList.remove('sh-enter');lastView=key;
+  {const key=page+':'+(page==='beiti'?S.ui.beiti:''),v=$('#view');if(key!==lastView&&(page==='beiti'||page==='waha')){v.classList.add('sh-enter');clearTimeout(enterT);enterT=setTimeout(()=>v.classList.remove('sh-enter'),1200)}else if(key!==lastView)v.classList.remove('sh-enter');lastView=key;
    if(ui.fx){const t=document.querySelector(`.pcard [data-id="${ui.fx.id}"], .bl-card [data-id="${ui.fx.id}"]`),c=t&&t.closest('.pcard,.bl-card');if(c)c.classList.add('fx-'+ui.fx.k);ui.fx=null}}
   document.querySelectorAll('.nav a').forEach(a=>a.dataset.page===page?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
   if(page==='masai')applyHeroMode();
@@ -2385,6 +2407,7 @@ let lastDay=dkey();
 function tick(){
   if(dkey()!==lastDay){lastDay=dkey();render();return}
   masarTick();
+  if(page==='waha')khTick();else if(S.kh&&S.kh.run&&khLeft()<=0)khTick();
   if(page!=='masai')return;
   const mc=$('#m-clock');if(mc){const ct=clockHTML(new Date());if(mc.innerHTML!==ct)mc.innerHTML=ct}
   const np=nextPrayer(),c=$('#np-count');if(c){if($('#np-name').textContent!==np.name){render();return}c.textContent=countdown(np.at-Date.now());const rg=$('#np-ring');if(rg)rg.setAttribute('stroke-dashoffset',(326.7*(1-prayerProgress(np,new Date()))).toFixed(1))}
