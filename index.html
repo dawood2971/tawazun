@@ -128,6 +128,7 @@
 .pc-bar .pc-add{background:#8BD448;color:#0F4A3C}
 .pc-bar.in{width:100%;justify-content:center;border:0;background:#0F4A3C;color:#fff;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer}
 .pcard.done{opacity:.75}.pcard.done .pc-n{text-decoration:line-through;color:#66756D}
+.pgrp{margin-bottom:14px}.pgrp[hidden]{display:none}.pg-h{display:flex;align-items:center;gap:8px;margin:0 2px 8px;font-size:.95rem;font-weight:800;color:#0F4A3C}.pg-h span{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;font-size:1rem}.pg-h small{margin-inline-start:auto;padding:1px 9px;border-radius:99px;background:#E4F4EA;color:#1F7A55;font-size:.72rem;font-weight:700}
 .pgrid{grid-template-columns:1fr;gap:8px}
 .pcard{display:grid;grid-template-columns:44px minmax(0,1fr) auto 22px;grid-template-rows:auto auto;column-gap:10px;row-gap:0;align-items:center;padding:8px 10px;border-radius:16px}
 .pcard .pc-img{grid-column:1;grid-row:1/3;width:44px;height:44px;margin:0;border-radius:12px}.pcard .pc-img span{font-size:1.5rem;filter:none}
@@ -1488,7 +1489,7 @@ const MF={
     if(t.remind!==''&&!t.time)toast('التذكير يحتاج وقت للمهمة');closeSheet()},
 };
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='sp-title'){e.preventDefault();e.target.blur()}});
-document.addEventListener('input',e=>{if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)})});
+document.addEventListener('input',e=>{if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.pgrp').forEach(g=>{g.hidden=!g.querySelector('.pcard:not([hidden])')})});
 document.addEventListener('input',e=>{if(e.target.id!=='inbox-q')return;const q=e.target.value.trim();
   document.querySelectorAll('#m-today .task').forEach(r=>r.hidden=q&&!r.dataset.title.includes(q))});
 document.addEventListener('change',e=>{const id=e.target.id;if(id==='sp-title'){const i=e.target,t=S.tasks.find(x=>x.id===i.dataset.id),v=i.value.trim();if(t&&v&&v!==t.title){spRename();const r=document.querySelector(`.task[data-id="${t.id}"] .task-t`);if(r)r.textContent=v;toast('تعدّل الاسم')}return}if(id==='rate-good'||id==='rate-better'){const r=S.ratings[todayK()]=S.ratings[todayK()]||{};r[id==='rate-good'?'good':'better']=e.target.value.trim();save()}});
@@ -1963,13 +1964,13 @@ function rashanView(){const items=S.groceries.map(g=>{if(!g.cat||(g.cat!=='meat'
   const card=g=>{const n=qtyNum(g.qty),unit=String(g.qty||'').replace(/^\s*\d+(?:\.\d+)?\s*/,'');return `<div class="pcard ${g.done?'done':''}" data-t="${esc(rnorm(g.text))}">
     <button class="pc-x" data-act="g-del" data-id="${g.id}" aria-label="حذف ${esc(g.text)}">×</button>
     <div class="pc-img" style="background:${RTINT[g.cat]||'#F1F1EC'}"><span aria-hidden="true">${itemEmo(g)}</span></div>
-    <button class="pc-n" data-act="g-move" data-id="${g.id}">${esc(g.text)}</button><span class="pc-q num">${g.qty?esc(g.qty):rcatOf(g.cat)[2]}</span>
+    <button class="pc-n" data-act="g-move" data-id="${g.id}">${esc(g.text)}</button><span class="pc-q num">${g.qty?esc(g.qty):""}</span>
     ${g.done?`<button class="pc-bar in" data-act="g-toggle" data-id="${g.id}">✓ في السلة</button>`:`<div class="pc-bar"><button data-act="g-qty" data-id="${g.id}" data-d="-1" aria-label="أنقص">−</button><b class="num">${n||1}${unit?` <small>${esc(unit)}</small>`:''}</b><button data-act="g-qty" data-id="${g.id}" data-d="1" aria-label="زِد">+</button><button class="pc-add" data-act="g-toggle" data-id="${g.id}" aria-label="اشتريته">✓</button></div>`}</div>`};
   return `<div class="shop">
     <div class="sh-cats" role="tablist"><button class="${cat?'':'on'}" data-act="r-cat" data-c=""><span>🛒</span><b>الكل</b><small class="num">${left}</small></button>${used.map(c=>`<button class="${cat===c[0]?'on':''}" data-act="r-cat" data-c="${c[0]}"><span style="background:${RTINT[c[0]]}">${RICON[c[0]]}</span><b>${c[2].split(' ')[0]}</b><small class="num">${items.filter(g=>g.cat===c[0]&&!g.done).length}</small></button>`).join('')}</div>
     ${bought?`<form class="sh-promo pay" data-form="rashan-pay"><div><p class="sh-pt">${left?'اشتريت جزء؟':'خلصت الراشن؟'}</p><p class="sh-ps num">${bought} غرض في السلة · اكتب المبلغ ويتسجل في غوازي</p></div><div class="r-pay-row"><input id="r-amt" name="amount" inputmode="decimal" placeholder="المبلغ" required><button class="btn">سجّل</button></div></form>`:''}
     <div class="sh-h"><h2>${cat?rcatOf(cat)[2]:'تحتاجها'}</h2><span class="sub num">${left?`${left} غرض باقي`:items.length?'اشتريت كل شي':'القائمة فاضية'}</span></div>
-    ${shown.length?`<div class="pgrid">${shown.map(card).join('')}</div>`:'<div class="empty">اكتب أو الصق أغراضك تحت، وبتترتب تلقائياً حسب الأقسام.</div>'}
+    ${shown.length?[...RCATS.map(c=>[c,shown.filter(g=>!g.done&&g.cat===c[0])]),[['done','✓','في السلة'],shown.filter(g=>g.done)]].filter(x=>x[1].length).map(([c,gs])=>`<div class="pgrp"><h3 class="pg-h"><span style="background:${RTINT[c[0]]||'#E4F4EA'}">${RICON[c[0]]||'✓'}</span>${esc(c[2])}<small class="num">${gs.length}</small></h3><div class="pgrid">${gs.map(card).join('')}</div></div>`).join(''):'<div class="empty">اكتب أو الصق أغراضك تحت، وبتترتب تلقائياً حسب الأقسام.</div>'}
     <form class="sh-add" data-form="grocery-bulk"><label for="r-in">أضف أغراض</label><textarea id="r-in" name="raw" rows="2" placeholder="مثال: 2 حليب، جبن مثلثات، طماط" required></textarea><button class="btn">أضف للقائمة</button></form>
     ${left?`<div class="sh-promos"><button class="sh-promo lime" data-act="g-img"><b>حمّل القائمة صورة</b><small>PNG مرتبة بالأقسام</small><span aria-hidden="true">⬇</span></button><button class="sh-promo sand" data-act="g-copy"><b>انسخ القائمة</b><small>للواتساب</small><span aria-hidden="true">⧉</span></button></div>`:''}
     ${bought?'<button class="link sh-clear" data-act="g-clear">امسح اللي في السلة بدون تسجيل</button>':''}
