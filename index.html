@@ -79,7 +79,7 @@
 .sh-brand{display:flex;align-items:baseline;gap:6px;flex:1}.sh-brand b{font-size:1.35rem;font-weight:800}.sh-brand small{font-size:.72rem;color:#B9D7CB}.sh-logo{font-size:1.1rem}
 .sh-gear{background:rgba(255,255,255,.1)!important;border-color:transparent!important;color:#fff!important;width:38px;height:38px}
 .sh-cart{position:relative;width:38px;height:38px;border:0;border-radius:12px;background:#8BD448;font-size:1.1rem;cursor:pointer}.sh-cart i{position:absolute;top:-5px;inset-inline-end:-5px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:#F4B63F;color:#16241E;font-size:.66rem;font-style:normal;font-weight:800;display:grid;place-items:center}
-.sh-search{flex:1 0 100%;display:flex;align-items:center;gap:6px;background:#fff;border-radius:12px;padding:0 12px;height:42px;color:#66756D}.sh-search span{font-size:1.2rem}.sh-search input{flex:1;min-width:0;border:0;outline:0;background:none;font:inherit;font-size:16px;color:#16241E}
+.sh-search{flex:1 0 100%;min-width:0;max-width:100%;box-sizing:border-box;display:flex;align-items:center;gap:6px;background:#fff;border-radius:12px;padding:0 12px;height:42px;color:#66756D}.sh-search span{font-size:1.2rem}.sh-search input{flex:1;min-width:0;width:100%;border:0;outline:0;background:none;font:inherit;font-size:16px;color:#16241E}
 .sh-hero{position:relative;display:flex;align-items:center;gap:8px;overflow:hidden;margin-bottom:14px;padding:18px 16px;border-radius:22px;background:radial-gradient(80% 90% at 0% 100%,#2C8A62 0,transparent 60%),linear-gradient(150deg,#14583F,#0F4A3C);color:#fff;box-shadow:0 14px 28px -16px rgba(15,74,60,.7)}
 .sh-ht{flex:1;min-width:0;position:relative;z-index:1}.sh-eye{margin:0 0 6px;display:inline-block;font-size:.72rem;font-weight:700;color:#16241E;background:#8BD448;border-radius:99px;padding:3px 10px}
 .sh-hero h2{margin:0 0 6px;font-size:1.6rem;line-height:1.25;font-weight:800}.sh-sub{margin:0 0 12px;font-size:.78rem;color:#C9E3D7}
@@ -98,6 +98,26 @@
 .pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .pcard{position:relative;display:flex;flex-direction:column;gap:2px;padding:10px;border-radius:18px;background:#fff;border:1px solid #E9EDE5;box-shadow:0 6px 16px -12px rgba(15,74,60,.35)}
 .pcard[hidden]{display:none}
+.bl-top{margin-bottom:12px}
+.bl-hero{position:relative;display:flex;align-items:center;gap:12px;overflow:hidden;margin-bottom:14px;padding:18px 16px;border-radius:22px;background:radial-gradient(70% 90% at 0% 0%,#2C8A62 0,transparent 60%),linear-gradient(150deg,#14583F,#0F4A3C);color:#fff;box-shadow:0 14px 28px -16px rgba(15,74,60,.6)}
+.bl-ht{flex:1;min-width:0}.bl-eye{display:inline-block;margin:0 0 8px;padding:3px 10px;border-radius:99px;background:#8BD448;color:#0F3B2F;font-size:.74rem;font-weight:700}
+.bl-big{margin:0;font-size:2rem;font-weight:800;line-height:1.1}.bl-big small{font-size:.85rem;font-weight:600;color:#C9E3D7}.bl-sub{margin:2px 0 10px;font-size:.8rem;color:#C9E3D7}
+.bl-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}.bl-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8BD448,#F4B63F)}
+.bl-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.bl-stats span{display:flex;flex-direction:column;gap:1px;padding:7px 8px;border-radius:12px;background:rgba(255,255,255,.09);font-size:.66rem;color:#C9E3D7;min-width:0}.bl-stats b{font-size:.82rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bl-ring{flex:none;display:grid;place-items:center;align-content:center;width:84px;height:84px;border-radius:50%;background:radial-gradient(closest-side,#0F4A3C 74%,transparent 75% 100%),conic-gradient(#F4B63F calc(var(--p)*1%),rgba(255,255,255,.15) 0);align-self:flex-start}.bl-ring b{font-size:1.15rem;line-height:1}.bl-ring small{font-size:.62rem;color:#C9E3D7}
+.bl-list{display:flex;flex-direction:column;gap:10px}
+.bl-card{position:relative;display:flex;align-items:center;gap:12px;padding:12px;border-radius:18px;background:#fff;border:1px solid #E7EAE2;box-shadow:0 6px 16px -12px rgba(15,74,60,.35)}
+.bl-ic{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:15px;font-size:1.6rem}
+.bl-m{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.bl-m b{font-size:1rem;color:#16241E}.bl-m>span{font-size:.74rem;color:#66756D}
+.bl-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}.bl-auto,.bl-st{padding:2px 9px;border-radius:99px;font:inherit;font-size:.68rem;border:1px solid #DCE3DA;background:#F5F6F0;color:#4D5C55}.bl-auto{cursor:pointer}.bl-auto.on{background:#E4F4EA;border-color:#BFE3CB;color:#1F7A55}.bl-st.good{background:#E4F4EA;border-color:#BFE3CB;color:#1F7A55}.bl-st.warn,.bl-st.bad{background:#FFF1D6;border-color:#F6DCA4;color:#8A5A00}
+.bl-r{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-inline-end:16px}.bl-amt{margin:0;font-size:1.1rem;font-weight:800;color:#0F4A3C}.bl-amt small{margin-inline-start:3px;font-size:.62rem;font-weight:600;color:#66756D}
+.bl-pay{min-width:72px;height:32px;padding:0 12px;border:0;border-radius:99px;background:#F4B63F;color:#3A2A00;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer}.bl-pay[aria-pressed="true"]{background:#E4F4EA;color:#1F7A55}
+.bl-card.paid{background:#FAFBF7}.bl-card.paid .bl-m b{text-decoration:line-through;color:#7D8A83}.bl-card.paid .bl-amt{color:#7D8A83}
+.bl-x{position:absolute;top:6px;inset-inline-end:6px;width:22px;height:22px;border:0;border-radius:50%;background:none;color:#9AA59F;font-size:1rem;line-height:1;cursor:pointer}
+.bl-add{margin-top:14px;padding:14px;border-radius:18px;background:#fff;border:1px dashed #BFD6C8}.bl-add h3{margin:0 0 10px;font-size:1rem;color:#0F4A3C}
+.bl-add form{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}.bl-f{min-width:0;height:44px;padding:0 12px;border:1px solid #E1E6DE;border-radius:12px;background:#F5F6F0;font:inherit;font-size:16px;color:#16241E}.bl-f.wide{grid-column:1/-1}
+.bl-go{height:44px;padding:0 18px;border:0;border-radius:12px;background:#0F4A3C;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.bl-add .chk-l{margin-top:10px}.bl-add .sub{margin:6px 0 0;font-size:.72rem}
 .pc-img{display:grid;place-items:center;height:84px;border-radius:14px;margin-bottom:6px}.pc-img span{font-size:2.6rem;filter:drop-shadow(0 6px 6px rgba(0,0,0,.15))}
 .pc-x{position:absolute;top:6px;inset-inline-start:6px;z-index:1;width:24px;height:24px;border:0;border-radius:50%;background:rgba(255,255,255,.85);color:#8A968F;font-size:.95rem;cursor:pointer}
 .pc-n{border:0;background:none;padding:0;text-align:start;font:inherit;font-weight:700;font-size:.9rem;color:#16241E;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1554,6 +1574,10 @@ function autoBills(){const now=new Date(),m=mkey(now),dim=new Date(now.getFullYe
   (S.bills||[]).forEach(b=>{if(!b.auto||b.paid[m]||b.skip===m||!billLive(b,m))return;const day=Math.min(b.day,dim);if(now.getDate()<day)return;
     const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey(new Date(now.getFullYear(),now.getMonth(),day)),auto:1};S.expenses.push(e);b.paid[m]=e.id;ch=true});
   if(ch)save();return ch}
+const BEMO=[['جوال','📱'],['هاتف','📱'],['سيار','🚗'],['قسط','🏦'],['انترنت','🌐'],['إنترنت','🌐'],['الإنترنت','🌐'],['نت','🌐'],['كهرب','💡'],['ماء','💧'],['مياه','💧'],['ايجار','🏠'],['إيجار','🏠'],['سكن','🏠'],['غاز','🔥'],['تأمين','🛡️'],['اشتراك','📺'],['نتفل','📺'],['مدرس','🎒'],['نادي','🏋️']];
+const BTINT=['#E4F4EA','#FFF1D6','#E6F0FF','#FDE8E4','#EEE9FB','#E2F5F3'];
+function billEmo(b){const n=String(b.name||'');const m=BEMO.find(e=>n.includes(e[0]));return m?m[1]:'🧾'}
+function billTint(b){let h=0;for(const c of String(b.name||''))h=(h*31+c.charCodeAt(0))>>>0;return BTINT[h%BTINT.length]}
 function billState(b){const now=new Date(),m=mkey(now),paid=!!b.paid[m];if(paid)return['مدفوعة','good'];if(!billLive(b,m)){const[y,mo]=b.from.split('-');return[`تبدأ ${new Intl.DateTimeFormat(LOC,{month:'long'}).format(new Date(+y,mo-1,1))}`,'']}
   const diff=b.day-now.getDate();if(diff<0)return[`متأخرة ${-diff} يوم`,'bad'];if(diff===0)return['تستحق اليوم','bad'];if(diff<=5)return[`بعد ${diff} أيام`,'warn'];return[`يوم ${b.day}`,'']}
 function pBeiti(){
@@ -1577,16 +1601,24 @@ function pBeiti(){
     <div class="list">${upcoming.map(e=>{const r=relDay(e.date);return `<div class="item"><div class="grow"><div><b>${esc(kn(e.kid))}</b> · ${esc(e.text)}</div><div class="sub num">${fmtDay(parseD(e.date))}${e.time?` · ${clockStr(e.time)}`:''}</div></div><span class="pill ${r[1]}">${r[0]}</span>${del('ke-del',e.id)}</div>`}).join('')||'<div class="empty">ما فيه مواعيد قادمة.</div>'}</div>
     ${S.kids.length?`<form class="add" data-form="kidEvent"><select class="sm" name="kid" aria-label="الاسم">${S.kids.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select><input name="text" placeholder="الموعد، مثل: تمرين سباحة" required autocomplete="off"><input class="sm" type="date" name="date" value="${k}" required aria-label="التاريخ"><input class="sm" type="time" name="time" aria-label="الوقت"><button class="btn">أضف</button></form>`:'<p class="muted small" style="margin-top:10px">أضف أسماء الأولاد أولاً عشان تسجّل مواعيدهم.</p>'}
     ${past.length?`<p class="small muted" style="margin-top:12px">${past.length} مواعيد انتهت. <button class="link" data-act="ke-clear">امسحها</button></p>`:''}`}
+  let billHero='';
   if(tab==='bills'){const m=mkey(now),total=S.bills.filter(b=>billLive(b,m)||b.paid[m]).reduce((a,b)=>a+b.amount,0),paidT=S.bills.filter(b=>b.paid[m]).reduce((a,b)=>a+b.amount,0);
     const items=S.bills.slice().sort((a,b)=>!!a.paid[m]-!!b.paid[m]||a.day-b.day);
-    body=`<div class="sec-h"><h2>فواتير ${fmtMonth(now)}</h2><span class="sub num">${money(paidT)} من ${money(total)}</span></div>
-    <div style="margin-bottom:10px">${bar(total?paidT/total*100:0)}</div>
-    <div class="list">${items.map(b=>{const st=billState(b);return `<div class="item ${b.paid[m]?'done':''}">${chk(b.paid[m],'b-toggle',b.id,b.name)}<div class="grow"><div class="t">${esc(b.name)}</div><div class="sub num">${money(b.amount)} · كل شهر يوم ${b.day}</div></div><button class="pill ${b.auto?'good':''}" data-act="b-auto" data-id="${b.id}" aria-pressed="${!!b.auto}" title="تندفع تلقائياً كل شهر">${b.auto?'⟳ تلقائي':'يدوي'}</button><span class="pill ${st[1]}">${st[0]}</span>${del('b-del',b.id)}</div>`}).join('')||'<div class="empty">أضف فواتيرك الشهرية لتعرف وش المستحق.</div>'}</div>
-    <p class="sub" style="margin-top:8px">لما تعلّم الفاتورة مدفوعة تنضاف تلقائياً لمصاريف «غوازي».</p>
-    <form class="add" data-form="bill"><input name="name" placeholder="الفاتورة" required autocomplete="off"><input class="xs" name="amount" inputmode="decimal" placeholder="المبلغ" required autocomplete="off"><input class="xs" name="day" inputmode="numeric" placeholder="يوم" required autocomplete="off"><button class="btn">أضف</button></form>
-    <label class="chk-l"><input type="checkbox" name="auto" value="1" form="" id="bill-auto"> فاتورة ثابتة: تنحسب مدفوعة تلقائياً في يومها كل شهر</label>`}
+    const live=items.filter(x=>billLive(x,m)&&!x.paid[m]),next=live.slice().sort((x,y)=>((x.day-now.getDate()+31)%31)-((y.day-now.getDate()+31)%31))[0],pct=total?Math.round(paidT/total*100):0;
+    billHero=`<section class="bl-hero"><div class="bl-ht"><p class="bl-eye">فواتير ${fmtMonth(now)}</p><p class="bl-big num">${fmtMoney(total-paidT)} <small>${esc(S.settings.currency)}</small></p><p class="bl-sub">${total-paidT>0?'باقي عليك هالشهر':'كل فواتير الشهر مدفوعة'}</p>
+      <div class="bl-bar"><i style="width:${pct}%"></i></div><div class="bl-stats num"><span><b>${fmtMoney(paidT)}</b>مدفوع</span><span><b>${fmtMoney(total)}</b>المجموع</span><span><b>${next?esc(next.name):'—'}</b>${next?`القادمة يوم ${next.day}`:'ما فيه قادمة'}</span></div></div>
+      <div class="bl-ring num" style="--p:${pct}"><b>${pct}%</b><small>مدفوع</small></div></section>`;
+    body=`<div class="sec-h"><h2>فواتيري</h2><span class="sub num">${items.length} فاتورة</span></div>
+    <div class="bl-list">${items.map(x=>{const st=billState(x),pd=!!x.paid[m];return `<div class="bl-card ${pd?'paid':''}">
+      <span class="bl-ic" style="background:${billTint(x)}" aria-hidden="true">${billEmo(x)}</span>
+      <div class="bl-m"><b>${esc(x.name)}</b><span class="num">كل شهر يوم ${x.day}</span><div class="bl-tags"><button class="bl-auto ${x.auto?'on':''}" data-act="b-auto" data-id="${x.id}" aria-pressed="${!!x.auto}">${x.auto?'⟳ تلقائي':'يدوي'}</button><span class="bl-st ${st[1]}">${st[0]}</span></div></div>
+      <div class="bl-r"><p class="bl-amt num">${fmtMoney(x.amount)}<small>${esc(S.settings.currency)}</small></p>${pd||billLive(x,m)?`<button class="bl-pay" data-act="b-toggle" data-id="${x.id}" aria-pressed="${pd}">${pd?'✓ مدفوعة':'ادفع'}</button>`:''}</div>
+      <button class="bl-x" data-act="b-del" data-id="${x.id}" aria-label="حذف ${esc(x.name)}">×</button></div>`}).join('')||'<div class="empty">أضف فواتيرك الشهرية تحت.</div>'}</div>
+    <div class="bl-add"><h3>أضف فاتورة</h3><form data-form="bill"><input class="bl-f wide" name="name" placeholder="اسم الفاتورة" required autocomplete="off"><input class="bl-f" name="amount" inputmode="decimal" placeholder="المبلغ" required autocomplete="off"><input class="bl-f" name="day" inputmode="numeric" placeholder="يوم" required autocomplete="off"><button class="bl-go">أضف</button></form>
+    <label class="chk-l"><input type="checkbox" name="auto" value="1" form="" id="bill-auto"> فاتورة ثابتة: تنحسب مدفوعة تلقائياً في يومها كل شهر</label>
+    <p class="sub">لما تعلّم الفاتورة مدفوعة تنضاف تلقائياً لمصاريف «غوازي».</p></div>`}
   const nextKid=upcoming[0],dueSum=unpaid.filter(b=>b.day<=now.getDate()+5).reduce((a,b)=>a+b.amount,0);
-  const hero=`<div class="sh-top"><div class="sh-brand"><span class="sh-logo" aria-hidden="true">🌿</span><b>بيتي</b><small>${fmtDay(now)}</small></div><button class="icon-btn sh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button><button class="sh-cart" data-act="beiti-tab" data-t="groceries" aria-label="راشن البيت">🛒<i class="num">${gLeft}</i></button>
+  const hero=tab==='bills'?`<div class="sh-top bl-top"><div class="sh-brand"><span class="sh-logo" aria-hidden="true">🧾</span><b>بيتي</b><small>${fmtDay(now)}</small></div><button class="icon-btn sh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button></div>`+billHero:`<div class="sh-top"><div class="sh-brand"><span class="sh-logo" aria-hidden="true">🌿</span><b>بيتي</b><small>${fmtDay(now)}</small></div><button class="icon-btn sh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button><button class="sh-cart" data-act="beiti-tab" data-t="groceries" aria-label="راشن البيت">🛒<i class="num">${gLeft}</i></button>
     <label class="sh-search"><span aria-hidden="true">⌕</span><input id="r-q" type="search" placeholder="ابحث في أغراض الراشن" autocomplete="off"></label></div>
     <section class="sh-hero"><div class="sh-ht"><p class="sh-eye num">⚡ ${gLeft?`${gLeft} غرض باقي`:'القائمة خالصة'}</p><h2>نجيب السوق<br>لباب بيتك</h2><p class="sh-sub num">${unpaid.length?`فواتير خلال 5 أيام: ${fmtMoney(dueSum)} ${esc(S.settings.currency)}`:'كل الفواتير مدفوعة'}</p><button class="sh-cta" data-act="shop-now">ابدأ التسوق</button></div><span class="sh-img" aria-hidden="true"></span></section>`;
   return hero+`<div class="seg sh-seg" role="tablist">${tabs.map(([id,n,c])=>`<button role="tab" aria-selected="${tab===id}" data-act="beiti-tab" data-t="${id}">${n}<small>${c}</small></button>`).join('')}</div><section class="sec sh-sec" style="margin-top:14px">${body}</section>`;
