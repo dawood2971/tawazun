@@ -964,7 +964,7 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
   <div class="nav-in">
     <a href="#masai" data-page="masai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>مَسَار</a>
     <a href="#waha" data-page="waha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 11c-1-3-4-5-8-5 1 3 4 5 8 5z"/><path d="M12 11c1-3 4-5 8-5-1 3-4 5-8 5z"/><path d="M12 8c0-2.5-1.5-4.5-3-5.5M12 8c0-2.5 1.5-4.5 3-5.5"/></svg>واحة</a>
-    <a href="#beiti" data-page="beiti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>بيتي</a>
+    <a href="#beiti" data-page="beiti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>معاش</a>
     <a href="#mahfazti" data-page="mahfazti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/><path d="M16 15h2"/><path d="M6 6l9-3 1 3"/></svg>غوازي</a>
   </div>
 </nav>
@@ -1711,7 +1711,7 @@ function pBeiti(){
     const items=S.bills.slice().sort((a,b)=>!!a.paid[m]-!!b.paid[m]||a.day-b.day);
     const live=items.filter(x=>billLive(x,m)&&!x.paid[m]),next=live.slice().sort((x,y)=>((x.day-now.getDate()+31)%31)-((y.day-now.getDate()+31)%31))[0],pct=total?Math.round(paidT/total*100):0;
     const kinds=BKINDS.map(k=>[...k,items.filter(x=>billKind(x)===k[0])]),kSel=BKINDS.some(k=>k[0]===ui.bKind)?ui.bKind:'',shownB=kSel?items.filter(x=>billKind(x)===kSel):items,day=now.getDate(),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-    billHero=`<section class="bp-head"><div class="bp-row"><span class="bp-av" aria-hidden="true">${BICON.user}</span><div class="bp-hi"><b>فواتير بيتي</b><small class="num">${fmtDay(now)}</small></div><button class="bp-ib" data-act="settings" aria-label="الإعدادات">${GEAR}</button></div>
+    billHero=`<section class="bp-head"><div class="bp-row"><span class="bp-av" aria-hidden="true">${BICON.user}</span><div class="bp-hi"><b>فواتيري</b><small class="num">${fmtDay(now)}</small></div><button class="bp-ib" data-act="settings" aria-label="الإعدادات">${GEAR}</button></div>
       <label class="bp-search"><span aria-hidden="true">${BICON.search}</span><input id="b-q" type="search" placeholder="ابحث عن فاتورة أو خدمة…" autocomplete="off"></label></section>
     <section class="bp-sheet ${ui.bpOpen||kSel?'open':''}"><button class="bp-sh" data-act="bp-open" aria-expanded="${!!(ui.bpOpen||kSel)}"><h3>${BICON.receipt}ادفع فاتورة</h3><span class="bp-more num">${kSel?esc(BKINDS.find(k=>k[0]===kSel)[1]):`${items.length} فواتير`}<i class="bp-chev" aria-hidden="true">⌄</i></span></button>
       ${ui.bpOpen||kSel?`${kSel?`<button class="bp-all" data-act="b-kind" data-k="">عرض كل الفواتير</button>`:''}<div class="bp-grid">${kinds.map(([k,label,,bs])=>{const due=bs.filter(x=>billLive(x,m)&&!x.paid[m]).length;return `<button class="bp-tile ${kSel===k?'on':''} ${bs.length?'':'none'}" data-act="b-kind" data-k="${k}"><span class="bp-ti">${BICON[k]}${due?`<i class="num">${due}</i>`:''}</span><b>${label}</b></button>`}).join('')}</div>`:''}</section>
@@ -1730,7 +1730,7 @@ function pBeiti(){
     <p class="sub">لما تعلّم الفاتورة مدفوعة تنضاف تلقائياً لمصاريف «غوازي».</p></div>`}
   const nextKid=upcoming[0],dueSum=unpaid.filter(b=>b.day<=now.getDate()+5).reduce((a,b)=>a+b.amount,0);
   const orb=[...new Set(S.groceries.filter(g=>!g.done).map(itemEmo))].slice(0,6);while(orb.length&&orb.length<5)orb.push(['🥕','🍞','🥛','🍅','🧀'][orb.length]);if(!orb.length)orb.push('🥕','🍞','🥛','🍅','🧀');
-  const hero=tab==='bills'?billHero:`<div class="sh-top"><div class="sh-brand"><span class="sh-logo" aria-hidden="true">🌿</span><b>بيتي</b><small>${fmtDay(now)}</small></div><button class="icon-btn sh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button><button class="sh-cart" data-act="beiti-tab" data-t="groceries" aria-label="راشن البيت">🛒<i class="num">${gLeft}</i></button>
+  const hero=tab==='bills'?billHero:`<div class="sh-top"><div class="sh-brand"><span class="sh-logo" aria-hidden="true">🌿</span><b>معاش</b><small>${fmtDay(now)}</small></div><button class="icon-btn sh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button><button class="sh-cart" data-act="beiti-tab" data-t="groceries" aria-label="راشن البيت">🛒<i class="num">${gLeft}</i></button>
     <label class="sh-search"><span aria-hidden="true">⌕</span><input id="r-q" type="search" placeholder="ابحث أو أضف غرض…" autocomplete="off" enterkeyhint="done"></label><div class="sh-sug" id="r-sug" hidden></div></div>
     <section class="sh-hero"><div class="sh-ht"><p class="sh-eye num">⚡ ${gLeft?`${gLeft} غرض باقي`:'القائمة خالصة'}</p><h2>نجيب السوق<br>لباب بيتك</h2><p class="sh-sub num">${unpaid.length?`فواتير خلال 5 أيام: ${fmtMoney(dueSum)} ${esc(S.settings.currency)}`:'كل الفواتير مدفوعة'}</p><button class="sh-cta" data-act="shop-now">ابدأ التسوق</button></div><span class="sh-vis" aria-hidden="true"><span class="sh-orb">${orb.map((e,i)=>`<i style="--a:${i*360/orb.length}deg"><b>${e}</b></i>`).join('')}</span><span class="sh-img"></span></span></section>`;
   return hero+`<div class="seg sh-seg" role="tablist">${tabs.map(([id,n,c])=>`<button role="tab" aria-selected="${tab===id}" data-act="beiti-tab" data-t="${id}">${n}<small>${c}</small></button>`).join('')}</div><section class="sec sh-sec" style="margin-top:14px">${body}</section>`;
@@ -2159,7 +2159,7 @@ async function rashanImage(){
       ctx.fillStyle=C.ink;ctx.font=IT;ctx.textAlign='right';r.lines.forEach((ln,j)=>ctx.fillText(ln,xr-64,y+j*40));
       if(r.qty){ctx.font=QT;const w=ctx.measureText(r.qty).width+24;ctx.fillStyle=C.soft;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(xl+20,y-28,w,38,19);else ctx.rect(xl+20,y-28,w,38);ctx.fill();ctx.fillStyle=C.pur;ctx.textAlign='center';ctx.fillText(r.qty,xl+20+w/2,y)}
       y+=r.lines.length*40+16})});
-  ctx.textAlign='center';ctx.fillStyle=C.mut;ctx.font=F(500,24);ctx.fillText('بيتي · توازن',W/2,H-50);
+  ctx.textAlign='center';ctx.fillStyle=C.mut;ctx.font=F(500,24);ctx.fillText('معاش · توازن',W/2,H-50);
   return await new Promise(r=>cv.toBlob(r,'image/png'))}
 async function rashanShare(){const left=S.groceries.filter(g=>!g.done).length;if(!left){toast('ما فيه أغراض باقية للحفظ');return}
   toast('أجهّز الصورة…');const blob=await rashanImage();if(!blob){toast('تعذّر تجهيز الصورة');return}
