@@ -79,6 +79,15 @@
 .sh-brand{display:flex;align-items:baseline;gap:6px;flex:1}.sh-brand b{font-size:1.35rem;font-weight:800}.sh-brand small{font-size:.72rem;color:#B9D7CB}.sh-logo{font-size:1.1rem}
 .sh-gear{background:rgba(255,255,255,.1)!important;border-color:transparent!important;color:#fff!important;width:38px;height:38px}
 .sh-cart{position:relative;width:38px;height:38px;border:0;border-radius:12px;background:#8BD448;font-size:1.1rem;cursor:pointer}.sh-cart i{position:absolute;top:-5px;inset-inline-end:-5px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:#F4B63F;color:#16241E;font-size:.66rem;font-style:normal;font-weight:800;display:grid;place-items:center}
+.sh-promo.rc{display:block;padding:0;background:#fff;border:1px solid #E1E6DE;color:#16241E}
+.rc-head{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;border:0;background:none;font:inherit;text-align:start;cursor:pointer;color:inherit}.rc-head>span:nth-child(2){flex:1;display:flex;flex-direction:column}.rc-head b{font-size:.95rem}.rc-head small{font-size:.72rem;color:#5F6F67}.rc-head i{font-style:normal;transition:transform .25s}.rc.open .rc-head i{transform:rotate(180deg)}
+.rc-ic{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#FFF1D6;font-size:1.25rem}
+.rc form{padding:0 14px 14px}.rc textarea{width:100%;box-sizing:border-box;min-height:120px;padding:10px 12px;border:1px solid #E1E6DE;border-radius:12px;background:#F5F6F0;font:inherit;font-size:16px;line-height:1.6;color:#16241E;resize:vertical}
+.rc-rows{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}.rc-rows li{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n p" "g p";column-gap:10px;padding:7px 10px;border-radius:10px;background:#F5F6F0}.rc-rows li.m{background:#E4F4EA}
+.rc-n{grid-area:n;font-size:.85rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rc-g{grid-area:g;font-size:.7rem;color:#8A6A00}.rc-rows li.m .rc-g{color:#1F7A55}.rc-rows b{grid-area:p;align-self:center;font-size:.9rem}
+.rc-tot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:10px 12px;border-radius:12px;background:#0F4A3C;color:#fff;font-size:.78rem}.rc-tot b{font-size:1.05rem}.rc-note,.rc-none{margin:6px 2px 0;font-size:.72rem;color:#5F6F67}
+.rc-go{width:100%;height:46px;margin-top:10px;border:0;border-radius:12px;background:#F4B63F;color:#3A2A00;font:inherit;font-weight:800;cursor:pointer}
+.pc-pr{font-style:normal;color:#1F7A55}.pc-pr.up{color:#C2562A}
 .sh-sug{flex:1 0 100%;margin-top:2px;padding:10px;border-radius:14px;background:#fff;color:#16241E;box-shadow:0 12px 26px -14px rgba(0,0,0,.45);animation:shUp .2s ease-out}.sh-sug[hidden]{display:none}.sh-sug>*:first-child{margin-top:0!important}.sh-sug button{margin:0}
 .sg-add{display:flex;align-items:center;gap:8px;width:100%;height:42px;padding:0 12px;border:0;border-radius:11px;background:#8BD448;color:#0F3B2F;font:inherit;font-weight:800;font-size:.9rem;cursor:pointer;text-align:start}.sg-add span{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#0F4A3C;color:#fff;font-size:.9rem}
 .sg-h{margin:10px 2px 6px;font-size:.72rem;font-weight:700;color:#5F6F67}.sg-h.ok{margin-bottom:0;color:#1F7A55}.sg-add+.sg-h.ok,.sh-sug>.sg-h.ok:first-child{margin-top:4px}
@@ -1568,7 +1577,7 @@ const MF={
     if(t.remind!==''&&!t.time)toast('التذكير يحتاج وقت للمهمة');closeSheet()},
 };
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='sp-title'){e.preventDefault();e.target.blur()}});
-document.addEventListener('input',e=>{if(e.target.id==='b-q'){const q=rnorm(e.target.value.trim());document.querySelectorAll('.bl-card').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.bp-tile').forEach(t=>{t.classList.toggle('dim',!!q&&!rnorm(t.textContent).includes(q))});return}if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());rSug(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.pgrp').forEach(g=>{g.hidden=!g.querySelector('.pcard:not([hidden])')})});
+document.addEventListener('input',e=>{if(e.target.id==='rc-in'){rcPrev();return}if(e.target.id==='b-q'){const q=rnorm(e.target.value.trim());document.querySelectorAll('.bl-card').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.bp-tile').forEach(t=>{t.classList.toggle('dim',!!q&&!rnorm(t.textContent).includes(q))});return}if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());rSug(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.pgrp').forEach(g=>{g.hidden=!g.querySelector('.pcard:not([hidden])')})});
 document.addEventListener('input',e=>{if(e.target.id!=='inbox-q')return;const q=e.target.value.trim();
   document.querySelectorAll('#m-today .task').forEach(r=>r.hidden=q&&!r.dataset.title.includes(q))});
 document.addEventListener('change',e=>{const id=e.target.id;if(id==='sp-title'){const i=e.target,t=S.tasks.find(x=>x.id===i.dataset.id),v=i.value.trim();if(t&&v&&v!==t.title){spRename();const r=document.querySelector(`.task[data-id="${t.id}"] .task-t`);if(r)r.textContent=v;toast('تعدّل الاسم')}return}if(id==='rate-good'||id==='rate-better'){const r=S.ratings[todayK()]=S.ratings[todayK()]||{};r[id==='rate-good'?'good':'better']=e.target.value.trim();save()}});
@@ -2054,6 +2063,17 @@ function rSug(raw){const box=document.getElementById('r-sug');if(!box)return;con
   if(inList.length)h+=`<p class="sg-h ok">✓ موجود في القائمة: ${inList.slice(0,3).map(g=>esc(g.text)).join('، ')}</p>`;
   box.innerHTML=h;box.hidden=!h}
 document.addEventListener('keydown',e=>{if(e.target.id!=='r-q'||e.key!=='Enter')return;e.preventDefault();const b=document.querySelector('#r-sug button');if(b)b.click()});
+const RC_TOTAL=/(المجموع|الإجمالي|الاجمالي|اجمالي|إجمالي|المطلوب|total|subtotal|grand)/i,RC_SKIP=/(ضريبة|vat|tax|خصم|discount|نقد|cash|card|visa|باقي|change|فاتورة رقم|invoice|tel|هاتف)/i;
+function rcNum(t){return String(t).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/٫/g,'.')}
+function rcParse(raw){const rows=[];let total=0;String(raw||'').split(/\n+/).forEach(line=>{const l=rcNum(line).trim();if(!l)return;const ms=[...l.matchAll(/(\d+(?:[.,]\d+)?)/g)];if(!ms.length)return;const last=ms[ms.length-1],p=+last[1].replace(',','.');if(!(p>0))return;
+    if(RC_TOTAL.test(l)){total=p;return}if(RC_SKIP.test(l))return;
+    let name=(l.slice(0,last.index)+' '+l.slice(last.index+last[0].length)).replace(/(ر\.?\s?ع\.?|ريال|omr|ro)\b/gi,'').replace(/\b\d+\s*[x×*]\s*|\s*[x×*]\s*\d+\b/gi,' ').replace(/[\-–:=|•*]+/g,' ').replace(/\s+/g,' ').trim();if(!name||/^\d+$/.test(name))return;
+    rows.push({name,p,g:rcMatch(name)})});const sum=rows.reduce((a,r)=>a+r.p,0);return{rows,sum:Math.round(sum*1000)/1000,total:total||Math.round(sum*1000)/1000}}
+function rcMatch(name){const n=rnorm(name),nw=n.split(' ').filter(w=>w.length>2);let best=null,bs=0;S.groceries.forEach(g=>{const t=rnorm(g.text);let sc=t===n?4:(t.includes(n)||n.includes(t))?3:0;if(!sc){const tw=t.split(' ').filter(w=>w.length>2);if(tw.some(w=>nw.some(x=>x.startsWith(w)||w.startsWith(x))))sc=1}if(!g.done&&sc)sc+=.5;if(sc>bs){bs=sc;best=g}});return best}
+function rcPrev(){const box=document.getElementById('rc-prev'),ta=document.getElementById('rc-in');if(!box||!ta)return;const r=rcParse(ta.value);if(!r.rows.length){box.innerHTML=ta.value.trim()?'<p class="rc-none">ما لقيت أسعار. اكتب كل غرض وسعره في سطر.</p>':'';return}
+  const cur=esc(S.settings.currency);box.innerHTML=`<ul class="rc-rows">${r.rows.map(x=>`<li class="${x.g?'m':''}"><span class="rc-n">${esc(x.name)}</span><span class="rc-g">${x.g?`✓ ${esc(x.g.text)}`:'غرض جديد'}</span><b class="num">${fmtMoney(x.p)}</b></li>`).join('')}</ul>
+  <div class="rc-tot num"><span>${r.rows.length} غرض · ${r.rows.filter(x=>x.g).length} من قائمتك</span><b>${fmtMoney(r.total)} ${cur}</b></div>${r.total!==r.sum?`<p class="rc-note num">مجموع الأسعار ${fmtMoney(r.sum)}، وبنسجل مجموع الفاتورة ${fmtMoney(r.total)}.</p>`:''}`}
+function gPriceOf(g){const e=(S.gPrice||{})[rnorm(g.text)];return e||null}
 function rAdd(raw){const added=[];rSplit(raw).forEach(line=>{const{text,qty}=rParse(line);if(!text)return;const same=S.groceries.find(g=>!g.done&&rnorm(g.text)===rnorm(text));if(same){if(qty)same.qty=qty;rAdd.dup=(rAdd.dup||0)+1;return}const cat=rClassify(text);S.groceries.push({id:uid(),text,qty,done:false,cat});gHist(text,qty);added.push(cat)});return added}
 function gHist(text,qty){const h=S.gHist=S.gHist||{},k=rnorm(text);const e=h[k]||(h[k]={text,qty:'',n:0});e.text=text;if(qty)e.qty=qty;e.n++;e.last=dkey()}
 function gHistSeed(){if(S.gHist)return;S.gHist={};S.groceries.forEach(g=>gHist(g.text,g.qty))}
@@ -2068,11 +2088,17 @@ function rashanView(){const items=S.groceries.map(g=>{if(!g.cat||(g.cat!=='meat'
   const card=g=>{const n=qtyNum(g.qty),unit=String(g.qty||'').replace(/^\s*\d+(?:\.\d+)?\s*/,'');return `<div class="pcard ${g.done?'done':''}" data-t="${esc(rnorm(g.text))}">
     <button class="pc-x" data-act="g-del" data-id="${g.id}" aria-label="حذف ${esc(g.text)}">×</button>
     <div class="pc-img" style="background:${RTINT[g.cat]||'#F1F1EC'}"><span aria-hidden="true">${itemEmo(g)}</span></div>
-    <button class="pc-n" data-act="g-move" data-id="${g.id}">${esc(g.text)}</button><span class="pc-q num">${g.qty?esc(g.qty):""}</span>
+    <button class="pc-n" data-act="g-move" data-id="${g.id}">${esc(g.text)}</button><span class="pc-q num">${g.qty?esc(g.qty):""}${(()=>{const pr=gPriceOf(g);return pr?`<em class="pc-pr ${pr.prev&&pr.p>pr.prev?'up':''}">${g.qty?' · ':''}آخر سعر ${fmtMoney(pr.p)}${pr.prev&&pr.p>pr.prev?' ↑':''}</em>`:''})()}</span>
     ${g.done?`<button class="pc-bar in" data-act="g-toggle" data-id="${g.id}">✓ في السلة</button>`:`<div class="pc-bar"><button data-act="g-qty" data-id="${g.id}" data-d="-1" aria-label="أنقص">−</button><b class="num">${n||1}${unit?` <small>${esc(unit)}</small>`:''}</b><button data-act="g-qty" data-id="${g.id}" data-d="1" aria-label="زِد">+</button><button class="pc-add" data-act="g-toggle" data-id="${g.id}" aria-label="اشتريته">✓</button></div>`}</div>`};
   return `<div class="shop">
     <div class="sh-cats" role="tablist"><button class="${cat?'':'on'}" data-act="r-cat" data-c=""><span>🛒</span><b>الكل</b><small class="num">${left}</small></button>${used.map(c=>`<button class="${cat===c[0]?'on':''}" data-act="r-cat" data-c="${c[0]}"><span style="background:${RTINT[c[0]]}">${RICON[c[0]]}</span><b>${c[2].split(' ')[0]}</b><small class="num">${items.filter(g=>g.cat===c[0]&&!g.done).length}</small></button>`).join('')}</div>
     ${bought?`<form class="sh-promo pay" data-form="rashan-pay"><div><p class="sh-pt">${left?'اشتريت جزء؟':'خلصت الراشن؟'}</p><p class="sh-ps num">${bought} غرض في السلة · اكتب المبلغ ويتسجل في غوازي</p></div><div class="r-pay-row"><input id="r-amt" name="amount" inputmode="decimal" placeholder="المبلغ" required><button class="btn">سجّل</button></div></form>`:''}
+    <section class="sh-promo rc ${ui.rcOpen?'open':''}"><button class="rc-head" data-act="rc-open" aria-expanded="${!!ui.rcOpen}"><span class="rc-ic" aria-hidden="true">🧾</span><span><b>الصق الفاتورة</b><small>الأغراض وأسعارها مرة وحدة، وتنحسب لغوازي</small></span><i aria-hidden="true">⌄</i></button>
+    ${ui.rcOpen?`<form data-form="rc-save"><textarea id="rc-in" name="raw" rows="5" placeholder="كل غرض وسعره في سطر، مثل:
+حليب المراعي 2 لتر 0.950
+طماطم 0.600
+خبز 0.300
+المجموع 1.850"></textarea><div id="rc-prev"></div><button class="rc-go">سجّل الفاتورة في غوازي</button></form>`:''}</section>
     <div class="sh-h"><h2>${cat?rcatOf(cat)[2]:'تحتاجها'}</h2><span class="sub num">${left?`${left} غرض باقي`:items.length?'اشتريت كل شي':'القائمة فاضية'}</span></div>
     ${shown.length?[...RCATS.map(c=>[c,shown.filter(g=>!g.done&&g.cat===c[0])]),[['done','✓','في السلة'],shown.filter(g=>g.done)]].filter(x=>x[1].length).map(([c,gs])=>`<div class="pgrp"><h3 class="pg-h"><span style="background:${RTINT[c[0]]||'#E4F4EA'}">${RICON[c[0]]||'✓'}</span>${esc(c[2])}<small class="num">${gs.length}</small></h3><div class="pgrid">${gs.map(card).join('')}</div></div>`).join(''):'<div class="empty">اكتب أو الصق أغراضك تحت، وبتترتب تلقائياً حسب الأقسام.</div>'}
     <form class="sh-add" data-form="grocery-bulk"><label for="r-in">أضف أغراض</label><textarea id="r-in" name="raw" rows="2" placeholder="مثال: 2 حليب، جبن مثلثات، طماط" required></textarea><button class="btn">أضف للقائمة</button></form>
@@ -2161,6 +2187,7 @@ const A={
   'g-del':d=>{rm('groceries',d.id);commit()},
   'q-add':d=>{const text=String(d.t||'').trim();if(!text)return;const same=S.groceries.find(g=>!g.done&&rnorm(g.text)===rnorm(text));if(same){ui.fx={k:'in',id:same.id};toast('موجود في القائمة من قبل');commit();return}
     const done=S.groceries.find(g=>g.done&&rnorm(g.text)===rnorm(text));let g;if(done){done.done=false;if(d.q)done.qty=d.q;g=done}else{const p=rParse(text);g={id:uid(),text:p.text||text,qty:d.q||p.qty||'',done:false,cat:rClassify(p.text||text)};S.groceries.push(g)}gHistSeed();gHist(g.text,g.qty);ui.fx={k:'in',id:g.id};ui.rCat='';commit();toast(`انضاف «${g.text}» إلى ${rcatOf(g.cat)[2]}`)},
+  'rc-open':()=>{ui.rcOpen=!ui.rcOpen;render();if(ui.rcOpen)setTimeout(()=>{const t=document.getElementById('rc-in');if(t){t.scrollIntoView({block:'center',behavior:'smooth'});t.focus({preventScroll:true})}},60)},
   'g-clear':()=>{S.groceries=S.groceries.filter(g=>!g.done);commit()},
   'g-copy':()=>{const open=S.groceries.filter(g=>!g.done);let out='🛒 *راشن البيت*\n';
     RGROUPS.forEach(([gid,gn])=>{const cats=RCATS.filter(c=>c[1]===gid).map(c=>[c,open.filter(g=>(g.cat||rClassify(g.text))===c[0])]).filter(([,l])=>l.length);if(!cats.length)return;
@@ -2276,6 +2303,9 @@ const F={
     const read=k=>[...f.querySelectorAll(`[data-row="${k}"]`)].map(r=>[r.querySelector('[name=n]').value.trim(),num(r.querySelector('[name=a]').value)]).filter(([n,a])=>n&&a>0);
     S.plan={salary:sal,jamiya:(S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya,mine:mineCap(),gifts:giftsOf(),fixed:read('fixed'),ration:read('ration'),buckets:bk};const mf=(S.monthFixed||{})[wMonth];if(mf)S.plan.fixed.forEach(([n,a])=>{if(!(n in mf))mf[n]=a});closeSheet();toast('انحفظت الإعدادات')},
   budget:v=>{const b=num(v.budget);if(!(b>=0)){toast('اكتب الميزانية رقماً');return false}S.budgets[wMonth]=b},
+  'rc-save':v=>{const r=rcParse(v.raw);if(!r.rows.length||!(r.total>0)){toast('ما لقيت أغراض بأسعار. اكتب كل غرض وسعره في سطر.');return false}
+    const today=dkey(),P=S.gPrice=S.gPrice||{};gHistSeed();let up=0;r.rows.forEach(x=>{const name=x.g?x.g.text:x.name,k=rnorm(name),old=P[k];if(old&&x.p>old.p)up++;P[k]={p:x.p,prev:old?old.p:0,date:today};if(x.g)x.g.done=true;else gHist(x.name,'')});
+    const n=r.rows.length;S.expenses.push({id:uid(),amount:r.total,cat:'راشن البيت',sub:'',note:`راشن البيت (${n} غرض، من الفاتورة)`,date:today});S.groceries=S.groceries.filter(g=>!g.done);ui.rcOpen=false;spendAlert(r.total,'راشن البيت','');if(up)setTimeout(()=>toast(`${up} ${up===1?'غرض سعره':'أغراض أسعارها'} زادت عن آخر مرة`,3200),2600)},
   'rashan-pay':v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const n=S.groceries.filter(g=>g.done).length;
     S.expenses.push({id:uid(),amount,cat:'راشن البيت',sub:'',note:`راشن البيت (${n} غرض)`,date:dkey()});S.groceries=S.groceries.filter(g=>!g.done);spendAlert(amount,'راشن البيت','')},
   expense:v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const cat=CATS.includes(v.cat)?v.cat:'الالتزامات',sub=subsOf(cat)?(subsOf(cat).includes(v.sub)?v.sub:'أخرى'):'';
