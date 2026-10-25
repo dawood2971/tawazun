@@ -128,6 +128,40 @@
 .pc-bar .pc-add{background:#8BD448;color:#0F4A3C}
 .pc-bar.in{width:100%;justify-content:center;border:0;background:#0F4A3C;color:#fff;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer}
 .pcard.done{opacity:.75}.pcard.done .pc-n{text-decoration:line-through;color:#66756D}
+/* بيتي motion */
+.sh-hero{overflow:hidden}.sh-vis{position:relative;flex:none;display:grid;place-items:center;width:128px;height:140px}
+.sh-vis .sh-img{position:relative;z-index:1;animation:shFloat 5s ease-in-out infinite}
+.sh-orb{position:absolute;inset:50% auto auto 50%;width:0;height:0;animation:shSpin 26s linear infinite}
+.sh-orb i{position:absolute;left:0;top:0;transform:rotate(var(--a)) translateX(84px) rotate(calc(-1*var(--a)))}
+.sh-orb b{display:grid;place-items:center;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 6px 14px -6px rgba(0,0,0,.45);font-size:1.05rem;font-style:normal;animation:shSpin 26s linear infinite reverse}
+@keyframes shSpin{to{transform:rotate(360deg)}}
+@keyframes shFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(2deg) translateY(-6px)}}
+.sh-enter .sh-hero{animation:shIn .55s cubic-bezier(.2,.8,.2,1) both}
+.sh-enter .sh-img{animation:shPop .7s cubic-bezier(.2,1.4,.4,1) .15s both,shFloat 5s ease-in-out .9s infinite}
+.sh-enter .sh-orb i b{animation:shPop .5s cubic-bezier(.2,1.4,.4,1) .35s both,shSpin 26s linear .85s infinite reverse}
+.sh-enter .sh-cats button,.sh-enter .pgrp,.sh-enter .bl-card,.sh-enter .bl-hero,.sh-enter .sh-promo{animation:shUp .5s cubic-bezier(.2,.8,.2,1) both}
+.sh-enter .sh-cats button:nth-child(2),.sh-enter .pgrp:nth-of-type(2),.sh-enter .bl-card:nth-child(2){animation-delay:.06s}
+.sh-enter .sh-cats button:nth-child(3),.sh-enter .pgrp:nth-of-type(3),.sh-enter .bl-card:nth-child(3){animation-delay:.12s}
+.sh-enter .sh-cats button:nth-child(4),.sh-enter .pgrp:nth-of-type(4),.sh-enter .bl-card:nth-child(4){animation-delay:.18s}
+.sh-enter .sh-cats button:nth-child(n+5),.sh-enter .pgrp:nth-of-type(n+5),.sh-enter .bl-card:nth-child(n+5){animation-delay:.24s}
+.sh-enter .bl-ring{animation:shPop .7s cubic-bezier(.2,1.4,.4,1) .15s both}
+.sh-enter .bl-bar i{animation:shGrow .9s cubic-bezier(.2,.8,.2,1) .2s both}
+@keyframes shIn{from{opacity:0;transform:translateY(14px) scale(.98)}}
+@keyframes shUp{from{opacity:0;transform:translateY(16px)}}
+@keyframes shPop{from{opacity:0;transform:scale(.4) rotate(-12deg)}}
+@keyframes shGrow{from{width:0}}
+.sh-cats button,.pc-bar button,.bl-pay,.sh-cta{transition:transform .15s,background-color .25s,color .25s}
+.sh-cats button:active,.pc-bar button:active,.bl-pay:active,.sh-cta:active{transform:scale(.9)}
+.fx-up .pc-bar b,.fx-down .pc-bar b{animation:shBump .35s cubic-bezier(.2,1.5,.4,1)}
+@keyframes shBump{40%{transform:translateY(-5px) scale(1.35);color:#1F7A55}}
+.fx-down .pc-bar b{animation-name:shBumpD}@keyframes shBumpD{40%{transform:translateY(4px) scale(.8)}}
+.fx-in{animation:shIn2 .5s cubic-bezier(.2,.8,.2,1)}.fx-in .pc-img{animation:shPop .5s cubic-bezier(.2,1.4,.4,1)}
+.fx-in .pc-bar.in{animation:shPop .45s cubic-bezier(.2,1.4,.4,1) .05s both}
+@keyframes shIn2{from{opacity:.3;transform:translateY(-18px);background:#E4F4EA}}
+.fx-out{animation:shUp .45s cubic-bezier(.2,.8,.2,1)}
+.fx-pay .bl-pay{animation:shPop .45s cubic-bezier(.2,1.4,.4,1)}.fx-pay .bl-ic{animation:shWig .6s}
+@keyframes shWig{25%{transform:rotate(-12deg) scale(1.1)}60%{transform:rotate(8deg)}}
+@media (prefers-reduced-motion:reduce){.sh-orb,.sh-orb b,.sh-vis .sh-img{animation:none!important}.sh-enter *,[class*="fx-"],[class*="fx-"] *{animation:none!important}}
 .pgrp{margin-bottom:14px}.pgrp[hidden]{display:none}.pg-h{display:flex;align-items:center;gap:8px;margin:0 2px 8px;font-size:.95rem;font-weight:800;color:#0F4A3C}.pg-h span{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;font-size:1rem}.pg-h small{margin-inline-start:auto;padding:1px 9px;border-radius:99px;background:#E4F4EA;color:#1F7A55;font-size:.72rem;font-weight:700}
 .pgrid{grid-template-columns:1fr;gap:8px}
 .pcard{display:grid;grid-template-columns:44px minmax(0,1fr) auto 22px;grid-template-rows:auto auto;column-gap:10px;row-gap:0;align-items:center;padding:8px 10px;border-radius:16px}
@@ -1626,9 +1660,10 @@ function pBeiti(){
     <label class="chk-l"><input type="checkbox" name="auto" value="1" form="" id="bill-auto"> فاتورة ثابتة: تنحسب مدفوعة تلقائياً في يومها كل شهر</label>
     <p class="sub">لما تعلّم الفاتورة مدفوعة تنضاف تلقائياً لمصاريف «غوازي».</p></div>`}
   const nextKid=upcoming[0],dueSum=unpaid.filter(b=>b.day<=now.getDate()+5).reduce((a,b)=>a+b.amount,0);
+  const orb=[...new Set(S.groceries.filter(g=>!g.done).map(itemEmo))].slice(0,6);while(orb.length&&orb.length<5)orb.push(['🥕','🍞','🥛','🍅','🧀'][orb.length]);if(!orb.length)orb.push('🥕','🍞','🥛','🍅','🧀');
   const hero=tab==='bills'?`<div class="sh-top bl-top"><div class="sh-brand"><span class="sh-logo" aria-hidden="true">🧾</span><b>بيتي</b><small>${fmtDay(now)}</small></div><button class="icon-btn sh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button></div>`+billHero:`<div class="sh-top"><div class="sh-brand"><span class="sh-logo" aria-hidden="true">🌿</span><b>بيتي</b><small>${fmtDay(now)}</small></div><button class="icon-btn sh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button><button class="sh-cart" data-act="beiti-tab" data-t="groceries" aria-label="راشن البيت">🛒<i class="num">${gLeft}</i></button>
     <label class="sh-search"><span aria-hidden="true">⌕</span><input id="r-q" type="search" placeholder="ابحث في أغراض الراشن" autocomplete="off"></label></div>
-    <section class="sh-hero"><div class="sh-ht"><p class="sh-eye num">⚡ ${gLeft?`${gLeft} غرض باقي`:'القائمة خالصة'}</p><h2>نجيب السوق<br>لباب بيتك</h2><p class="sh-sub num">${unpaid.length?`فواتير خلال 5 أيام: ${fmtMoney(dueSum)} ${esc(S.settings.currency)}`:'كل الفواتير مدفوعة'}</p><button class="sh-cta" data-act="shop-now">ابدأ التسوق</button></div><span class="sh-img" aria-hidden="true"></span></section>`;
+    <section class="sh-hero"><div class="sh-ht"><p class="sh-eye num">⚡ ${gLeft?`${gLeft} غرض باقي`:'القائمة خالصة'}</p><h2>نجيب السوق<br>لباب بيتك</h2><p class="sh-sub num">${unpaid.length?`فواتير خلال 5 أيام: ${fmtMoney(dueSum)} ${esc(S.settings.currency)}`:'كل الفواتير مدفوعة'}</p><button class="sh-cta" data-act="shop-now">ابدأ التسوق</button></div><span class="sh-vis" aria-hidden="true"><span class="sh-orb">${orb.map((e,i)=>`<i style="--a:${i*360/orb.length}deg"><b>${e}</b></i>`).join('')}</span><span class="sh-img"></span></span></section>`;
   return hero+`<div class="seg sh-seg" role="tablist">${tabs.map(([id,n,c])=>`<button role="tab" aria-selected="${tab===id}" data-act="beiti-tab" data-t="${id}">${n}<small>${c}</small></button>`).join('')}</div><section class="sec sh-sec" style="margin-top:14px">${body}</section>`;
 }
 
@@ -2053,7 +2088,7 @@ const A={
   'w-del':d=>{rm('weights',d.id);commit()},
   /* بيتي */
   'beiti-tab':d=>{S.ui.beiti=d.t;commit()},
-  'g-toggle':d=>{const g=find(S.groceries,d.id);g.done=!g.done;commit()},
+  'g-toggle':d=>{const g=find(S.groceries,d.id);g.done=!g.done;ui.fx={k:g.done?'in':'out',id:d.id};commit()},
   'g-del':d=>{rm('groceries',d.id);commit()},
   'g-clear':()=>{S.groceries=S.groceries.filter(g=>!g.done);commit()},
   'g-copy':()=>{const open=S.groceries.filter(g=>!g.done);let out='🛒 *راشن البيت*\n';
@@ -2063,7 +2098,7 @@ const A={
   'g-move':d=>openMove(d.id),
   'shop-now':()=>{S.ui.beiti='groceries';commit();setTimeout(()=>{const t=document.getElementById('r-in');if(t){t.scrollIntoView({block:'center',behavior:'smooth'});t.focus({preventScroll:true})}},60)},
   'r-cat':d=>{ui.rCat=d.c;render()},
-  'g-qty':d=>{const g=find(S.groceries,d.id);if(!g)return;const n=qtyNum(g.qty),unit=String(g.qty||'').replace(/^\s*\d+(?:\.\d+)?\s*/,''),v=Math.max(1,(n||1)+(+d.d));g.qty=(v+(unit?' '+unit:'')).trim();commit()},
+  'g-qty':d=>{const g=find(S.groceries,d.id);if(!g)return;ui.fx={k:+d.d>0?'up':'down',id:d.id};const n=qtyNum(g.qty),unit=String(g.qty||'').replace(/^\s*\d+(?:\.\d+)?\s*/,''),v=Math.max(1,(n||1)+(+d.d));g.qty=(v+(unit?' '+unit:'')).trim();commit()},
   'g-img':()=>{rashanShare()},
   'g-setcat':d=>{const g=find(S.groceries,d.id);if(!g)return;g.cat=d.c;S.rLearn=S.rLearn||{};S.rLearn[rnorm(g.text)]=d.c;closeSheet();commit();toast(`انتقل إلى ${rcatOf(d.c)[2]}`)},
   'e-toggle':d=>{const e=find(S.errands,d.id);e.done=!e.done;commit()},
@@ -2073,7 +2108,7 @@ const A={
   'ke-del':d=>{rm('kidEvents',d.id);commit()},
   'ke-clear':()=>{const k=dkey();S.kidEvents=S.kidEvents.filter(e=>e.date>=k);commit()},
   'b-auto':d=>{const b=find(S.bills,d.id);if(!b)return;b.auto=!b.auto;if(b.auto)autoBills();commit();toast(b.auto?`«${b.name}» صارت تلقائية كل شهر`:`«${b.name}» صارت يدوية`)},
-  'b-toggle':d=>{const b=find(S.bills,d.id),m=mkey();if(b.paid[m]){rm('expenses',b.paid[m]);delete b.paid[m];if(b.auto)b.skip=m}else{const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey()};S.expenses.push(e);b.paid[m]=e.id;toast(`انضافت ${b.name} لمصاريف الشهر`)}commit()},
+  'b-toggle':d=>{const b=find(S.bills,d.id),m=mkey();ui.fx={k:'pay',id:d.id};if(b.paid[m]){rm('expenses',b.paid[m]);delete b.paid[m];if(b.auto)b.skip=m}else{const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey()};S.expenses.push(e);b.paid[m]=e.id;toast(`انضافت ${b.name} لمصاريف الشهر`)}commit()},
   'b-del':d=>{rm('bills',d.id);commit()},
   /* محفظتي */
   'm-prev':()=>{const d=parseD(wMonth+'-01');d.setMonth(d.getMonth()-1);wMonth=mkey(d);render()},
@@ -2216,12 +2251,15 @@ function enhanceDates(root){(root||document).querySelectorAll('input[type=date]'
   let w=i.parentElement;if(!w.classList.contains('dp')){w=document.createElement('span');w.className='dp '+i.className;i.before(w);w.innerHTML=DP_IC+'<span class="dp-t"></span>';w.appendChild(i);
     i.addEventListener('click',()=>{try{i.showPicker()}catch(e){}});['input','change'].forEach(ev=>i.addEventListener(ev,()=>{w.querySelector('.dp-t').textContent=dpLabel(i.value)}))}
   w.querySelector('.dp-t').textContent=dpLabel(i.value)})}
+let lastView='',enterT=0;
 function render(){
   autoBills();
   if(page!=='mahfazti')ringShown=0;
   document.documentElement.dataset.page=page;
   const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=getComputedStyle(document.documentElement).getPropertyValue('--hero-bg').trim();
   $('#view').innerHTML=banner()+PAGES[page]();
+  {const key=page+':'+(page==='beiti'?S.ui.beiti:''),v=$('#view');if(key!==lastView&&page==='beiti'){v.classList.add('sh-enter');clearTimeout(enterT);enterT=setTimeout(()=>v.classList.remove('sh-enter'),1200)}else if(key!==lastView)v.classList.remove('sh-enter');lastView=key;
+   if(ui.fx){const t=document.querySelector(`.pcard [data-id="${ui.fx.id}"], .bl-card [data-id="${ui.fx.id}"]`),c=t&&t.closest('.pcard,.bl-card');if(c)c.classList.add('fx-'+ui.fx.k);ui.fx=null}}
   document.querySelectorAll('.nav a').forEach(a=>a.dataset.page===page?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
   if(page==='masai')applyHeroMode();
   enhanceDates($('#view'));
