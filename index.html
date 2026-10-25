@@ -136,6 +136,10 @@
 .bp-search{display:flex;align-items:center;gap:8px;min-width:0;height:44px;padding:0 14px;border-radius:99px;background:#CFF3E2;color:#0E4A33}.bp-search svg{width:18px;height:18px;flex:none}.bp-search input{flex:1;min-width:0;width:100%;border:0;outline:0;background:none;font:inherit;font-size:16px;color:#0A3424}.bp-search input::placeholder{color:#3F6E58}
 .bp-sheet{position:relative;margin:-30px -2px 12px;padding:16px 14px 14px;border-radius:24px;background:#F3FBF7;border:1px solid #DDEFE5;box-shadow:0 -10px 24px -18px rgba(0,0,0,.35)}
 .bp-sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.bp-sh h3{display:flex;align-items:center;gap:6px;margin:0;font-size:1.05rem;color:#16241E}.bp-sh h3 svg{width:20px;height:20px;color:#0E4A33}
+.bp-sheet:not(.open){padding-bottom:16px}.bp-sheet:not(.open) .bp-sh{margin-bottom:0}button.bp-sh{width:100%;padding:0;border:0;background:none;font:inherit;cursor:pointer;text-align:start}
+.bp-chev{display:inline-block;margin-inline-start:6px;font-style:normal;font-size:1rem;transition:transform .25s}.bp-sheet.open .bp-chev{transform:rotate(180deg)}
+.bp-all{display:block;margin:-4px 0 10px;padding:0;border:0;background:none;font:inherit;font-size:.78rem;font-weight:700;color:#1E9A62;cursor:pointer}
+.bp-sheet.open .bp-grid{animation:shUp .35s cubic-bezier(.2,.8,.2,1)}
 .bp-more{border:0;background:none;padding:0;font:inherit;font-size:.78rem;font-weight:600;color:#16241E;cursor:pointer}
 .bp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 8px}
 .bp-tile{display:flex;flex-direction:column;align-items:center;gap:5px;padding:0;border:0;background:none;font:inherit;cursor:pointer;color:#16241E;transition:opacity .2s,transform .15s}.bp-tile:active{transform:scale(.92)}
@@ -1690,8 +1694,8 @@ function pBeiti(){
     const kinds=BKINDS.map(k=>[...k,items.filter(x=>billKind(x)===k[0])]),kSel=BKINDS.some(k=>k[0]===ui.bKind)?ui.bKind:'',shownB=kSel?items.filter(x=>billKind(x)===kSel):items,day=now.getDate(),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
     billHero=`<section class="bp-head"><div class="bp-row"><span class="bp-av" aria-hidden="true">${BICON.user}</span><div class="bp-hi"><b>فواتير بيتي</b><small class="num">${fmtDay(now)}</small></div><button class="bp-ib" data-act="settings" aria-label="الإعدادات">${GEAR}</button></div>
       <label class="bp-search"><span aria-hidden="true">${BICON.search}</span><input id="b-q" type="search" placeholder="ابحث عن فاتورة أو خدمة…" autocomplete="off"></label></section>
-    <section class="bp-sheet"><div class="bp-sh"><h3>${BICON.receipt}ادفع فاتورة</h3>${kSel?`<button class="bp-more" data-act="b-kind" data-k="">عرض الكل ›</button>`:`<span class="bp-more num">${items.length} فواتير</span>`}</div>
-      <div class="bp-grid">${kinds.map(([k,label,,bs])=>{const due=bs.filter(x=>billLive(x,m)&&!x.paid[m]).length;return `<button class="bp-tile ${kSel===k?'on':''} ${bs.length?'':'none'}" data-act="b-kind" data-k="${k}"><span class="bp-ti">${BICON[k]}${due?`<i class="num">${due}</i>`:''}</span><b>${label}</b></button>`}).join('')}</div></section>
+    <section class="bp-sheet ${ui.bpOpen||kSel?'open':''}"><button class="bp-sh" data-act="bp-open" aria-expanded="${!!(ui.bpOpen||kSel)}"><h3>${BICON.receipt}ادفع فاتورة</h3><span class="bp-more num">${kSel?esc(BKINDS.find(k=>k[0]===kSel)[1]):`${items.length} فواتير`}<i class="bp-chev" aria-hidden="true">⌄</i></span></button>
+      ${ui.bpOpen||kSel?`${kSel?`<button class="bp-all" data-act="b-kind" data-k="">عرض كل الفواتير</button>`:''}<div class="bp-grid">${kinds.map(([k,label,,bs])=>{const due=bs.filter(x=>billLive(x,m)&&!x.paid[m]).length;return `<button class="bp-tile ${kSel===k?'on':''} ${bs.length?'':'none'}" data-act="b-kind" data-k="${k}"><span class="bp-ti">${BICON[k]}${due?`<i class="num">${due}</i>`:''}</span><b>${label}</b></button>`}).join('')}</div>`:''}</section>
     <section class="bp-sum"><div class="bp-sr"><div><p class="bp-lb">باقي عليك ${fmtMonth(now)}</p><p class="bp-big num">${fmtMoney(total-paidT)}<small>${esc(S.settings.currency)}</small></p></div><div class="bp-kv num"><span><i class="g"></i>مدفوع <b>${fmtMoney(paidT)}</b></span><span><i></i>المجموع <b>${fmtMoney(total)}</b></span></div></div>
       ${next?`<p class="bp-next">القادمة: <b>${esc(next.name)}</b> يوم <span class="num">${next.day}</span></p>`:`<p class="bp-next good">✓ كل فواتير الشهر مدفوعة</p>`}
       <div class="bp-tl"><div class="bp-line"><i style="width:${(day-1)/(dim-1)*100}%"></i></div><span class="bp-today" style="inset-inline-start:${(day-1)/(dim-1)*100}%"><em>اليوم</em></span>${items.filter(x=>billLive(x,m)||x.paid[m]).map(x=>`<span class="bp-dot ${x.paid[m]?'pd':''}" style="inset-inline-start:${(Math.min(x.day,dim)-1)/(dim-1)*100}%" title="${esc(x.name)}"></span>`).join('')}</div>
@@ -2156,6 +2160,7 @@ const A={
   'b-auto':d=>{const b=find(S.bills,d.id);if(!b)return;b.auto=!b.auto;if(b.auto)autoBills();commit();toast(b.auto?`«${b.name}» صارت تلقائية كل شهر`:`«${b.name}» صارت يدوية`)},
   'b-toggle':d=>{const b=find(S.bills,d.id),m=mkey();ui.fx={k:'pay',id:d.id};if(b.paid[m]){rm('expenses',b.paid[m]);delete b.paid[m];if(b.auto)b.skip=m}else{const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey()};S.expenses.push(e);b.paid[m]=e.id;ui.paidOk=b.id}commit()},
   'b-kind':d=>{const k=d.k||'',has=S.bills.some(x=>billKind(x)===k);if(k&&!has){ui.bKind='';render();const n=document.getElementById('b-name');if(n){n.value=BKINDS.find(x=>x[0]===k)[1];n.scrollIntoView({block:'center',behavior:'smooth'});n.focus({preventScroll:true})}return}ui.bKind=ui.bKind===k?'':k;render()},
+  'bp-open':()=>{if(ui.bKind){ui.bKind='';ui.bpOpen=false}else ui.bpOpen=!ui.bpOpen;render()},
   'bp-ok-x':()=>{ui.paidOk=null;render()},
   'b-del':d=>{rm('bills',d.id);commit()},
   /* محفظتي */
