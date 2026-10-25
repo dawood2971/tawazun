@@ -218,6 +218,22 @@
 .kh-empty{margin:0 0 10px;font-size:.8rem;color:#5D6B8C}.kh-nf{display:flex;gap:8px}.kh-nf input{flex:1;min-width:0}
 :root[data-page="waha"] .nav{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-color:rgba(255,255,255,.8)}:root[data-page="waha"] .nav a{color:#5D6B8C}:root[data-page="waha"] .nav a[aria-current="page"]{color:#6A5AE0;background:rgba(255,255,255,.75)}
 :root[data-page="waha"] .banner{background:rgba(255,255,255,.55);color:#1E2A4A}
+.kh-pill{display:inline-flex;align-items:center;gap:4px;margin-top:10px;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);font-size:.76rem;font-weight:700;color:#3B4A70;box-shadow:0 6px 14px -10px rgba(52,70,120,.5)}.kh-pill b{color:#D98E1F}
+.kh-track{stroke:rgba(255,255,255,.75)!important}.kh-prog{stroke:url(#khGold)!important}
+.kh-snd{position:absolute;top:12px;left:12px;z-index:2;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.6);font-size:1rem;cursor:pointer}
+.kh-pre{flex-wrap:wrap;justify-content:center}.kh-pre button{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:64px;height:52px;border-radius:18px;line-height:1.1}.kh-pre button b{font-size:1.05rem}.kh-pre button small{margin:0;font-size:.6rem}
+.kh-pre button[aria-checked="true"]{background:linear-gradient(135deg,#FFE29A,#F5B841 55%,#E39A2A)!important;color:#4A2F00!important;border-color:transparent;box-shadow:0 10px 18px -10px rgba(217,142,31,.8)}
+.kh-cust{position:relative;z-index:1;display:flex;gap:8px;width:100%;max-width:320px}.kh-cust input{flex:1;min-width:0;height:46px;padding:0 14px;border:1px solid rgba(255,255,255,.9);border-radius:16px;background:rgba(255,255,255,.75);font:inherit;font-size:16px;color:#1E2A4A}
+.kh-goal{position:relative;z-index:1;width:100%;max-width:340px}.kh-q{margin:2px 2px 8px;font-size:.88rem;font-weight:800;color:#1E2A4A;text-align:center}
+.kh-gs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.kh-g{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:18px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.5);font:inherit;color:#1E2A4A;cursor:pointer;transition:transform .15s,background .25s,box-shadow .25s}.kh-g:active{transform:scale(.94)}.kh-g b{font-size:.74rem}.kh-g .kh-ai{width:38px;height:38px;margin:0;font-size:1.1rem;border-radius:12px}
+.kh-g[data-a="lang"] .kh-ai{background:linear-gradient(145deg,#BAE6FD,#3B82F6)}.kh-g[data-a="skill"] .kh-ai{background:linear-gradient(145deg,#FDE68A,#F59E0B)}
+.kh-g.on{background:rgba(255,255,255,.9);box-shadow:0 0 0 2px #A78BFA,0 10px 18px -12px rgba(106,90,224,.7)}.kh-g.pop .kh-ai{animation:khArc .5s cubic-bezier(.2,1.5,.4,1)}
+.kh-det{width:100%;box-sizing:border-box;height:44px;margin-top:8px;padding:0 14px;border:1px solid rgba(255,255,255,.9);border-radius:14px;background:rgba(255,255,255,.7);font:inherit;font-size:16px;color:#1E2A4A;animation:shUp .3s ease-out}.kh-det::placeholder{color:#8A96B3}
+.kh-pause{flex:1;height:52px;border:0;border-radius:99px;background:linear-gradient(135deg,#FFE29A,#F5B841 55%,#E39A2A);color:#4A2F00;font:inherit;font-weight:800;font-size:1rem;cursor:pointer;box-shadow:0 12px 22px -12px rgba(217,142,31,.8)}
+.kh-endl{position:relative;z-index:1;border:0;background:none;padding:4px 10px;font:inherit;font-size:.82rem;font-weight:700;color:#5D6B8C;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.kh-two{display:flex;gap:8px}.kh-two input{flex:1;min-width:0}
+.kh-tots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}.kh-tots span{display:flex;flex-direction:column;align-items:center;padding:8px 4px;border-radius:14px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85)}.kh-tots i{font-style:normal;font-size:1rem}.kh-tots b{font-size:1.05rem;color:#1E2A4A}.kh-tots small{font-size:.64rem;color:#5D6B8C}
+.sh-enter .kh-g .kh-ai{animation:khArc .6s cubic-bezier(.2,1.5,.4,1) both}.sh-enter .kh-g:nth-child(2) .kh-ai{animation-delay:.08s}.sh-enter .kh-g:nth-child(3) .kh-ai{animation-delay:.16s}
 .sh-enter .kh-head,.sh-enter .kh-timer{animation:shIn .55s cubic-bezier(.2,.8,.2,1) both}.sh-enter .kh-sec{animation:shUp .55s cubic-bezier(.2,.8,.2,1) .12s both}
 .sh-enter .kh-ac .kh-ai{animation:khArc .6s cubic-bezier(.2,1.5,.4,1) both}.sh-enter .kh-ac:nth-child(2) .kh-ai{animation-delay:.08s}.sh-enter .kh-ac:nth-child(3) .kh-ai{animation-delay:.16s}.sh-enter .kh-ac:nth-child(4) .kh-ai{animation-delay:.24s}
 @keyframes khArc{from{opacity:0;transform:translate(30px,40px) rotate(-35deg) scale(.3)}}
@@ -1625,7 +1641,7 @@ const MF={
     if(t.remind!==''&&!t.time)toast('التذكير يحتاج وقت للمهمة');closeSheet()},
 };
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='sp-title'){e.preventDefault();e.target.blur()}});
-document.addEventListener('input',e=>{if(e.target.id==='kh-book'){khS().book=e.target.value;save();return}if(e.target.id==='rc-in'){rcPrev();return}if(e.target.id==='b-q'){const q=rnorm(e.target.value.trim());document.querySelectorAll('.bl-card').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.bp-tile').forEach(t=>{t.classList.toggle('dim',!!q&&!rnorm(t.textContent).includes(q))});return}if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());rSug(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.pgrp').forEach(g=>{g.hidden=!g.querySelector('.pcard:not([hidden])')})});
+document.addEventListener('input',e=>{if(e.target.id==='kh-det'){khS().detail[e.target.dataset.a]=e.target.value;save();return}if(e.target.id==='rc-in'){rcPrev();return}if(e.target.id==='b-q'){const q=rnorm(e.target.value.trim());document.querySelectorAll('.bl-card').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.bp-tile').forEach(t=>{t.classList.toggle('dim',!!q&&!rnorm(t.textContent).includes(q))});return}if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());rSug(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.pgrp').forEach(g=>{g.hidden=!g.querySelector('.pcard:not([hidden])')})});
 document.addEventListener('input',e=>{if(e.target.id!=='inbox-q')return;const q=e.target.value.trim();
   document.querySelectorAll('#m-today .task').forEach(r=>r.hidden=q&&!r.dataset.title.includes(q))});
 document.addEventListener('change',e=>{const id=e.target.id;if(id==='sp-title'){const i=e.target,t=S.tasks.find(x=>x.id===i.dataset.id),v=i.value.trim();if(t&&v&&v!==t.title){spRename();const r=document.querySelector(`.task[data-id="${t.id}"] .task-t`);if(r)r.textContent=v;toast('تعدّل الاسم')}return}if(id==='rate-good'||id==='rate-better'){const r=S.ratings[todayK()]=S.ratings[todayK()]||{};r[id==='rate-good'?'good':'better']=e.target.value.trim();save()}});
@@ -1660,38 +1676,47 @@ let actx;function beep(){try{actx=actx||new (window.AudioContext||window.webkitA
 
 function streak(h){let n=0,d=new Date();if(!h.log[dkey(d)])d=addDays(d,-1);while(h.log[dkey(d)]){n++;d=addDays(d,-1)}return n}
 /* ---------- page: خلوة (was واحة; old habits/health data kept) ---------- */
-const KH_ACTS=[['read','📖','قراءة كتاب','صفحات'],['lang','🗣️','تعلم لغة','دقيقة'],['skill','💡','مهارة جديدة','جلسة'],['think','🧘','تأمل وتفكير','جلسة']];
+const KH_ACTS=[['read','📖','قراءة كتاب','اسم الكتاب (اختياري)'],['lang','🗣️','تعلّم لغة','اللغة أو التطبيق (اختياري)'],['skill','💡','مهارة جديدة','الكورس أو المهارة (اختياري)'],['think','🧘','تأمل وتفكير','']];
+const KH_PICK=KH_ACTS.slice(0,3);
 const KH_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12"/><path d="M7 3c0 5 5 6 5 9s-5 4-5 9"/><path d="M17 3c0 5-5 6-5 9s5 4 5 9"/><path d="M9.5 18.5h5"/></svg>';
-function khS(){S.kh=S.kh||{dur:60,act:'read',sessions:[],notes:[],run:null,done:null,book:''};return S.kh}
+function khS(){const k=S.kh=S.kh||{dur:60,act:'read',sessions:[],notes:[],run:null,done:null};k.detail=k.detail||{read:k.book||'',lang:'',skill:''};if(k.sound===undefined)k.sound=true;if(k.act==='think')k.act='read';return k}
 function khMonth(d){const m=mkey(d||new Date());return khS().sessions.filter(x=>x.date.startsWith(m))}
 function khStreak(){const set=new Set(khS().sessions.map(x=>x.date));let n=0,d=new Date();if(!set.has(dkey(d)))d=addDays(d,-1);while(set.has(dkey(d))){n++;d=addDays(d,-1)}return n}
-function khLeft(){const r=khS().run;if(!r)return 0;return Math.max(0,r.start+r.dur*60000-Date.now())}
+function khLeft(){const r=khS().run;if(!r)return 0;const now=r.pausedAt||Date.now();return Math.max(0,r.start+r.dur*60000-now)}
 function khClock(ms){const s=Math.ceil(ms/1000),m=Math.floor(s/60);return `${m}:${String(s%60).padStart(2,'0')}`}
-function khTick(){const k=khS();if(!k.run)return;const left=khLeft();if(left<=0){k.done={act:k.run.act,min:k.run.dur,at:Date.now()};k.run=null;try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}commit();toast('خلصت خلوتك 🌿 سجّل وش تعلمت');return}
+let khAC=null;
+function khChime(end){if(!khS().sound)return;try{khAC=khAC||new(window.AudioContext||window.webkitAudioContext)();const t=khAC.currentTime;(end?[523.25,659.25,783.99]:[659.25,783.99]).forEach((f,i)=>{const o=khAC.createOscillator(),g=khAC.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+i*.22);g.gain.linearRampToValueAtTime(.18,t+i*.22+.04);g.gain.exponentialRampToValueAtTime(.001,t+i*.22+1.6);o.connect(g).connect(khAC.destination);o.start(t+i*.22);o.stop(t+i*.22+1.7)})}catch(e){}}
+function khTick(){const k=khS();if(!k.run||k.run.pausedAt)return;const left=khLeft();if(left<=0){k.done={act:k.run.act,min:k.run.dur,at:Date.now(),detail:k.run.detail||''};k.run=null;khChime(true);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}commit();toast('خلصت خلوتك 🌿 سجّل وش أنجزت');return}
   const c=document.getElementById('kh-clock');if(c)c.textContent=khClock(left);const ring=document.getElementById('kh-ring');if(ring)ring.setAttribute('stroke-dashoffset',(KH_C*(1-left/(k.run.dur*60000))).toFixed(1))}
 const KH_C=2*Math.PI*88;
 function pWaha(){
-  const k=khS(),now=new Date(),run=k.run,act=KH_ACTS.find(a=>a[0]===(run?run.act:k.act))||KH_ACTS[0],mon=khMonth(now),mins=mon.reduce((a,x)=>a+x.min,0),streak=khStreak();
+  const k=khS(),now=new Date(),run=k.run,cur=run?run.act:k.act,act=KH_ACTS.find(a=>a[0]===cur)||KH_ACTS[0],mon=khMonth(now),mins=mon.reduce((a,x)=>a+x.min,0),streak=khStreak();
   const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),byDay={};mon.forEach(x=>byDay[x.date]=(byDay[x.date]||0)+x.min);
-  const statOf=a=>{const xs=mon.filter(x=>x.act===a);if(a==='read'){const p=xs.reduce((s,x)=>s+(x.pages||0),0);return p?`${p} صفحة`:`${xs.length} جلسة`}if(a==='lang')return `${xs.reduce((s,x)=>s+x.min,0)} دقيقة`;return `${xs.length} جلسة`};
-  const left=run?khLeft():k.dur*60000,frac=run?left/(run.dur*60000):1;
-  const timer=`<section class="kh-timer a-${act[0]} ${run?'on':''}"><span class="kh-blob" aria-hidden="true"></span>
-    <div class="kh-ringw"><svg viewBox="0 0 200 200" class="kh-svg" aria-hidden="true"><circle cx="100" cy="100" r="88" class="kh-track"/><circle id="kh-ring" cx="100" cy="100" r="88" class="kh-prog" stroke-dasharray="${KH_C.toFixed(1)}" stroke-dashoffset="${(KH_C*(1-frac)).toFixed(1)}" transform="rotate(-90 100 100)"/></svg>
-      <div class="kh-mid"><span class="kh-act">${act[1]} ${act[2]}</span><b id="kh-clock" class="num">${khClock(left)}</b><small>${run?'خلوتك شغالة':'دقيقة من الذهب'}</small></div></div>
-    ${run?`<div class="kh-btns"><button class="kh-end" data-act="kh-stop">إنهاء الآن</button><button class="kh-cancel" data-act="kh-cancel">إلغاء</button></div>`
-    :`<div class="kh-pre" role="radiogroup" aria-label="المدة">${[25,45,60].map(m=>`<button role="radio" aria-checked="${k.dur===m}" data-act="kh-dur" data-m="${m}" class="num">${m}<small>د</small></button>`).join('')}</div><button class="kh-go" data-act="kh-start">ابدأ الخلوة</button>`}
-  </section>`;
-  const done=k.done?(()=>{const a=KH_ACTS.find(x=>x[0]===k.done.act)||KH_ACTS[0];return `<form class="kh-done" data-form="kh-save"><p class="kh-dt">🌿 خلصت <b class="num">${k.done.min}</b> دقيقة ${a[2]}</p>${a[0]==='read'?`<input name="pages" inputmode="numeric" placeholder="كم صفحة قريت؟" autocomplete="off">`:''}<textarea name="note" rows="2" placeholder="ماذا تعلمت اليوم؟ جملة وحدة تكفي"></textarea><div class="kh-dr"><button class="kh-go">احفظ الخلوة</button><button type="button" class="kh-cancel" data-act="kh-skip">بدون ملاحظة</button></div></form>`})():'';
-  const acts=`<section class="kh-sec"><h2 class="kh-h">ماذا ستثري به عقلك اليوم؟</h2><div class="kh-acts">${KH_ACTS.map(a=>`<button class="kh-ac ${(run?run.act:k.act)===a[0]?'on':''} ${ui.khPop===a[0]?'pop':''}" data-act="kh-act" data-a="${a[0]}" ${run?'disabled':''}><span class="kh-ai">${a[1]}</span><b>${a[2]}</b><small class="num">${statOf(a[0])} هالشهر</small></button>`).join('')}</div>
-    ${(run?run.act:k.act)==='read'?`<label class="kh-book"><span>📕</span><input id="kh-book" value="${esc(k.book||'')}" placeholder="اسم الكتاب اللي تقراه" autocomplete="off"></label>`:''}</section>`;
-  const heat=`<section class="kh-sec kh-streak"><div class="kh-sr"><div class="kh-fire"><b class="num">${streak}</b><small>${streak===1?'يوم':'أيام'}</small></div><div><p class="kh-st">${streak?`${streak} ${streak===1?'يوم':'أيام متتالية'} من الخلوة`:'ابدأ سلسلتك اليوم'}</p><p class="kh-ss num">${(mins/60).toFixed(1)} ساعة هالشهر · ${mon.length} خلوة</p></div></div>
+  const left=run?khLeft():k.dur*60000,frac=run?left/(run.dur*60000):1,custom=![25,45,60].includes(k.dur);
+  const pill=streak?`🔥 <b class="num">${streak}</b> ${streak===1?'يوم':streak<11?'أيام متتالية':'يوماً متتالياً'} من التعلّم`:'🌱 ابدأ اليوم، وابنِ عادتك خطوة بخطوة';
+  const head=`<header class="kh-head"><span class="kh-orbs" aria-hidden="true"><i></i><i></i><i></i></span><div><h1>خلوة</h1><p>ساعتك الذهبية للتعلّم والارتقاء</p><span class="kh-pill">${pill}</span></div><button class="kh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button></header>`;
+  const ring=`<div class="kh-ringw"><svg viewBox="0 0 200 200" class="kh-svg" aria-hidden="true"><defs><linearGradient id="khGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE29A"/><stop offset=".55" stop-color="#F5B841"/><stop offset="1" stop-color="#D98E1F"/></linearGradient></defs><circle cx="100" cy="100" r="88" class="kh-track"/><circle id="kh-ring" cx="100" cy="100" r="88" class="kh-prog" stroke="url(#khGold)" stroke-dasharray="${KH_C.toFixed(1)}" stroke-dashoffset="${(KH_C*(1-frac)).toFixed(1)}" transform="rotate(-90 100 100)"/></svg>
+      <div class="kh-mid"><span class="kh-act">${run?(run.pausedAt?'⏸ متوقفة مؤقتاً':'أنت الآن في وقتك الخاص'):'وقت لنفسك'}</span><b id="kh-clock" class="num">${khClock(left)}</b><small>${run?`${act[1]} ${act[2]}${run.detail?` · ${esc(run.detail)}`:''}`:'دقيقة من التعلّم'}</small></div></div>`;
+  const snd=`<button class="kh-snd" data-act="kh-sound" aria-pressed="${k.sound}" aria-label="${k.sound?'كتم النغمة':'تشغيل النغمة'}">${k.sound?'🔔':'🔕'}</button>`;
+  const timer=run?`<section class="kh-timer a-${cur} on"><span class="kh-blob" aria-hidden="true"></span>${snd}${ring}
+      <div class="kh-btns"><button class="kh-pause" data-act="kh-pause">${run.pausedAt?'▶ استئناف':'⏸ إيقاف مؤقت'}</button></div><button class="kh-endl" data-act="kh-stop">إنهاء الجلسة</button></section>`
+    :`<section class="kh-timer a-${cur}"><span class="kh-blob" aria-hidden="true"></span>${snd}${ring}
+      <div class="kh-pre" role="radiogroup" aria-label="المدة">${[25,45,60].map(m=>`<button role="radio" aria-checked="${k.dur===m}" data-act="kh-dur" data-m="${m}"><b class="num">${m}</b><small>دقيقة</small></button>`).join('')}<button role="radio" aria-checked="${custom}" data-act="kh-custom"><b class="num">${custom?k.dur:'✎'}</b><small>مخصص</small></button></div>
+      ${ui.khCustom?`<form class="kh-cust" data-form="kh-dur"><input name="m" inputmode="numeric" placeholder="كم دقيقة؟ (5 إلى 180)" value="${custom?k.dur:''}" autocomplete="off"><button class="kh-go sm">تم</button></form>`:''}
+      <div class="kh-goal"><p class="kh-q">ماذا ستروي عقلك اليوم؟</p><div class="kh-gs">${KH_PICK.map(a=>`<button class="kh-g ${cur===a[0]?'on':''} ${ui.khPop===a[0]?'pop':''}" data-act="kh-act" data-a="${a[0]}" data-a2="${a[0]}"><span class="kh-ai">${a[1]}</span><b>${a[2]}</b></button>`).join('')}</div>
+      ${act[3]?`<input class="kh-det" id="kh-det" data-a="${cur}" value="${esc(k.detail[cur]||'')}" placeholder="${act[3]}" autocomplete="off">`:''}</div>
+      <button class="kh-go" data-act="kh-start">ابدأ الخلوة</button></section>`;
+  const done=k.done?(()=>{const a=KH_ACTS.find(x=>x[0]===k.done.act)||KH_ACTS[0],f=a[0]==='read'?`<input name="pages" inputmode="numeric" placeholder="كم صفحة قريت؟" autocomplete="off">`:a[0]==='lang'?`<div class="kh-two"><input name="mins" inputmode="numeric" placeholder="دقائق الممارسة" value="${k.done.min}" autocomplete="off"><input name="words" inputmode="numeric" placeholder="كلمات جديدة" autocomplete="off"></div>`:a[0]==='skill'?`<input name="what" placeholder="وش سويت؟ درس، تمرين، مشروع…" autocomplete="off">`:'';
+    return `<form class="kh-done" data-form="kh-save"><p class="kh-dt">🌿 خلصت <b class="num">${k.done.min}</b> دقيقة ${a[1]} ${a[2]}${k.done.detail?` · ${esc(k.done.detail)}`:''}</p>${f}<textarea name="note" rows="2" maxlength="220" placeholder="ماذا تعلمت اليوم؟ سطرين يكفون"></textarea><div class="kh-dr"><button class="kh-go">احفظ الإنجاز</button><button type="button" class="kh-cancel" data-act="kh-skip">تخطي</button></div></form>`})():'';
+  const tot=a=>{const xs=mon.filter(x=>x.act===a);if(a==='read'){const p=xs.reduce((s,x)=>s+(x.pages||0),0);return [p,'صفحة']}if(a==='lang'){const w=xs.reduce((s,x)=>s+(x.words||0),0);return w?[w,'كلمة']:[xs.reduce((s,x)=>s+x.min,0),'دقيقة']}return [xs.length,'جلسة']};
+  const rec=`<section class="kh-sec kh-streak"><div class="kh-sr"><div class="kh-fire"><b class="num">${streak}</b><small>${streak===1?'يوم':'أيام'}</small></div><div><p class="kh-st">${streak?`${streak} ${streak===1?'يوم':'أيام متتالية'} من الخلوة`:'سلسلتك تبدأ من أول خلوة'}</p><p class="kh-ss num">${(mins/60).toFixed(1)} ساعة هالشهر · ${mon.length} خلوة</p></div></div>
+    <div class="kh-tots">${KH_PICK.map(a=>{const [n,u]=tot(a[0]);return `<span><i>${a[1]}</i><b class="num">${n}</b><small>${u}</small></span>`}).join('')}</div>
     <div class="kh-heat" aria-label="أيام الشهر">${[...Array(dim)].map((_,i)=>{const d=dkey(new Date(now.getFullYear(),now.getMonth(),i+1)),v=byDay[d]||0,l=v>=60?3:v>=30?2:v?1:0;return `<i class="l${l} ${i+1===now.getDate()?'today':''}" title="${i+1}: ${v} د"></i>`}).join('')}</div></section>`;
   const notes=k.notes.slice(-3).reverse();
-  const note=`<section class="kh-sec"><h2 class="kh-h">مفكرة الخواطر</h2>${notes.map(n=>`<div class="kh-note"><p>${esc(n.text)}</p><small class="num">${fmtDay(parseD(n.date))}${n.act?` · ${(KH_ACTS.find(a=>a[0]===n.act)||['','',''])[2]}`:''}</small><button class="kh-x" data-act="kh-ndel" data-id="${n.id}" aria-label="حذف">×</button></div>`).join('')||'<p class="kh-empty">بعد كل خلوة اكتب جملة وحدة عن اللي تعلمته.</p>'}
-    <form class="kh-nf" data-form="kh-note"><input name="text" placeholder="ماذا تعلمت اليوم؟" required autocomplete="off"><button class="kh-go sm">أضف</button></form></section>`;
-  return `<header class="kh-head"><span class="kh-orbs" aria-hidden="true"><i></i><i></i><i></i></span><div><h1>خلوة</h1><p>ساعتك الذهبية للتعلم والارتقاء</p></div><button class="kh-gear" data-act="settings" aria-label="الإعدادات">${GEAR}</button></header>${done}${timer}${acts}${heat}${note}`;
+  const note=`<section class="kh-sec"><h2 class="kh-h">مفكرة الخواطر</h2>${notes.map(n=>`<div class="kh-note"><p>${esc(n.text)}</p><small class="num">${fmtDay(parseD(n.date))}${n.act?` · ${(KH_ACTS.find(a=>a[0]===n.act)||['','',''])[2]}`:''}</small><button class="kh-x" data-act="kh-ndel" data-id="${n.id}" aria-label="حذف">×</button></div>`).join('')||'<p class="kh-empty">اكتب سطرين عن اللي تعلمته عشان تثبت المعلومة.</p>'}
+    <form class="kh-nf" data-form="kh-note"><input name="text" maxlength="220" placeholder="ماذا تعلمت اليوم؟" required autocomplete="off"><button class="kh-go sm">أضف</button></form></section>`;
+  return head+done+timer+rec+note;
 }
-
 function spark(vals){const W=300,H=70,P=8,mn=Math.min(...vals),mx=Math.max(...vals),rg=mx-mn||1;
   const pts=vals.map((v,i)=>[P+(W-2*P)*i/(vals.length-1),P+(H-2*P)*(1-(v-mn)/rg)]),last=pts[pts.length-1];
   const line=pts.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ');
@@ -2204,12 +2229,15 @@ const rm=(key,id)=>{S[key]=S[key].filter(x=>x.id!==id)};
 let resetArm=0;
 const A={
   settings:openSettings,'sheet-close':(d,el,e)=>{if(e.target.closest('[data-stop]')&&e.target.closest('[data-act]')!==el)return;if(el.classList.contains('sheet-wrap')&&e.target!==el)return;closeSheet()},
-  'kh-dur':d=>{khS().dur=+d.m;commit()},
+  'kh-dur':d=>{khS().dur=+d.m;ui.khCustom=false;commit()},
+  'kh-custom':()=>{ui.khCustom=!ui.khCustom;render();if(ui.khCustom)setTimeout(()=>{const x=document.querySelector('.kh-cust input');if(x)x.focus()},50)},
   'kh-act':d=>{khS().act=d.a;ui.khPop=d.a;commit();ui.khPop=null},
-  'kh-start':()=>{const k=khS();k.run={start:Date.now(),dur:k.dur,act:k.act};k.done=null;commit();toast(`بدأت خلوتك: ${k.dur} دقيقة`)},
-  'kh-stop':()=>{const k=khS();if(!k.run)return;const min=Math.max(1,Math.round((Date.now()-k.run.start)/60000));k.done={act:k.run.act,min,at:Date.now()};k.run=null;commit()},
+  'kh-sound':()=>{const k=khS();k.sound=!k.sound;commit();if(k.sound)khChime(false)},
+  'kh-start':()=>{const k=khS();k.run={start:Date.now(),dur:k.dur,act:k.act,detail:(k.detail[k.act]||'').trim()};k.done=null;ui.khCustom=false;commit();khChime(false);toast(`بدأت خلوتك: ${k.dur} دقيقة`)},
+  'kh-pause':()=>{const r=khS().run;if(!r)return;if(r.pausedAt){r.start+=Date.now()-r.pausedAt;delete r.pausedAt}else r.pausedAt=Date.now();commit()},
+  'kh-stop':()=>{const k=khS();if(!k.run)return;const end=k.run.pausedAt||Date.now(),min=Math.max(1,Math.round((end-k.run.start)/60000));k.done={act:k.run.act,min:Math.min(min,k.run.dur),at:Date.now(),detail:k.run.detail||''};k.run=null;khChime(true);commit()},
   'kh-cancel':()=>{const k=khS();k.run=null;k.done=null;commit()},
-  'kh-skip':()=>{const k=khS();if(k.done){k.sessions.push({id:uid(),date:dkey(),act:k.done.act,min:k.done.min});k.done=null}commit()},
+  'kh-skip':()=>{const k=khS();if(k.done){k.sessions.push({id:uid(),date:dkey(),act:k.done.act,min:k.done.min,detail:k.done.detail||undefined});k.done=null}commit()},
   'kh-ndel':d=>{const k=khS();k.notes=k.notes.filter(n=>n.id!==d.id);commit()},
   'clear-sample':()=>{const st={...S.settings,sample:false};S=blank();S.settings=st;closeSheet();commit();toast('مسحت الأمثلة، ابدأ ببياناتك')},
   'load-sample':()=>{const st=S.settings;S=sample();S.settings={...st,sample:true};closeSheet();commit()},
@@ -2351,7 +2379,8 @@ const F={
     S.plan={salary:sal,jamiya:(S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya,mine:mineCap(),gifts:giftsOf(),fixed:read('fixed'),ration:read('ration'),buckets:bk};const mf=(S.monthFixed||{})[wMonth];if(mf)S.plan.fixed.forEach(([n,a])=>{if(!(n in mf))mf[n]=a});closeSheet();toast('انحفظت الإعدادات')},
   budget:v=>{const b=num(v.budget);if(!(b>=0)){toast('اكتب الميزانية رقماً');return false}S.budgets[wMonth]=b},
   'rc-save':v=>rcApply(v.raw,true),
-  'kh-save':v=>{const k=khS();if(!k.done)return;const pages=Math.max(0,Math.round(num(v.pages)||0)),note=(v.note||'').trim();k.sessions.push({id:uid(),date:dkey(),act:k.done.act,min:k.done.min,pages:pages||undefined,book:k.done.act==='read'?k.book||undefined:undefined});if(note)k.notes.push({id:uid(),text:note,date:dkey(),act:k.done.act});k.done=null;toast('انحفظت خلوتك ✨')},
+  'kh-save':v=>{const k=khS();if(!k.done)return;const n=x=>Math.max(0,Math.round(num(x)||0)),d=k.done,note=(v.note||'').trim(),x={id:uid(),date:dkey(),act:d.act,min:d.act==='lang'&&n(v.mins)?n(v.mins):d.min,detail:d.detail||undefined};if(n(v.pages))x.pages=n(v.pages);if(n(v.words))x.words=n(v.words);if((v.what||'').trim())x.what=v.what.trim();k.sessions.push(x);if(note)k.notes.push({id:uid(),text:note,date:dkey(),act:d.act});k.done=null;toast(khStreak()>1?`انحفظ ✨ ${khStreak()} أيام متتالية`:'انحفظ إنجازك ✨')},
+  'kh-dur':v=>{const m=Math.round(num(v.m));if(!(m>=5&&m<=180)){toast('اكتب مدة من 5 إلى 180 دقيقة');return false}khS().dur=m;ui.khCustom=false},
   'kh-note':v=>{const t=(v.text||'').trim();if(!t)return false;khS().notes.push({id:uid(),text:t,date:dkey()})},
   'rashan-pay':v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const n=S.groceries.filter(g=>g.done).length;
     S.expenses.push({id:uid(),amount,cat:'راشن البيت',sub:'',note:`راشن البيت (${n} غرض)`,date:dkey()});S.groceries=S.groceries.filter(g=>!g.done);spendAlert(amount,'راشن البيت','')},
