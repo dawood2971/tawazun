@@ -2062,7 +2062,7 @@ function rSug(raw){const box=document.getElementById('r-sug');if(!box)return;con
   const hist=Object.entries(S.gHist||{}).filter(([k])=>k.includes(q)&&!act.has(k)).sort((a,b)=>(b[0].startsWith(q)-a[0].startsWith(q))||b[1].n-a[1].n).slice(0,5);
   let h='';
   if(!exact)h+=`<button class="sg-add" data-act="q-add" data-t="${esc(raw)}"><span>＋</span>أضف «${esc(raw)}»</button>`;
-  if(hist.length)h+=`<p class="sg-h">من مشترياتك قبل</p><div class="sg-chips">${hist.map(([,e])=>`<button data-act="q-add" data-t="${esc(e.text)}" data-q="${esc(e.qty||'')}"><span aria-hidden="true">${itemEmo({text:e.text,cat:rClassify(e.text)})}</span>${esc(e.text)}${e.qty?`<small class="num">${esc(e.qty)}</small>`:''}</button>`).join('')}</div>`;
+  if(hist.length)h+=`<p class="sg-h">من مشترياتك قبل</p><div class="sg-chips">${hist.map(([,e])=>`<button data-act="q-add" data-t="${esc(e.text)}" data-q="${esc(e.qty||'')}"><span aria-hidden="true">${itemEmo({text:e.text,cat:rClassify(e.text)})}</span>${esc(e.text)}${e.qty?`<small class="num">${esc(e.qty)}</small>`:''}${(S.gPrice||{})[rnorm(e.text)]?`<small class="num sg-p">${fmtMoney(S.gPrice[rnorm(e.text)].p)}</small>`:''}</button>`).join('')}</div>`;
   if(inList.length)h+=`<p class="sg-h ok">✓ موجود في القائمة: ${inList.slice(0,3).map(g=>esc(g.text)).join('، ')}</p>`;
   box.innerHTML=h;box.hidden=!h}
 document.addEventListener('keydown',e=>{if(e.target.id!=='r-q'||e.key!=='Enter')return;e.preventDefault();const b=document.querySelector('#r-sug button');if(b)b.click()});
