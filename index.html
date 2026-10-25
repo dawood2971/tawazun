@@ -584,23 +584,21 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .plan .pl-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.9rem;border-top:1px dashed var(--line)}.plan .pl-row:first-child{border-top:0}
 .plan .pl-total{border-top:2px solid var(--ink);font-size:1.05rem}.plan .pl-total b{color:var(--accent);font-size:1.25rem}
 .wk .pl-line,.rest-b .pl-line{display:flex;justify-content:space-between;padding:4px 0}.wk .bar{margin:8px 0}
-.xa-card{position:relative;overflow:hidden;border-radius:24px;padding:16px;border:1px solid rgba(255,255,255,.9);
+.xa-card{position:relative;overflow:hidden;border-radius:20px;padding:12px 14px 14px;border:1px solid rgba(255,255,255,.9);
   background:radial-gradient(70% 60% at 0% 0%,rgba(147,197,253,.45),transparent 70%),radial-gradient(60% 60% at 100% 100%,rgba(191,219,254,.6),transparent 70%),linear-gradient(160deg,#F6F9FF,#E6EFFD);
-  box-shadow:0 18px 36px -20px rgba(37,99,235,.45),inset 0 1px 0 #fff}
-.xa-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
-.xa-eye{margin:0;font-size:.72rem;font-weight:700;color:#2563EB}.xa-head h2{margin:2px 0;font-size:1.45rem;color:#0F1F4D}.xa-sub{margin:0;font-size:.78rem;color:#5B6B8C}
-.xa-art{width:118px;flex:none;filter:drop-shadow(0 10px 12px rgba(37,99,235,.22))}
-.xa-f{display:flex;flex-direction:column;gap:12px}
+  box-shadow:0 14px 30px -20px rgba(37,99,235,.45),inset 0 1px 0 #fff}
+.xa-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}.xa-head h2{margin:0;font-size:1.25rem;color:#0F1F4D}
+.xa-art{width:62px;height:48px;flex:none;filter:drop-shadow(0 6px 8px rgba(37,99,235,.22))}
+.xa-f{display:flex;flex-direction:column;gap:9px}
 .xa-chips{gap:7px}.xa-chips .chip-b{background:rgba(255,255,255,.65);border:1px solid rgba(147,180,240,.55);color:#1E3A8A;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 2px 6px -3px rgba(37,99,235,.3)}
-.xa-chips .chip-b[aria-pressed="true"]{background:linear-gradient(160deg,#3B82F6,#1D4ED8);border-color:#1D4ED8;color:#fff;box-shadow:0 8px 16px -6px rgba(29,78,216,.6),inset 0 1px 0 rgba(255,255,255,.35);transform:translateY(-1px)}
-.xa-chips.subs{margin-top:-4px}
-.xa-fld{display:flex;flex-direction:column;gap:5px}.xa-fld>span:first-child{font-size:.78rem;font-weight:700;color:#334A7A}
-.xa-fld .field,.xa-in{background:rgba(255,255,255,.75);border:1px solid rgba(147,180,240,.6);border-radius:14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.xa-fld input.field{flex:none;height:48px;min-height:0;padding:0 14px;font:inherit;font-size:16px;color:#0F1F4D;width:100%}
-.xa-fld .dp{width:100%;flex:1 1 auto;height:48px}
-.xa-in{display:flex;align-items:center;padding:0 14px;height:58px}.xa-in input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:1.6rem;font-weight:800;color:#0F1F4D;outline:none}.xa-in em{font-style:normal;font-size:.85rem;color:#5B6B8C}
+.xa-chips .chip-b[aria-pressed="true"]{background:linear-gradient(160deg,#3B82F6,#1D4ED8);border-color:#1D4ED8;color:#fff;box-shadow:0 6px 12px -6px rgba(29,78,216,.6),inset 0 1px 0 rgba(255,255,255,.35)}
+.xa-chips.subs{margin-top:-2px}
+.xa-row{display:flex;gap:8px}.xa-row>*,.xa-row>.dp{flex:1 1 0;min-width:0}
+.xa-f .field,.xa-in,.xa-f .dp{background:rgba(255,255,255,.75)!important;border:1px solid rgba(147,180,240,.6)!important;border-radius:12px}
+.xa-f .dp{height:46px;margin-top:0!important;width:auto}
+.xa-in{display:flex;align-items:center;padding:0 12px;height:46px}.xa-in input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:16px;font-weight:700;color:#0F1F4D;outline:none}.xa-in em{font-style:normal;font-size:.75rem;color:#5B6B8C}
 .xa-in:focus-within{outline:2px solid #2563EB}
-.xa-btn{height:52px;border:0;border-radius:16px;background:linear-gradient(160deg,#2F6BFF,#1D3FD0);color:#fff;font:inherit;font-size:1.05rem;font-weight:800;cursor:pointer;box-shadow:0 12px 22px -10px rgba(29,63,208,.7),inset 0 1px 0 rgba(255,255,255,.3)}
+.xa-btn{height:46px;border:0;border-radius:12px;background:linear-gradient(160deg,#2F6BFF,#1D3FD0);color:#fff;font:inherit;font-size:1rem;font-weight:800;cursor:pointer;box-shadow:0 10px 18px -10px rgba(29,63,208,.7),inset 0 1px 0 rgba(255,255,255,.3)}
 .xa-btn:active{transform:translateY(1px)}
 .wk2{position:relative;min-height:320px;border-radius:22px;overflow:hidden;color:#0B0B0B;
   background:radial-gradient(120% 90% at 20% 0%,#FAFAFA,#ECECEC 70%,#E4E4E4);box-shadow:0 14px 30px -18px rgba(20,30,60,.45)}
@@ -1723,15 +1721,13 @@ function pMahfazti(){
   </div>
 
   <section class="sec xadd"><div class="xa-card">
-    <div class="xa-head"><div><p class="xa-eye">غوازي</p><h2>أضف مصروف</h2><p class="xa-sub">اختر القسم وسجّل المبلغ</p></div>${xaArt()}</div>
+    <div class="xa-head"><h2>أضف مصروف</h2>${xaArt()}</div>
     <form class="xa-f" data-form="expense">
       <div class="chips xa-chips" id="cat-chips">${BUCKETS.filter(b=>b.k!=='jam'&&b.k!=='gift').map(b=>`<button type="button" class="chip-b" aria-pressed="${walletUI.cat===b.cat}" data-act="cat-pick" data-v="${b.cat}">${b.k==='cons'?'المواد الاستهلاكية':b.name}</button>`).join('')}</div>
       <input type="hidden" name="cat" id="exp-cat" value="${walletUI.cat}"><input type="hidden" name="sub" id="exp-sub" value="${walletUI.sub}">
       <div class="chips subs xa-chips" id="sub-chips" ${subsOf(walletUI.cat)?'':'hidden'}>${(subsOf(walletUI.cat)||SUBS).map(x=>`<button type="button" class="chip-b" aria-pressed="${walletUI.sub===x}" data-act="sub-pick" data-v="${x}">${x}</button>`).join('')}</div>
-      <label class="xa-fld xa-amt"><span>المبلغ</span><span class="xa-in"><input name="amount" id="exp-amount" inputmode="decimal" placeholder="0.000" required autocomplete="off"><em>${esc(S.settings.currency)}</em></span></label>
-      <div class="xa-fld"><span>اليوم</span><input class="field" type="date" name="date" value="${cur?td:dkey(cFrom(m))}" aria-label="التاريخ"></div>
-      <label class="xa-fld"><span>ملاحظة (اختياري)</span><input class="field" name="note" id="exp-note" placeholder="مثلاً: قهوة مع الربع" autocomplete="off"></label>
-      <button class="xa-btn">سجّل</button>
+      <div class="xa-row"><span class="xa-in"><input name="amount" id="exp-amount" inputmode="decimal" placeholder="المبلغ" required autocomplete="off"><em>${esc(S.settings.currency)}</em></span><input class="field xa-note" name="note" id="exp-note" placeholder="ملاحظة (اختياري)" autocomplete="off"></div>
+      <div class="xa-row"><input class="field" type="date" name="date" value="${cur?td:dkey(cFrom(m))}" aria-label="التاريخ"><button class="xa-btn">سجّل</button></div>
     </form></div></section>
 
   ${eventsSection()}
