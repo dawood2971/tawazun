@@ -302,6 +302,7 @@
 .qpill{border:0;cursor:pointer;background:color-mix(in srgb,var(--qc) 16%,transparent);color:color-mix(in srgb,var(--qc) 80%,#000);font-weight:600}
 .qgroup{margin-top:12px}
 .qg-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:14px;background:color-mix(in srgb,var(--qc) 14%,var(--surface));margin-bottom:8px}
+.qg-h{cursor:pointer;user-select:none}.qgroup:not(.open) .qg-h{margin-bottom:0}.qgroup+.qgroup{margin-top:8px}.qg-chev{font-size:1.1rem;color:color-mix(in srgb,var(--qc) 80%,#000);transition:transform .2s}.qgroup.open .qg-chev{transform:rotate(180deg)}
 .qg-h b{color:color-mix(in srgb,var(--qc) 85%,#000)}.qg-act{font-size:.8rem;color:var(--muted);flex:1}
 .qg-n{min-width:26px;height:26px;border-radius:50%;background:var(--qc);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:600}
 .more{display:block;margin:6px auto 0}
@@ -1077,11 +1078,11 @@ function suggSection(){const g=sg(),favs=g.fav.map(id=>g.items.find(i=>i.id===id
       <button class="link" style="margin-top:8px" data-act="sugg-reset">رجّع الاقتراحات الافتراضية المحذوفة</button>`:''}</div>`}
 function quadOf(t){if(t.imp==null||t.urg==null)return 'none';return t.imp?(t.urg?'do':'plan'):(t.urg?'del':'drop')}
 const qPill=t=>{const q=quadOf(t);return `<button class="pill qpill" style="--qc:${QUADS[q].c}" data-act="classify" data-id="${t.id}">${QUADS[q].name}</button>`};
-const ui={sugg:false,more:{},view:'all',addToday:true,sAdded:null,sEdit:false,sCat:'home',sOpen:null};
+const ui={sugg:false,more:{},qOpen:{},view:'all',addToday:true,sAdded:null,sEdit:false,sCat:'home',sOpen:null};
 function todayGroups(k,list,mix){return QORDER.map(q=>{const ts=list.filter(t=>quadOf(t)===q).sort((a,b)=>(a.status==='done')-(b.status==='done')||(b.plan===k)-(a.plan===k)||(a.order??0)-(b.order??0)||(b.created||0)-(a.created||0));if(!ts.length)return '';
-  const open=ui.more[q],shown=open?ts:ts.slice(0,5);
-  return `<div class="qgroup" style="--qc:${QUADS[q].c}"><div class="qg-h"><b>${QUADS[q].name}</b><span class="qg-act">${QUADS[q].act}</span><span class="num qg-n">${ts.length}</span>${q==='drop'?`<button class="link qg-del" data-act="t-x-many" data-ids="${ts.map(t=>t.id).join(',')}" data-msg="حُذفت ${ts.length} من «غير مهم وغير عاجل»">احذفها كلها</button>`:''}</div>
-    <div class="list tasks" data-list="${k}">${shown.map(t=>taskRow(t,k,mix)).join('')}</div>${ts.length>5?`<button class="link more" data-act="q-more" data-q="${q}">${open?'عرض أقل':`عرض المزيد (${ts.length-5})`}</button>`:''}</div>`}).join('')}
+  const open=ui.more[q],shown=open?ts:ts.slice(0,5),exp=!!ui.qOpen[q];
+  return `<div class="qgroup ${exp?'open':''}" style="--qc:${QUADS[q].c}"><div class="qg-h" role="button" tabindex="0" data-act="q-open" data-q="${q}" aria-expanded="${exp}"><b>${QUADS[q].name}</b><span class="qg-act">${QUADS[q].act}</span><span class="num qg-n">${ts.length}</span>${q==='drop'?`<button class="link qg-del" data-act="t-x-many" data-ids="${ts.map(t=>t.id).join(',')}" data-msg="حُذفت ${ts.length} من «غير مهم وغير عاجل»">احذفها كلها</button>`:''}<span class="qg-chev" aria-hidden="true">⌄</span></div>
+    ${exp?`<div class="list tasks" data-list="${k}">${shown.map(t=>taskRow(t,k,mix)).join('')}</div>${ts.length>5?`<button class="link more" data-act="q-more" data-q="${q}">${open?'عرض أقل':`عرض المزيد (${ts.length-5})`}</button>`:''}`:''}</div>`}).join('')}
 function clBlock(t){const yn=(f,label)=>`<div class="q2"><b>${label}</b><div class="yn"><button type="button" class="ynb ${t[f]===true?'on':''}" data-act="cl-set" data-f="${f}" data-v="1" data-id="${t.id}">نعم</button><button type="button" class="ynb ${t[f]===false?'on':''}" data-act="cl-set" data-f="${f}" data-v="0" data-id="${t.id}">لا</button></div></div>`;
   return `<div class="clblock">${yn('imp','هل المهمة مهمة؟')}${yn('urg','هل المهمة عاجلة؟')}<div id="cl-result">${clResult(t)}</div>
     <p class="sub" style="margin-top:10px">أو اختر الصندوق مباشرة:</p><div class="mgrid small-m">${['do','plan','del','drop'].map(q=>`<button type="button" class="mbox ${quadOf(t)===q?'on':''}" style="--qc:${QUADS[q].c}" data-act="cl-quad" data-q="${q}" data-id="${t.id}"><b>${QUADS[q].name}</b></button>`).join('')}</div></div>`}
@@ -1353,6 +1354,7 @@ const MA={
   'sugg-edit':()=>{ui.sEdit=!ui.sEdit;render()},
   'sugg-del':d=>{const g=sg(),it=g.items.find(i=>i.id===d.id);g.items=g.items.filter(i=>i.id!==d.id);g.fav=g.fav.filter(x=>x!==d.id);delete g.count[d.id];if(ui.sAdded&&ui.sAdded.sid===d.id)ui.sAdded=null;commit();if(it)toast(`انحذف اقتراح «${it.title}»`)},
   'sugg-reset':()=>{const g=sg(),have=new Set(g.items.map(i=>i.id));const miss=sdefItems().filter(i=>!have.has(i.id));g.items.push(...miss);commit();toast(miss.length?`رجعت ${miss.length} من الاقتراحات`:'كل الاقتراحات الافتراضية موجودة')},
+  'q-open':d=>{ui.qOpen[d.q]=!ui.qOpen[d.q];render()},
   'q-more':d=>{ui.more[d.q]=!ui.more[d.q];render()},
   't-edit':d=>openEdit(d.id),
   't-done':d=>{const t=S.tasks.find(x=>x.id===d.id);t.status=t.status==='done'?'todo':'done';if(t.status==='done')toast('أحسنت، مهمة مكتملة');commit()},
