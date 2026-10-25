@@ -1029,9 +1029,12 @@ const CATS=BUCKETS.map(b=>b.cat);
 const PLANNED_SUBS=['فواتير'];
 /* daily spending = الالتزامات (except bills) and المواد الاستهلاكية; the rest are planned payments */
 const isDaily=e=>(e.cat==='الالتزامات'&&!PLANNED_SUBS.includes(e.sub))||e.cat==='المواد الاستهلاكية';
-const PLAN_DEF={salary:720,jamiya:50,gifts:[['أمي',30],['زوجتي',30],['عمتي',10],['بناتي',10],['مصروف مدرسي',6]],fixed:[['ديون',40],['عيد أضحى',15],['عيد الفطر',15],['طوارئ',15],['سفر',15],['التجديد',10],['رمضان',8],['صيانة السيارات',5],['عيد ميلاد / زواج',5],['المدارس',4],['ادخار',3]],
+const LEGACY_PLAN={salary:720,jamiya:50,gifts:[['أمي',30],['زوجتي',30],['عمتي',10],['بناتي',10],['مصروف مدرسي',6]],fixed:[['ديون',40],['عيد أضحى',15],['عيد الفطر',15],['طوارئ',15],['سفر',15],['التجديد',10],['رمضان',8],['صيانة السيارات',5],['عيد ميلاد / زواج',5],['المدارس',4],['ادخار',3]],
   ration:[['خضار وفواكه',28],['سمك',14],['دجاج',8.5],['لحوم',6],['روب',4],['صمون',5],['مياه',13.5],['حليب فراولة',2.3],['كروسون',4.5],['قاشع',3]],
   buckets:{rashan:90,cons:90,commit:null}};
+/* new users start empty; LEGACY_PLAN only fills gaps in plans saved before planV2 */
+const PLAN_DEF={salary:0,jamiya:0,gifts:[],fixed:[],ration:[],buckets:{rashan:0,cons:0,commit:null}};
+const SAMPLE_PLAN={salary:600,jamiya:0,gifts:[['الوالدين',30]],fixed:[['طوارئ',20],['سفر',15],['ادخار',10]],ration:[['خضار وفواكه',25],['دجاج',10]],buckets:{rashan:90,cons:60,commit:null}};
 const EVENTS_DEF=[['تجديد السيارة','date','','التجديد'],['تأمين السيارة','date','',''],['نزهة وتدليل وترفيه','date','',''],['أعياد الميلاد','date','','عيد ميلاد / زواج'],
   ['شهر رمضان','hijri','9-1','رمضان'],['عيد الفطر','hijri','10-1','عيد الفطر'],['عيد الأضحى','hijri','12-10','عيد أضحى']];
 const sumRows=r=>r.reduce((a,x)=>a+(+x[1]||0),0);
@@ -1079,7 +1082,7 @@ function walletMigrate7(s){if(s.wallet7)return;const N='جمعية',cur=ckey(),p
   const mf=(s.monthFixed||{})[cur];if(mf)delete mf[N];const hp=(s.hPaid||{})[cur];
   if(hp&&N in hp){s.funds[N]=(s.funds[N]||0)-hp[N];(s.expenses=s.expenses||[]).push({id:uid(),date:dkey(),amount:hp[N],cat:'الجمعية',sub:'',note:'الجمعية'});delete hp[N]}s.wallet7=1}
 function walletMigrate5(s){if(s.wallet5)return;(s.expenses||[]).forEach(e=>{if(e.sub==='سداد الفيزا'){e.cat='الفيزا';e.sub=''}});s.wallet5=1}
-function blank(){return{v:1,settings:{...DEF},plans:{},focusLog:{},ratings:{},habits:[],health:{},weights:[],groceries:[],errands:[],kids:[],kidEvents:[],bills:[],budgets:{},expenses:[],goals:[],ui:{beiti:'groceries'},tasks:[],top:{},prayed:{},garden:[],fired:{},focus:{mode:'idle'},masar:2,matrix:1}}
+function blank(){return{v:1,settings:{...DEF},plans:{},focusLog:{},ratings:{},habits:[],health:{},weights:[],groceries:[],errands:[],kids:[],kidEvents:[],bills:[],budgets:{},expenses:[],goals:[],ui:{beiti:'groceries'},tasks:[],top:{},prayed:{},garden:[],fired:{},focus:{mode:'idle'},masar:2,matrix:1,planV2:1}}
 function sample(){
   const s=blank();s.settings.sample=true;const t=new Date(),k=dkey(t),ago=n=>dkey(addDays(t,-n)),fwd=n=>dkey(addDays(t,n));
   const T=(title,plan,extra)=>{const x={id:uid(),title,cat:'',date:'',time:'',remind:'',plan,status:'todo',order:0,created:Date.now(),...extra};s.tasks.push(x);return x};
@@ -1104,12 +1107,13 @@ function sample(){
   [['مطاعم وقهوة',3.8,'قهوة مع الزملاء',1],['مقاضي البيت',58.65,'مقاضي الأسبوع',2],['بنزين ومواصلات',12,'بنزين',3],['الأولاد',25,'رسوم نشاط',5],['مطاعم وقهوة',18.5,'عشاء العائلة',8],['مقاضي البيت',32.4,'خضار وفواكه',12],['ترفيه',8.9,'اشتراك',14],['صحة',7.25,'صيدلية',16],['بنزين ومواصلات',11,'بنزين',18],['مطاعم وقهوة',4.6,'',20]].forEach(([cat,amount,note,d])=>s.expenses.push({id:uid(),cat,amount,note,date:day(d)}));
   s.bills=[['الإنترنت',25,5],['الكهرباء',38.5,15],['الجوال',12,25],['قسط السيارة',185,27]].map(([name,amount,d])=>({id:uid(),name,amount,day:d,paid:{}}));
   s.bills.forEach(bl=>{if(bl.day<t.getDate()){const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:bl.amount,note:bl.name,date:day(bl.day)};s.expenses.push(e);bl.paid[m]=e.id}});
-  s.plan=JSON.parse(JSON.stringify(PLAN_DEF));s.wallet2=1;s.monthFixed={[m]:Object.fromEntries(PLAN_DEF.fixed)};s.funds=Object.fromEntries(PLAN_DEF.fixed.map(([n,a])=>[n,a*4]));s.fundTx=[];s.wallet3=1;s.salaries={[m]:{amount:PLAN_DEF.salary,at:dkey(t)}};walletMigrate(s);
+  s.plan=JSON.parse(JSON.stringify(SAMPLE_PLAN));s.wallet2=1;s.monthFixed={[m]:Object.fromEntries(SAMPLE_PLAN.fixed)};s.funds=Object.fromEntries(SAMPLE_PLAN.fixed.map(([n,a])=>[n,a*4]));s.fundTx=[];s.wallet3=1;s.salaries={[m]:{amount:SAMPLE_PLAN.salary,at:dkey(t)}};walletMigrate(s);
   s.goals=[{id:uid(),name:'صندوق الطوارئ',target:2000,saved:850},{id:uid(),name:'سفرة الصيف',target:900,saved:320}];
   return s;
 }
 function load(){let s=null;try{s=JSON.parse(localStorage.getItem(KEY))}catch(e){}
   if(!s||typeof s!=='object')return sample();
+  if(!s.planV2){s.plan=s.plan||{};for(const k in LEGACY_PLAN)if(s.plan[k]===undefined)s.plan[k]=JSON.parse(JSON.stringify(LEGACY_PLAN[k]));s.planV2=1}
   const b=blank();for(const k in b)if(s[k]===undefined)s[k]=b[k];
   /* one-time move to Omani rial + Muscat for data saved by the first (Saudi-default) version */
   if(!s.settings.omr){if(s.settings.sample){const page=s.ui;s=sample();s.ui=page||s.ui;return s}
