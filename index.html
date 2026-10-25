@@ -52,9 +52,9 @@
 :root[data-page="waha"][data-theme="dark"]{ --bg:#0D1611; --surface:#142019; --sunk:#1C2B22; --ink:#E4EFE7; --muted:#8FA897; --line:#253629;
   --accent:#5FC88D; --accent-soft:#173323; --on-accent:#06150C; --deep:#7CC6CF; --deep-soft:#15302F;
   --hero-bg:#17402C; --hero-ink:#EAF6EE; --hero-muted:#A6CDB4; --hero-glow:rgba(95,200,141,.3); }
-:root[data-page="beiti"]{ --bg:#F7EBEF; --surface:#FFFFFF; --sunk:#F0DEE6; --ink:#33263D; --muted:#6F5E78; --line:#E8D3DD;
-  --accent:#6B4F78; --accent-soft:#F1DDE6; --on-accent:#FFFFFF; --deep:#6B4F78; --deep-soft:#EADCF0;
-  --hero-bg:#6B4F78; --hero-ink:#FFFFFF; --hero-muted:#EADCF0; --hero-glow:rgba(241,154,62,.45);
+:root[data-page="beiti"]{ --bg:#F5F6F0; --surface:#FFFFFF; --sunk:#EEF1EA; --ink:#16241E; --muted:#5F6F67; --line:#E1E6DE;
+  --accent:#1F7A55; --accent-soft:#E4F4EA; --on-accent:#FFFFFF; --deep:#0F4A3C; --deep-soft:#DDEFE5;
+  --hero-bg:#0F4A3C; --hero-ink:#FFFFFF; --hero-muted:#C9E3D7; --hero-glow:rgba(241,154,62,.45);
   --f-display:"El Messiri","IBM Plex Sans Arabic",system-ui,"Segoe UI",Tahoma,sans-serif; color-scheme:light }
 :root[data-page="beiti"] .nav a[aria-current="page"]{box-shadow:inset 0 -3px 0 #F19A3E}
 :root[data-page="beiti"] .seg button[aria-selected="true"]{box-shadow:inset 0 -3px 0 #F19A3E,0 1px 3px rgba(0,0,0,.12)}
@@ -556,7 +556,7 @@ html,body{background:var(--bg)}
 :root[data-page="masai"] .mhero .ring-wrap{width:104px;height:104px;background:rgba(224,241,243,.9);border:0;backdrop-filter:none}
 :root[data-page="masai"] .ring-bg{stroke:#CFE7EA}:root[data-page="masai"] .ring-fg{stroke:#3E97A3!important}
 :root[data-page="masai"] .mhero .ring-c span{color:#4F7279}:root[data-page="masai"] .mhero .ring-c b{color:#12343B;font-size:1.05rem}
-:root[data-page="masai"] .mhero .big{font-size:2.8rem!important}
+:root[data-page="masai"] .mhero .big{font-size:2.8rem!important;line-height:1.3!important;padding-top:.22em}
 :root[data-page="masai"]{--f-hand:"Rakkas","Aref Ruqaa","Readex Pro",serif}
 :root[data-page="masai"] .mph h1,:root[data-page="masai"] .mph .eyebrow,:root[data-page="masai"] .sec h2,:root[data-page="masai"] .sec h3,:root[data-page="masai"] .mhero .big,:root[data-page="masai"] .qnav button span,:root[data-page="masai"] .top-card b,:root[data-page="masai"] .end-day{font-family:var(--f-hand);font-weight:400;letter-spacing:0}
 :root[data-page="masai"] .mph h1{font-size:3.2rem;line-height:1.2}:root[data-page="masai"] .mph .eyebrow{font-size:1.1rem}:root[data-page="masai"] .qnav button span{font-size:.98rem;line-height:1.3}:root[data-page="masai"] .sec .sec-h h2{font-size:1.7rem}
@@ -2309,7 +2309,7 @@ function render(){
   autoBills();
   if(page!=='mahfazti')ringShown=0;
   document.documentElement.dataset.page=page;
-  const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=getComputedStyle(document.documentElement).getPropertyValue('--hero-bg').trim();
+  const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=page==='beiti'?'#F5F6F0':getComputedStyle(document.documentElement).getPropertyValue('--hero-bg').trim();
   $('#view').innerHTML=banner()+PAGES[page]();
   {const key=page+':'+(page==='beiti'?S.ui.beiti:''),v=$('#view');if(key!==lastView&&page==='beiti'){v.classList.add('sh-enter');clearTimeout(enterT);enterT=setTimeout(()=>v.classList.remove('sh-enter'),1200)}else if(key!==lastView)v.classList.remove('sh-enter');lastView=key;
    if(ui.fx){const t=document.querySelector(`.pcard [data-id="${ui.fx.id}"], .bl-card [data-id="${ui.fx.id}"]`),c=t&&t.closest('.pcard,.bl-card');if(c)c.classList.add('fx-'+ui.fx.k);ui.fx=null}}
