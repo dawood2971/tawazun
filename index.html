@@ -1582,9 +1582,9 @@ function autoBills(){const now=new Date(),m=mkey(now),dim=new Date(now.getFullYe
   (S.bills||[]).forEach(b=>{if(!b.auto||b.paid[m]||b.skip===m||!billLive(b,m))return;const day=Math.min(b.day,dim);if(now.getDate()<day)return;
     const e={id:uid(),cat:'الالتزامات',sub:'فواتير',amount:b.amount,note:b.name,date:dkey(new Date(now.getFullYear(),now.getMonth(),day)),auto:1};S.expenses.push(e);b.paid[m]=e.id;ch=true});
   if(ch)save();return ch}
-const BEMO=[['جوال','📱'],['هاتف','📱'],['سيار','🚗'],['قسط','🏦'],['انترنت','🌐'],['إنترنت','🌐'],['الإنترنت','🌐'],['نت','🌐'],['كهرب','💡'],['ماء','💧'],['مياه','💧'],['ايجار','🏠'],['إيجار','🏠'],['سكن','🏠'],['غاز','🔥'],['تأمين','🛡️'],['اشتراك','📺'],['نتفل','📺'],['مدرس','🎒'],['نادي','🏋️']];
+const BEMO=[['جوال','📱'],['فودافون','📱'],['vodafone','📱'],['نورس','📱'],['عمانتل','📱'],['عمان تل','📱'],['omantel','📱'],['اوريدو','📱'],['أوريدو','📱'],['ooredoo','📱'],['رنة','📱'],['هاتف','📱'],['سيار','🚗'],['قسط','🏦'],['انترنت','🌐'],['إنترنت','🌐'],['الإنترنت','🌐'],['نت','🌐'],['كهرب','💡'],['ماء','💧'],['مياه','💧'],['ايجار','🏠'],['إيجار','🏠'],['سكن','🏠'],['غاز','🔥'],['تأمين','🛡️'],['اشتراك','📺'],['نتفل','📺'],['مدرس','🎒'],['نادي','🏋️']];
 const BTINT=['#E4F4EA','#FFF1D6','#E6F0FF','#FDE8E4','#EEE9FB','#E2F5F3'];
-function billEmo(b){const n=String(b.name||'');const m=BEMO.find(e=>n.includes(e[0]));return m?m[1]:'🧾'}
+function billEmo(b){const n=String(b.name||'').toLowerCase();const m=BEMO.find(e=>n.includes(e[0]));return m?m[1]:'🧾'}
 function billTint(b){let h=0;for(const c of String(b.name||''))h=(h*31+c.charCodeAt(0))>>>0;return BTINT[h%BTINT.length]}
 function billState(b){const now=new Date(),m=mkey(now),paid=!!b.paid[m];if(paid)return['مدفوعة','good'];if(!billLive(b,m)){const[y,mo]=b.from.split('-');return[`تبدأ ${new Intl.DateTimeFormat(LOC,{month:'long'}).format(new Date(+y,mo-1,1))}`,'']}
   const diff=b.day-now.getDate();if(diff<0)return[`متأخرة ${-diff} يوم`,'bad'];if(diff===0)return['تستحق اليوم','bad'];if(diff<=5)return[`بعد ${diff} أيام`,'warn'];return[`يوم ${b.day}`,'']}
