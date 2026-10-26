@@ -1923,7 +1923,7 @@ function mAudit(){if(!S||!S.expenses)return;let n;try{n=mSnap()}catch(e){return}
 function stmtInfo(m){const c=monthCalc(m),hp=Object.entries(hPaidOf(m)),cats={},today=dkey(),names=new Set(c.gifts.map(([n])=>n));
   c.ex.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(e=>(cats[e.cat]=cats[e.cat]||[]).push(e));
   const calc=c.salary-c.hasala-c.moved-c.ex.reduce((a,e)=>a+e.amount,0),W=[],seen={};
-  c.ex.forEach(e=>{if(e.cat==='عطايا'&&!names.has(e.sub))W.push(`عطية «${e.sub||e.note}» ${fmtMoney(e.amount)} مسجلة، والاسم مب موجود في قائمة عطايا`);
+  c.ex.forEach(e=>{if(e.cat==='عطايا'&&!names.has(e.sub))W.push([`عطية «${e.sub||e.note}» ${fmtMoney(e.amount)} مسجلة، والاسم مب موجود في قائمة عطايا`,e.id]);
     if(e.date>today)W.push(`«${e.note||e.sub||e.cat}» ${fmtMoney(e.amount)} تاريخه ${e.date} (بعد اليوم)`);
     const k=[e.date,e.amount,e.cat,e.sub||'',e.note||''].join('|');if(seen[k])W.push(`«${e.note||e.sub||e.cat}» ${fmtMoney(e.amount)} مكرر في نفس اليوم ${e.date}`);seen[k]=1});
   const res=[];if(c.jamLeft>0)res.push(['الجمعية',c.jamLeft]);c.gifts.forEach(([n,v])=>{const l=+v-c.given[n];if(l>0)res.push(['عطية '+n,l])});if(c.mineLeft>0)res.push(['مصروفي',c.mineLeft]);
@@ -1939,14 +1939,14 @@ function openStmt(){const m=wMonth,I=stmtInfo(m),c=I.c,r=(l,v,k='')=>`<div class
     ${I.ok?'<p class="st-ok">✓ الحساب مطابق: الراتب ناقص كل الخصومات يساوي المتبقي</p>':`<p class="st-bad num">⚠ فيه فرق ${fmtMoney(I.calc-c.rest)} بين الجمع والمتبقي</p>`}
     <p class="sub">اضغط على أي بند يفتح لك تفاصيله.</p></div>
   <div class="st-sec"><h3>محجوز من المتبقي</h3>${I.res.length?I.res.map(([n,v])=>r(esc(n),v,'minus')).join(''):'<p class="sub">ما فيه شي محجوز.</p>'}${r('تقدر تصرفه بحرية',c.rest-c.owed,'tot')}</div>
-  <div class="st-sec"><h3>تنبيهات</h3>${I.W.length?I.W.map(w=>`<div class="st-w num">⚠ ${esc(w)}</div>`).join(''):'<p class="st-ok">✓ ما فيه شي غريب: لا تكرار ولا عطايا لأسماء محذوفة ولا تواريخ بعد اليوم</p>'}</div>
+  <div class="st-sec"><h3>تنبيهات</h3>${I.W.length?I.W.map(w=>Array.isArray(w)?`<div class="st-w num" style="display:flex;align-items:center;gap:8px"><span class="grow">⚠ ${esc(w[0])}</span><button class="chip" data-act="stmt-xdel" data-id="${w[1]}">احذفها</button></div>`:`<div class="st-w num">⚠ ${esc(w)}</div>`).join(''):'<p class="st-ok">✓ ما فيه شي غريب: لا تكرار ولا عطايا لأسماء محذوفة ولا تواريخ بعد اليوم</p>'}</div>
   <div class="st-sec"><h3>سجل التغييرات</h3>${I.log.length?I.log.slice(0,60).map(x=>`<div class="st-log ${x.r[1]>x.r[0]||x.f[1]>x.f[0]?'up':''}"><div class="t num">${stT(x.t)}</div>${x.L.map(l=>`<div>${esc(l)}</div>`).join('')||'<div>تغيّر المحجوز</div>'}<div class="d num">المتبقي ${fmtMoney(x.r[0])} ← ${fmtMoney(x.r[1])}${x.r[1]>x.r[0]?' ↑':''} · الحر ${fmtMoney(x.f[0])} ← ${fmtMoney(x.f[1])}${x.f[1]>x.f[0]?' ↑':''}</div></div>`).join(''):'<p class="sub">السجل يبدأ من الحين، وكل تغيير على فلوس هذا الشهر بينكتب هنا.</p>'}</div>
   <button class="btn st-copy" data-act="stmt-copy">انسخ الكشف وأرسله</button>`,'كشف الحساب')}
 function stmtText(m){const I=stmtInfo(m),c=I.c,f=fmtMoney,o=[`كشف ${salaryName(m)} (${dkey(cFrom(m))} إلى ${dkey(cTo(m))})`,`الراتب: ${f(c.salary)}${c.applied?'':' (من الخطة)'}`];
   I.hp.forEach(([n,v])=>o.push(`- حصالة ${n}: ${f(v)}`));(c.moves||[]).forEach(x=>o.push(`- حوّلت لـ${x.fund}: ${f(x.amount)}`));
   Object.entries(I.cats).forEach(([k,l])=>{o.push(`${k}: ${f(l.reduce((a,e)=>a+e.amount,0))}`);l.forEach(e=>o.push(`  ${e.date} ${e.note||e.sub||''}: ${f(e.amount)}`))});
   o.push(`المتبقي: ${f(c.rest)} ${I.ok?'(مطابق)':'(فيه فرق '+f(I.calc-c.rest)+')'}`);I.res.forEach(([n,v])=>o.push(`محجوز ${n}: ${f(v)}`));o.push(`الحر للصرف: ${f(c.rest-c.owed)}`);
-  I.W.forEach(w=>o.push('تنبيه: '+w));if(I.log.length){o.push('آخر التغييرات:');I.log.slice(0,30).forEach(x=>o.push(`${stT(x.t)} ${x.L.join('، ')} | المتبقي ${f(x.r[0])} ← ${f(x.r[1])}`))}
+  I.W.forEach(w=>o.push('تنبيه: '+(Array.isArray(w)?w[0]:w)));if(I.log.length){o.push('آخر التغييرات:');I.log.slice(0,30).forEach(x=>o.push(`${stT(x.t)} ${x.L.join('، ')} | المتبقي ${f(x.r[0])} ← ${f(x.r[1])}`))}
   return o.join('\n')}
 function openGifts(){const m=wMonth,c=monthCalc(m),cur=esc(S.settings.currency);
   openSheet(`<p class="sub num">أعطيت ${fmtMoney(c.sp.gift)} من ${fmtMoney(c.giftTot)} ${cur} اضغط الزر لما تعطي الشخص، وغيّر المبلغ من الخانة.</p>
@@ -2367,7 +2367,7 @@ const A={
   'gift-open':()=>openGifts(),
   'gift-give':d=>{const m=wMonth,[n,v]=giftsOf()[+d.i],mine=S.expenses.filter(e=>e.cat==='عطايا'&&e.sub===n&&inCycle(e,m));
     if(mine.length){S.expenses=S.expenses.filter(e=>!mine.includes(e));toast(`رجّعت «${n}» لغير معطى`)}else{S.expenses.push({id:uid(),date:m===ckey()?dkey():dkey(cFrom(m)),amount:+v,cat:'عطايا',sub:n,note:n});toast(`أعطيت ${n} ${fmtMoney(+v)}`)}commit();openGifts()},
-  'stmt-open':()=>openStmt(),'stmt-copy':()=>copy(stmtText(wMonth),'نسخت الكشف، الصقه لي في المحادثة'),
+  'stmt-open':()=>openStmt(),'stmt-xdel':d=>{rm('expenses',d.id);commit();openStmt();toast('حذفت العطية ورجع مبلغها للمتبقي')},'stmt-copy':()=>copy(stmtText(wMonth),'نسخت الكشف، الصقه لي في المحادثة'),
   'gift-rm':d=>{const n=giftsOf()[+d.id][0];giftsSet(l=>l.splice(+d.id,1));commit();openGifts();toast(`انشال «${n}» من القائمة`)},
   'jam-del':d=>{rm('expenses',d.id);commit();openJamiya();toast('انحذفت الدفعة')},
   'z-del':d=>{rm('expenses',d.id);commit();openZakat();toast('انحذفت الدفعة')},
