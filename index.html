@@ -1938,6 +1938,8 @@ function openStmt(){const m=wMonth,I=stmtInfo(m),c=I.c,r=(l,v,k='')=>`<div class
     ${r('المتبقي',c.rest,'tot')}
     ${I.ok?'<p class="st-ok">✓ الحساب مطابق: الراتب ناقص كل الخصومات يساوي المتبقي</p>':`<p class="st-bad num">⚠ فيه فرق ${fmtMoney(I.calc-c.rest)} بين الجمع والمتبقي</p>`}
     <p class="sub">اضغط على أي بند يفتح لك تفاصيله.</p></div>
+  ${m===ckey()?`<div class="st-sec"><h3>طابق مع رصيدك الفعلي</h3><p class="sub">اكتب كم عندك الحين في الحساب. الفرق ينسجل سطر واحد «تسوية»، فإذا رصيدك أقل ينسجل مصاريف ما سجلتها، وإذا أكثر ينسجل فرق لصالحك.</p>
+    <form data-form="stmt-real" class="add" style="margin-top:8px"><input name="v" class="num" inputmode="decimal" placeholder="رصيدك الفعلي" required autocomplete="off"><button class="btn">طابق</button></form></div>`:''}
   <div class="st-sec"><h3>محجوز من المتبقي</h3>${I.res.length?I.res.map(([n,v])=>r(esc(n),v,'minus')).join(''):'<p class="sub">ما فيه شي محجوز.</p>'}${r('تقدر تصرفه بحرية',c.rest-c.owed,'tot')}</div>
   <div class="st-sec"><h3>تنبيهات</h3>${I.W.length?I.W.map(w=>Array.isArray(w)?`<div class="st-w num" style="display:flex;align-items:center;gap:8px"><span class="grow">⚠ ${esc(w[0])}</span><button class="chip" data-act="stmt-xdel" data-id="${w[1]}">احذفها</button></div>`:`<div class="st-w num">⚠ ${esc(w)}</div>`).join(''):'<p class="st-ok">✓ ما فيه شي غريب: لا تكرار ولا عطايا لأسماء محذوفة ولا تواريخ بعد اليوم</p>'}</div>
   <div class="st-sec"><h3>سجل التغييرات</h3>${I.log.length?I.log.slice(0,60).map(x=>`<div class="st-log ${x.r[1]>x.r[0]||x.f[1]>x.f[0]?'up':''}"><div class="t num">${stT(x.t)}</div>${x.L.map(l=>`<div>${esc(l)}</div>`).join('')||'<div>تغيّر المحجوز</div>'}<div class="d num">المتبقي ${fmtMoney(x.r[0])} ← ${fmtMoney(x.r[1])}${x.r[1]>x.r[0]?' ↑':''} · الحر ${fmtMoney(x.f[0])} ← ${fmtMoney(x.f[1])}${x.f[1]>x.f[0]?' ↑':''}</div></div>`).join(''):'<p class="sub">السجل يبدأ من الحين، وكل تغيير على فلوس هذا الشهر بينكتب هنا.</p>'}</div>
@@ -2391,6 +2393,9 @@ const A={
   'goal-del':d=>{rm('goals',d.id);commit()},
 };
 const F={
+  'stmt-real':v=>{const real=num(v.v);if(!(real>=0)){toast('اكتب الرصيد رقماً');return false}const c=monthCalc(ckey()),d=Math.round((c.rest-real)*1000)/1000;
+    if(!d){toast('حسابك مطابق ✓');return false}
+    S.expenses.push({id:uid(),date:dkey(),amount:d,cat:'تسوية',sub:'',note:d>0?'مصاريف ما سجلتها (تسوية مع الرصيد)':'فرق لصالحك (تسوية مع الرصيد)'});commit();openStmt();toast(`سجّلت تسوية ${fmtMoney(Math.abs(d))}، المتبقي الحين ${fmtMoney(real)}`,3500);return false},
   ...MF,
   habit:v=>{S.habits.push({id:uid(),name:v.text.trim(),log:{}})},
   weight:v=>{const kg=num(v.kg);if(!(kg>0)){toast('اكتب الوزن رقماً');return false}S.weights.push({id:uid(),date:v.date||dkey(),kg})},
