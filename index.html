@@ -1025,6 +1025,16 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .st-open{margin-top:10px}
 .gw-logo{display:block;height:56px;width:auto;margin-top:6px;overflow:visible}.gw-ink{fill:var(--ink)}.gw-sh{fill:#C9CCFF}.gw-dot{fill:var(--accent)}
 :root[data-page="mahfazti"] .ph h1{font-family:"Lalezar",var(--f-display);font-weight:400;font-size:2.6rem;line-height:1.25}
+.dq{position:relative;margin:12px 0 0;padding:14px 18px 12px;border-radius:22px;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.95);box-shadow:0 10px 26px -14px rgba(44,124,135,.45);overflow:hidden}
+.dq::before{content:"";position:absolute;inset-inline-start:0;top:14px;bottom:14px;width:4px;border-radius:4px;background:linear-gradient(#2C9AA6,#1F6E78)}
+.dq-mark{position:absolute;inset-inline-end:12px;top:-6px;font-size:4.2rem;line-height:1;color:#9FD0D6;opacity:.45;font-family:serif}
+.dq-eye{font-size:.74rem;font-weight:700;color:#1F6E78;letter-spacing:.02em}
+.dq blockquote{margin:4px 0 0;font-family:"El Messiri",var(--f-display);font-weight:700;font-size:1.22rem;line-height:1.7;color:var(--ink);position:relative}
+.dq-f{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.dq-src{font-size:.78rem;color:var(--muted)}
+.dq-next{border:0;background:#E3F2F3;color:#1F6E78;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;flex:none}
+.dq.fx-in blockquote{animation:dqIn .5s ease}@keyframes dqIn{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){.dq blockquote{animation:none!important}}
 </style>
 </head>
 <body>
@@ -1376,6 +1386,9 @@ const MICON={
   focus:'<svg viewBox="0 0 32 32"><path d="M9 19h14l-1.6 8a2 2 0 0 1-2 1.6h-6.8a2 2 0 0 1-2-1.6z" fill="#F6C6D2" stroke="#2F6F66" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 19V9" stroke="#2F6F66" stroke-width="1.8" stroke-linecap="round"/><path d="M16 13c-1-4-5-5-7-4 0 3 3 5 7 4zM16 11c1-4 5-5 7-4 0 3-3 5-7 4z" fill="#8FD0C3" stroke="#2F6F66" stroke-width="1.6" stroke-linejoin="round"/><path d="M14.6 24.3s-1.3-.8-1.3-1.6a.7.7 0 0 1 1.3-.2.7.7 0 0 1 1.3.2c0 .8-1.3 1.6-1.3 1.6z" fill="#fff"/></svg>',
   rate:'<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="11" fill="#CDEEDF" stroke="#2F6F66" stroke-width="1.8"/><circle cx="12.3" cy="14" r="1.4" fill="#2F6F66"/><circle cx="19.7" cy="14" r="1.4" fill="#2F6F66"/><path d="M11.5 18.5q4.5 4 9 0" fill="none" stroke="#2F6F66" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.5" cy="18" r="1.6" fill="#F29BB0" opacity=".7"/><circle cx="22.5" cy="18" r="1.6" fill="#F29BB0" opacity=".7"/></svg>',
   tom:'<svg viewBox="0 0 32 32"><path d="M6 12h16v9a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6z" fill="#8FD0C3" stroke="#2F6F66" stroke-width="1.8" stroke-linejoin="round"/><path d="M22 14h1.5a3 3 0 0 1 0 6H22" fill="none" stroke="#2F6F66" stroke-width="1.8"/><path d="M14 22.5s-3-1.8-3-3.6a1.5 1.5 0 0 1 3-.5 1.5 1.5 0 0 1 3 .5c0 1.8-3 3.6-3 3.6z" fill="#fff"/><path d="M11 5.5q1.5 1.5 0 3M15 4.5q1.5 1.5 0 3" fill="none" stroke="#F29BB0" stroke-width="1.6" stroke-linecap="round"/></svg>'};
+const DAILY_Q=[["فإن مع العسر يسرا", "سورة الشرح 5"], ["ومن يتوكل على الله فهو حسبه", "سورة الطلاق 3"], ["لا يكلف الله نفسا إلا وسعها", "سورة البقرة 286"], ["ألا بذكر الله تطمئن القلوب", "سورة الرعد 28"], ["وقل رب زدني علما", "سورة طه 114"], ["إن الله لا يغير ما بقوم حتى يغيروا ما بأنفسهم", "سورة الرعد 11"], ["واصبر فإن الله لا يضيع أجر المحسنين", "سورة هود 115"], ["وأن ليس للإنسان إلا ما سعى", "سورة النجم 39"], ["فاذكروني أذكركم", "سورة البقرة 152"], ["أحب الأعمال إلى الله أدومها وإن قل", "حديث شريف · متفق عليه"], ["احرص على ما ينفعك، واستعن بالله ولا تعجز", "حديث شريف · رواه مسلم"], ["نعمتان مغبون فيهما كثير من الناس: الصحة والفراغ", "حديث شريف · رواه البخاري"], ["الكلمة الطيبة صدقة", "حديث شريف · متفق عليه"], ["تبسمك في وجه أخيك صدقة", "حديث شريف · رواه الترمذي"], ["اللهم بارك لأمتي في بكورها", "حديث شريف · رواه أبو داود والترمذي"], ["ليس الشديد بالصرعة، إنما الشديد الذي يملك نفسه عند الغضب", "حديث شريف · متفق عليه"], ["والصلاة نور", "حديث شريف · رواه مسلم"], ["قليل دائم خير من كثير منقطع", "حكمة"], ["الوقت كالسيف، إن لم تقطعه قطعك", "مثل عربي"], ["من جد وجد، ومن زرع حصد", "مثل عربي"], ["القناعة كنز لا يفنى", "مثل عربي"], ["لكل مجتهد نصيب", "مثل عربي"], ["لا تؤجل عمل اليوم إلى الغد", "مثل عربي"], ["إذا هبت رياحك فاغتنمها", "مثل عربي"], ["خطوة صغيرة اليوم أفضل من خطة كبيرة مؤجلة", "عبارة اليوم"], ["رتب يومك قبل أن يرتبك", "عبارة اليوم"], ["ما فات لن يعود، وما هو آت بيدك", "عبارة اليوم"], ["ابدأ بالأهم، والباقي أسهل مما تظن", "عبارة اليوم"], ["هدوءك قوة، والنية الطيبة نصف الطريق", "عبارة اليوم"], ["يومك يبدأ من الفجر، فلا تضيع بركته", "عبارة اليوم"]];
+/* one phrase per day; ui.qOff lets Dawood flip to the next one */
+const dailyQ=()=>{const d=new Date(),n=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5)+d.getFullYear()*366+(ui.qOff||0);return DAILY_Q[((n%DAILY_Q.length)+DAILY_Q.length)%DAILY_Q.length]};
 function pMasai(){
   const now=new Date(),k=todayK(),tk=tomorrowK(),pt=todayPrayers(),np=nextPrayer();
   const city=S.settings.city==='custom'?'موقع مخصص':CITIES[S.settings.city][0];
@@ -1397,6 +1410,7 @@ function pMasai(){
         <div class="ring-c"><span>باقي</span><b class="num" id="np-count">${countdown(np.at-now)}</b></div></div>
     </div>
   </section>
+  ${(()=>{const [q,src]=dailyQ();return `<figure class="dq"><span class="dq-mark" aria-hidden="true">❝</span><figcaption class="dq-eye">عبارة اليوم</figcaption><blockquote>${q}</blockquote><div class="dq-f"><span class="dq-src">${src==='عبارة اليوم'?'':src}</span><button class="dq-next" data-act="dq-next" aria-label="عبارة ثانية">↻</button></div></figure>`})()}
   <nav class="qnav" aria-label="أقسام مسار">${[['tasks','المهام',MICON.tasks],['week','الأسبوع',MICON.week],['pray','الصلاة',MICON.pray],['focus','التركيز',MICON.focus],['rate','التقييم',MICON.rate],['tom','الغد',MICON.tom]].map(([id,n,ic])=>`<button data-act="mtab" data-t="${id}" aria-pressed="${tab===id}">${ic}<span>${n}</span></button>`).join('')}</nav>
 
   ${old.length?`<div class="card note-card" ${hid('tasks')}><b>عندك ${old.length} ${old.length>2&&old.length<11?'مهام':'مهمة'} ما اكتملت من أيام سابقة</b>
@@ -2372,6 +2386,7 @@ const A={
   'gift-open':()=>openGifts(),
   'gift-give':d=>{const m=wMonth,[n,v]=giftsOf()[+d.i],mine=S.expenses.filter(e=>e.cat==='عطايا'&&e.sub===n&&inCycle(e,m));
     if(mine.length){S.expenses=S.expenses.filter(e=>!mine.includes(e));toast(`رجّعت «${n}» لغير معطى`)}else{S.expenses.push({id:uid(),date:m===ckey()?dkey():dkey(cFrom(m)),amount:+v,cat:'عطايا',sub:n,note:n});toast(`أعطيت ${n} ${fmtMoney(+v)}`)}commit();openGifts()},
+  'dq-next':()=>{ui.qOff=(ui.qOff||0)+1;render()},
   'stmt-open':()=>openStmt(),'stmt-xdel':d=>{rm('expenses',d.id);commit();openStmt();toast('حذفت العطية ورجع مبلغها للمتبقي')},'stmt-copy':()=>copy(stmtText(wMonth),'نسخت الكشف، الصقه لي في المحادثة'),
   'gift-rm':d=>{const n=giftsOf()[+d.id][0];giftsSet(l=>l.splice(+d.id,1));commit();openGifts();toast(`انشال «${n}» من القائمة`)},
   'jam-del':d=>{rm('expenses',d.id);commit();openJamiya();toast('انحذفت الدفعة')},
