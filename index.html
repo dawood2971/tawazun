@@ -1036,6 +1036,34 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .dq.fx-in blockquote{animation:dqIn .5s ease}@keyframes dqIn{from{opacity:0;transform:translateY(6px)}}
 @media (prefers-reduced-motion:reduce){.dq blockquote{animation:none!important}}
 .dq blockquote span{display:block}.dq blockquote.poem{font-size:.88rem;line-height:1.85}.dq blockquote.poem span:last-child{padding-inline-start:1.2em}
+.nowc{position:relative;margin:4px 0 16px;padding:14px 16px;border-radius:22px;color:#fff;background:linear-gradient(135deg,#1F6E78,#2C9AA6 60%,#5BB8C0);box-shadow:0 14px 30px -14px rgba(31,110,120,.65);overflow:hidden}
+.nowc::after{content:"";position:absolute;inset-inline-end:-40px;top:-40px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.12)}
+.nw-top,.nowc.empty-now,.nowc.all-done{display:flex;gap:12px;align-items:center}
+.nw-ring{position:relative;width:52px;height:52px;flex:none}.nw-ring svg{width:52px;height:52px}.nw-ring circle{fill:none;stroke-width:5}.nw-ring .bg{stroke:rgba(255,255,255,.25)}.nw-ring .fg{stroke:#F2C94C;stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.nw-ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:.8rem}
+.nw-eye{display:block;font-size:.72rem;font-weight:700;opacity:.8;letter-spacing:.04em}
+.nw-t{display:block;font-size:1.15rem;line-height:1.45;cursor:pointer}.nw-s{display:block;font-size:.78rem;opacity:.85;margin-top:2px}
+.nw-al{display:inline-block;margin-top:10px;padding:5px 10px;border-radius:12px;background:rgba(255,255,255,.18);font-size:.8rem}.nw-al.bad{background:#F29BB0;color:#5A1328}
+.nw-btns{display:flex;gap:8px;margin-top:12px;position:relative;z-index:1}.nw-btns .btn{flex:1}
+.nowc .nw-ok{background:#fff!important;color:#1F6E78!important;border:0!important;font-weight:800}
+.nowc .nw-skip{background:transparent!important;color:#fff!important;border:1.5px solid rgba(255,255,255,.6)!important;flex:.5}
+.nw-next{margin:10px 0 0;font-size:.8rem;opacity:.85}
+.nowc.cel{animation:nwPop .6s ease}@keyframes nwPop{30%{transform:scale(1.03)}}
+.nw-conf{position:absolute;inset-inline-start:42px;top:40px;width:0;height:0;z-index:2}.nw-conf i{position:absolute;width:7px;height:7px;border-radius:2px;background:var(--c);animation:nwC 1.1s ease-out forwards}
+@keyframes nwC{from{transform:rotate(var(--a)) translateX(0);opacity:1}to{transform:rotate(var(--a)) translateX(var(--d)) translateY(20px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.nowc.cel,.nw-conf i{animation:none}.nw-conf{display:none}}
+.kh-pg .kp-card{padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.85);margin-bottom:10px}
+.kp-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;color:#1E2A4A}.kp-h span{font-size:.82rem;color:#5A6290}
+.kp-days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:10px}.kp-days i{display:flex;flex-direction:column;align-items:center;gap:3px;font-style:normal}
+.kp-days i::before{content:"";width:26px;height:26px;border-radius:50%;background:rgba(124,92,255,.12);border:1.5px dashed rgba(124,92,255,.35)}
+.kp-days i.on::before{background:linear-gradient(135deg,#FFE29A,#F5B841);border:0;box-shadow:0 4px 10px -4px #D98E1F}.kp-days i.td::before{outline:2px solid #7C5CFF;outline-offset:2px}
+.kp-days small{font-size:.62rem;color:#5A6290}
+.kp-s{margin:6px 0 0;font-size:.8rem;color:#5A6290}
+.kp-g{display:flex;align-items:center;gap:6px;margin-top:8px}.kp-g small{font-size:.74rem;color:#5A6290}
+.kp-g button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(124,92,255,.3);background:#fff;color:#1E2A4A;font:inherit;cursor:pointer}.kp-g button[aria-pressed=true]{background:#7C5CFF;color:#fff;border-color:#7C5CFF}
+.kp-x{border:0;background:none;color:#5A6290;font-size:1.2rem;cursor:pointer;padding:0 4px}
+.kh-nf .kp-n{max-width:80px;flex:none}
+.kh-pg .bar i{background:linear-gradient(90deg,#F5B841,#D98E1F)}
 </style>
 </head>
 <body>
@@ -1375,8 +1403,27 @@ function taskRow(t,k,mix){const top=S.top[k]===t.id,st=STATUS[t.status]||STATUS.
     ${inDay?'':`<button class="chip-b to-today" data-act="t-plan" data-id="${t.id}" data-to="today">إلى اليوم</button>`}
     ${inDay?`<button class="star ${top?'on':''}" data-act="t-top" data-id="${t.id}" data-k="${k}" aria-label="${top?'إلغاء الأهم':'اجعلها الأهم'}">${ICON.star}</button>`:''}
     <button class="del tdel" data-act="t-x" data-id="${t.id}" aria-label="احذف ${esc(t.title)}">×</button>
-    ${isToday&&t.status!=='done'?`<button class="play" data-act="focus-task" data-id="${t.id}" aria-label="ابدأ التركيز على ${esc(t.title)}">${ICON.play}</button>`:''}
   </div>`}
+/* «الحين»: the one task to do now. Timed tasks due soon come first, then the starred one, then by box; «بعدين» skips for this session */
+function nowPick(k){const now=new Date(),mins=now.getHours()*60+now.getMinutes(),skip=ui.nowSkip||[];
+  const open=tasksOn(k).filter(t=>t.status!=='done'),tm=t=>{if(!t.time)return null;const[h,m]=t.time.split(':').map(Number);return h*60+m};
+  const score=t=>{const x=tm(t);if(x!=null&&x-mins<=90)return -1e6+x;if(S.top[k]===t.id)return -5e5;return QORDER.indexOf(quadOf(t))*100+(t.order??0)/1000};
+  const sorted=open.slice().sort((a,b)=>score(a)-score(b)),fresh=sorted.filter(t=>!skip.includes(t.id));
+  const list=fresh.length?fresh:sorted;return{cur:list[0],next:list[1],open,tm,mins}}
+function nowCard(k,np){const today=tasksOn(k),done=today.filter(t=>t.status==='done').length,{cur,next,open,tm,mins}=nowPick(k),pct=today.length?done/today.length:0;
+  const C=2*Math.PI*22,cel=ui.nowCel&&Date.now()-ui.nowCel<1600,left=Math.round((np.at-Date.now())/6e4);
+  const ringS=`<div class="nw-ring"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" class="bg"/><circle cx="26" cy="26" r="22" class="fg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-pct)).toFixed(1)}" transform="rotate(-90 26 26)"/></svg><b class="num">${done}/${today.length}</b></div>`;
+  const conf=cel?`<div class="nw-conf" aria-hidden="true">${[...Array(14)].map((_,i)=>`<i style="--a:${i*26}deg;--d:${40+(i%4)*12}px;--c:${['#2C9AA6','#F2C94C','#F29BB0','#8FD0C3'][i%4]}"></i>`).join('')}</div>`:'';
+  if(!today.length)return `<div class="nowc empty-now">${ringS}<div class="grow"><span class="nw-eye">الحين</span><b class="nw-t">يومك فاضي</b><p class="nw-s">اكتب أول مهمة تحت، وبتطلع لك هنا.</p></div></div>`;
+  if(!cur)return `<div class="nowc all-done ${cel?'cel':''}">${conf}${ringS}<div class="grow"><span class="nw-eye">الحين</span><b class="nw-t">خلصت كل مهام اليوم 🎉</b><p class="nw-s">ارتاح، أو جهّز بكرة من قسم «الغد».</p></div></div>`;
+  const x=tm(cur),due=x!=null?x-mins:null,warn=!np.tomorrow&&left>0&&left<=45;
+  const hint=due!=null&&due<0?`<span class="nw-al bad">⏰ وقتها فات بـ ${-due} دقيقة</span>`:due!=null&&due<=90?`<span class="nw-al">⏰ وقتها بعد ${due} دقيقة</span>`:warn?`<span class="nw-al">🕌 باقي ${left} دقيقة على ${np.name}${open.length>1?`، وعندك ${open.length} مهام مفتوحة`:''}</span>`:'';
+  return `<div class="nowc ${cel?'cel':''}" style="--qc:${QUADS[quadOf(cur)].c}">${conf}
+    <div class="nw-top">${ringS}<div class="grow"><span class="nw-eye">الحين</span><b class="nw-t" data-act="t-edit" data-id="${cur.id}">${esc(cur.title)}</b>
+      <span class="nw-s">${S.top[k]===cur.id?'★ الأهم اليوم · ':''}${QUADS[quadOf(cur)].name}${cur.time?` · ${clockStr(cur.time)}`:''}</span></div></div>
+    ${hint}
+    <div class="nw-btns"><button class="btn nw-ok" data-act="now-done" data-id="${cur.id}">✓ خلصتها</button>${open.length>1?`<button class="btn ghost nw-skip" data-act="now-skip" data-id="${cur.id}">بعدين</button>`:''}</div>
+    ${next?`<p class="nw-next">بعدها: <b>${esc(next.title)}</b></p>`:''}</div>`}
 function topCard(k,label){const t=S.tasks.find(x=>x.id===S.top[k]&&x.plan===k);
   return t?`<div class="top-card ${t.status==='done'?'done':''}"><span class="sub">${label}</span><b class="t">${esc(t.title)}</b></div>`:''}
 
@@ -1400,7 +1447,7 @@ function pMasai(){
   const prayed=S.prayed[k]||{},prN=PRAY5.filter(([p])=>prayed[p]).length;
   const r=S.ratings[k]||{};
   const fl=S.focusLog[k]||{min:0,count:0};
-  const ring=prayerProgress(np,now),tab=['tasks','week','pray','focus','rate','tom'].includes(S.ui.mtab)?S.ui.mtab:'tasks',hid=t=>tab===t?'':'hidden';
+  const ring=prayerProgress(np,now),tab=['tasks','week','pray','rate','tom'].includes(S.ui.mtab)?S.ui.mtab:'tasks',hid=t=>tab===t?'':'hidden';
   const mine=[...today,...inbox],view=ui.view||'all',shownList=view==='today'?today:view==='later'?inbox:mine;
   return `<header class="ph mph"><div><p class="eyebrow">خطط يومك بهدوء</p><h1>مَسَار</h1></div><button class="icon-btn" data-act="settings" aria-label="الإعدادات">${GEAR}</button></header>
   <section class="hero mhero" aria-live="polite" data-mode="${heroMode.shown||heroMode(np)}" data-next="${heroMode(np)}"><div class="mh-bg night" aria-hidden="true"></div><div class="mh-bg day" aria-hidden="true"></div>${PRAYER_PHOTOS.map(k=>`<div class="mh-bg ph-${k}" aria-hidden="true"></div>`).join('')}
@@ -1412,13 +1459,14 @@ function pMasai(){
     </div>
   </section>
   ${(()=>{const [q,src]=dailyQ();return `<figure class="dq"><span class="dq-mark" aria-hidden="true">❝</span><figcaption class="dq-eye">عبارة اليوم</figcaption><blockquote class="${q.includes('|')?'poem':''}">${q.split('|').map(h=>`<span>${h}</span>`).join('')}</blockquote><div class="dq-f"><span class="dq-src">${src==='عبارة اليوم'?'':src}</span><button class="dq-next" data-act="dq-next" aria-label="عبارة ثانية">↻</button></div></figure>`})()}
-  <nav class="qnav" aria-label="أقسام مسار">${[['tasks','المهام',MICON.tasks],['week','الأسبوع',MICON.week],['pray','الصلاة',MICON.pray],['focus','التركيز',MICON.focus],['rate','التقييم',MICON.rate],['tom','الغد',MICON.tom]].map(([id,n,ic])=>`<button data-act="mtab" data-t="${id}" aria-pressed="${tab===id}">${ic}<span>${n}</span></button>`).join('')}</nav>
+  <nav class="qnav" aria-label="أقسام مسار">${[['tasks','المهام',MICON.tasks],['week','الأسبوع',MICON.week],['pray','الصلاة',MICON.pray],['rate','التقييم',MICON.rate],['tom','الغد',MICON.tom]].map(([id,n,ic])=>`<button data-act="mtab" data-t="${id}" aria-pressed="${tab===id}">${ic}<span>${n}</span></button>`).join('')}</nav>
 
   ${old.length?`<div class="card note-card" ${hid('tasks')}><b>عندك ${old.length} ${old.length>2&&old.length<11?'مهام':'مهمة'} ما اكتملت من أيام سابقة</b>
     <p class="sub">${old.slice(0,3).map(t=>esc(t.title)).join('، ')}${old.length>3?' …':''}</p>
     <div class="add"><button class="btn" data-act="old-today">انقلها لليوم</button><button class="btn ghost" data-act="old-inbox">أرجعها لـ«لاحقاً»</button></div></div>`:''}
 
   <section class="sec" id="m-today" ${hid('tasks')}>
+    ${nowCard(k,np)}
     <div class="sec-h"><h2>مهامي</h2><span class="sub num">${today.length?`أنجزت اليوم ${doneN} من ${today.length}`:''}</span></div>
     <form class="qform one-add" data-form="t-add"><div class="add" style="margin-top:0"><input name="title" id="task-new" placeholder="اكتب المهمة واضغط أضف" required autocomplete="off"><button class="btn">أضف</button></div>
       <div class="chips when-row"><span class="sub">أضيفها إلى:</span>${[['today','اليوم'],['later','لاحقاً']].map(([v,l])=>`<label class="chip-b radio"><input type="radio" name="when" value="${v}" ${(ui.addToday!==false)===(v==='today')?'checked':''}>${l}</label>`).join('')}</div></form>
@@ -1426,17 +1474,14 @@ function pMasai(){
       <button class="chip-b sg-toggle" data-act="sugg-toggle" aria-expanded="${ui.sugg}">${ui.sugg?'إخفاء الاقتراحات':'✦ اقتراحات سريعة'}</button></div>
     ${ui.sugg?suggSection():''}
     ${today.length&&view!=='later'?`<div style="margin:12px 0 10px">${bar(doneN/today.length*100,'acc')}</div>`:''}
-    ${view!=='later'?topCard(k,'الأهم اليوم'):''}
     ${mine.length>6?`<input class="field search" id="inbox-q" type="search" placeholder="ابحث في مهامك" autocomplete="off" style="margin:8px 0">`:''}
     ${shownList.length?todayGroups(k,shownList,true):`<div class="list"><div class="empty">${view==='later'?'ما فيه مهام مؤجلة.':view==='today'&&mine.length?'ما فيه مهام لليوم. اضغط «إلى اليوم» على أي مهمة.':`${cheer}.<br>اكتب أول مهمة فوق واضغط أضف.`}</div></div>`}
     ${doneN&&view!=='later'?`<button class="link" style="margin-top:8px" data-act="t-x-many" data-ids="${today.filter(t=>t.status==='done').map(t=>t.id).join(',')}" data-msg="${doneN===1?'حُذفت مهمة مكتملة':doneN===2?'حُذفت مهمتان مكتملتان':`حُذفت ${doneN} مهام مكتملة`}">امسح المكتملة (${doneN})</button>`:''}
     ${evening&&openToday.length?`<div class="card note-card" style="margin-top:12px"><b>قرّب اليوم يخلص، وباقي ${openToday.length} ${openToday.length>2&&openToday.length<11?'مهام':'مهمة'}</b>
       <div class="add"><button class="btn" data-act="eod-move">انقل إلى الغد</button><button class="btn ghost" data-act="eod-inbox">أرجعها لـ«لاحقاً»</button></div></div>`:''}
-    <button class="btn big" data-act="focus-start" style="margin-top:12px">ابدأ التركيز</button>
     <p class="sub" style="margin-top:8px">كل مهامك هنا مرتبة حسب الأهمية. «اليوم» يعني إنها في خطة اليوم، اضغطه عشان ترجعها لـ«لاحقاً». واضغط اسم التصنيف لتغييره.</p>
   </section>
 
-  <section class="sec" id="m-focus" ${hid('focus')}>${focusSection(fl)}</section>
 
   <section class="sec" id="m-pray" ${hid('pray')}>
     <div class="sec-h"><h2>أوقات الصلاة</h2><span class="sub num">أدّيت ${prN} من 5</span></div>
@@ -1597,7 +1642,7 @@ function endDaySummary(){const k=todayK(),tk=tomorrowK(),today=tasksOn(k),done=t
   const top=S.tasks.find(t=>t.id===S.top[tk]&&t.plan===tk),mood=r.mood&&MOODS.find(m=>m[0]===r.mood);
   openSheet(`<div class="summary">
     <div><span>المهام المكتملة</span><b class="num">${done}</b></div><div><span>المتبقية</span><b class="num">${left}</b></div>
-    <div><span>الصلوات المسجلة</span><b>${pr.length?pr.join('، '):'لا شي'}</b></div><div><span>دقائق التركيز</span><b class="num">${fl.min}</b></div>
+    <div><span>الصلوات المسجلة</span><b>${pr.length?pr.join('، '):'لا شي'}</b></div>
     <div><span>المزاج</span><b>${mood?mood[1]:'ما سجّلته'}</b></div><div><span>الأهم غداً</span><b>${top?esc(top.title):'ما حددته'}</b></div></div>
     ${left?`<p class="sub" style="margin-top:12px">وش تسوي بالمهام المتبقية؟</p><div class="add"><button class="btn" data-act="eod-move" data-close="1">انقل المهام المتبقية إلى الغد</button><button class="btn ghost" data-act="eod-inbox" data-close="1">أرجعها لـ«لاحقاً»</button></div>`:'<p class="cheer">خلّصت كل مهام اليوم، تستاهل راحة</p>'}
     ${!r.mood?'<button class="link" data-act="jump" data-to="m-rate" data-close="1" style="margin-top:10px">قيّم يومك قبل لا تنام</button>':''}`,'ملخص يومك')}
@@ -1606,6 +1651,9 @@ function moveOpen(fromK,toK){const ts=S.tasks.filter(t=>t.plan===fromK&&t.status
 const MA={
   jump:(d,el)=>{if(el.dataset.close)closeSheet();showTab({'m-rate':'rate','m-today':'tasks','m-pray':'pray','m-focus':'focus','m-tom':'tom','m-inbox':'tasks'}[d.to]||'tasks')},
   mtab:d=>showTab(d.t),
+  'now-done':d=>{const t=S.tasks.find(x=>x.id===d.id);if(!t)return;t.status='done';ui.nowCel=Date.now();ui.nowSkip=(ui.nowSkip||[]).filter(i=>i!==t.id);
+    const k=todayK(),left=tasksOn(k).filter(x=>x.status!=='done').length;toast(left?`أحسنت! باقي ${left} ${left>2&&left<11?'مهام':'مهمة'}`:'خلصت كل مهام اليوم 🎉');commit();setTimeout(()=>{if(ui.nowCel&&Date.now()-ui.nowCel>=1500&&page==='masai'){ui.nowCel=0;render()}},1700)},
+  'now-skip':d=>{ui.nowSkip=[...(ui.nowSkip||[]).filter(i=>i!==d.id),d.id];render()},
   'e-day':d=>{const i=$('#e-pday');if(i)i.value=d.v;toast(d.v?`صارت في ${fmtDay(parseD(d.v))}`:'صارت في «لاحقاً»')},
   wk:d=>{S.ui.wk=Math.max(0,(S.ui.wk||0)+ +d.n);commit()},
   'wk-add':d=>{const dt=$('#wk-date'),ti=$('#wk-title');if(dt)dt.value=d.d;if(ti){ti.focus();try{$('#wk-form-box').scrollIntoView({block:'nearest'})}catch(e){}}},
@@ -1720,6 +1768,18 @@ function khChime(end){if(!khS().sound)return;try{khAC=khAC||new(window.AudioCont
 function khTick(){const k=khS();if(!k.run||k.run.pausedAt)return;const left=khLeft();if(left<=0){k.done={act:k.run.act,min:k.run.dur,at:Date.now(),detail:k.run.detail||''};k.run=null;khChime(true);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}commit();toast('خلصت خلوتك 🌿 سجّل وش أنجزت');return}
   const c=document.getElementById('kh-clock');if(c)c.textContent=khClock(left);const ring=document.getElementById('kh-ring');if(ring)ring.setAttribute('stroke-dashoffset',(KH_C*(1-left/(k.run.dur*60000))).toFixed(1))}
 const KH_C=2*Math.PI*88;
+/* خلوة progress: sessions this week (Saturday to Friday) against a goal, and the current book's pages */
+function khWeek(){const now=new Date(),st=addDays(now,-((now.getDay()+1)%7));return [...Array(7)].map((_,i)=>dkey(addDays(st,i)))}
+function khProg(){const k=khS(),wk=khWeek(),days=new Set(k.sessions.filter(x=>wk.includes(x.date)).map(x=>x.date)),n=k.sessions.filter(x=>wk.includes(x.date)).length,g=k.weekGoal||3,b=k.bookP,td=dkey();
+  const week=`<div class="kp-card"><div class="kp-h"><b>هدف الأسبوع</b><span class="num">${Math.min(n,g)} من ${g} خلوات</span></div>
+    <div class="kp-days">${wk.map((d,i)=>`<i class="${days.has(d)?'on':''} ${d===td?'td':''}"><small>${['سبت','أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة'][i]}</small></i>`).join('')}</div>
+    ${bar(Math.min(1,n/g)*100,'')}<p class="kp-s">${n>=g?'🎉 حققت هدف الأسبوع':`باقي ${g-n} ${g-n===1?'خلوة':'خلوات'} على هدفك`}</p>
+    <div class="kp-g">${[2,3,5,7].map(x=>`<button aria-pressed="${g===x}" data-act="kh-wgoal" data-n="${x}" class="num">${x}</button>`).join('')}<small>خلوات بالأسبوع</small></div></div>`;
+  const book=b?(()=>{const pct=b.total?Math.min(1,b.page/b.total):0,fin=b.total&&b.page>=b.total;return `<div class="kp-card"><div class="kp-h"><b>📖 ${esc(b.title)}</b><button class="kp-x" data-act="kh-book-x" aria-label="شيل الكتاب">×</button></div>
+    ${bar(pct*100,'')}<p class="kp-s num">${fin?'🎉 خلصت الكتاب!':`صفحة ${b.page} من ${b.total} · باقي ${b.total-b.page}`}</p>
+    ${fin?'':`<form class="kh-nf" data-form="kh-page"><input name="p" inputmode="numeric" placeholder="وصلت صفحة كم؟" autocomplete="off"><button class="kh-go sm">حدّث</button></form>`}</div>`})()
+    :`<div class="kp-card"><div class="kp-h"><b>📖 كتابك الحالي</b></div><form class="kh-nf" data-form="kh-book"><input name="t" placeholder="اسم الكتاب" required autocomplete="off"><input name="n" class="kp-n" inputmode="numeric" placeholder="صفحاته" required autocomplete="off"><button class="kh-go sm">ابدأ</button></form></div>`;
+  return `<section class="kh-sec kh-pg"><h2 class="kh-h">تقدّمك</h2>${week}${book}</section>`}
 function pWaha(){
   const k=khS(),now=new Date(),run=k.run,cur=run?run.act:k.act,act=KH_ACTS.find(a=>a[0]===cur)||KH_ACTS[0],mon=khMonth(now),mins=mon.reduce((a,x)=>a+x.min,0),streak=khStreak();
   const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),byDay={};mon.forEach(x=>byDay[x.date]=(byDay[x.date]||0)+x.min);
@@ -1746,7 +1806,7 @@ function pWaha(){
   const notes=k.notes.slice(-3).reverse();
   const note=`<section class="kh-sec"><h2 class="kh-h">مفكرة الخواطر</h2>${notes.map(n=>`<div class="kh-note"><p>${esc(n.text)}</p><small class="num">${fmtDay(parseD(n.date))}${n.act?` · ${(KH_ACTS.find(a=>a[0]===n.act)||['','',''])[2]}`:''}</small><button class="kh-x" data-act="kh-ndel" data-id="${n.id}" aria-label="حذف">×</button></div>`).join('')||'<p class="kh-empty">اكتب سطرين عن اللي تعلمته عشان تثبت المعلومة.</p>'}
     <form class="kh-nf" data-form="kh-note"><input name="text" maxlength="220" placeholder="ماذا تعلمت اليوم؟" required autocomplete="off"><button class="kh-go sm">أضف</button></form></section>`;
-  return head+done+timer+rec+note;
+  return head+done+timer+khProg()+rec+note;
 }
 function spark(vals){const W=300,H=70,P=8,mn=Math.min(...vals),mx=Math.max(...vals),rg=mx-mn||1;
   const pts=vals.map((v,i)=>[P+(W-2*P)*i/(vals.length-1),P+(H-2*P)*(1-(v-mn)/rg)]),last=pts[pts.length-1];
@@ -2314,6 +2374,7 @@ const A={
   'kh-stop':()=>{const k=khS();if(!k.run)return;const end=k.run.pausedAt||Date.now(),min=Math.max(1,Math.round((end-k.run.start)/60000));k.done={act:k.run.act,min:Math.min(min,k.run.dur),at:Date.now(),detail:k.run.detail||''};k.run=null;khChime(true);commit()},
   'kh-cancel':()=>{const k=khS();k.run=null;k.done=null;commit()},
   'kh-skip':()=>{const k=khS();if(k.done){k.sessions.push({id:uid(),date:dkey(),act:k.done.act,min:k.done.min,detail:k.done.detail||undefined});k.done=null}commit()},
+  'kh-wgoal':d=>{khS().weekGoal=+d.n;commit()},'kh-book-x':()=>{const k=khS();k.bookP=null;commit()},
   'kh-ndel':d=>{const k=khS();k.notes=k.notes.filter(n=>n.id!==d.id);commit()},
   'clear-sample':()=>{const st={...S.settings,sample:false};S=blank();S.settings=st;closeSheet();commit();toast('مسحت الأمثلة، ابدأ ببياناتك')},
   'load-sample':()=>{const st=S.settings;S=sample();S.settings={...st,sample:true};closeSheet();commit()},
@@ -2460,8 +2521,10 @@ const F={
     S.plan={salary:sal,jamiya:(S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya,mine:mineCap(),gifts:giftsOf(),fixed:read('fixed'),ration:read('ration'),buckets:bk};const mf=(S.monthFixed||{})[wMonth];if(mf)S.plan.fixed.forEach(([n,a])=>{if(!(n in mf))mf[n]=a});closeSheet();toast('انحفظت الإعدادات')},
   budget:v=>{const b=num(v.budget);if(!(b>=0)){toast('اكتب الميزانية رقماً');return false}S.budgets[wMonth]=b},
   'rc-save':v=>rcApply(v.raw,true),
-  'kh-save':v=>{const k=khS();if(!k.done)return;const n=x=>Math.max(0,Math.round(num(x)||0)),d=k.done,note=(v.note||'').trim(),x={id:uid(),date:dkey(),act:d.act,min:d.act==='lang'&&n(v.mins)?n(v.mins):d.min,detail:d.detail||undefined};if(n(v.pages))x.pages=n(v.pages);if(n(v.words))x.words=n(v.words);if((v.what||'').trim())x.what=v.what.trim();k.sessions.push(x);if(note)k.notes.push({id:uid(),text:note,date:dkey(),act:d.act});k.done=null;toast(khStreak()>1?`انحفظ ✨ ${khStreak()} أيام متتالية`:'انحفظ إنجازك ✨')},
+  'kh-save':v=>{const k=khS();if(!k.done)return;const n=x=>Math.max(0,Math.round(num(x)||0)),d=k.done,note=(v.note||'').trim(),x={id:uid(),date:dkey(),act:d.act,min:d.act==='lang'&&n(v.mins)?n(v.mins):d.min,detail:d.detail||undefined};if(n(v.pages)){x.pages=n(v.pages);if(k.bookP&&d.act==='read')k.bookP.page=Math.min(k.bookP.total,k.bookP.page+x.pages)}if(n(v.words))x.words=n(v.words);if((v.what||'').trim())x.what=v.what.trim();k.sessions.push(x);if(note)k.notes.push({id:uid(),text:note,date:dkey(),act:d.act});k.done=null;toast(khStreak()>1?`انحفظ ✨ ${khStreak()} أيام متتالية`:'انحفظ إنجازك ✨')},
   'kh-dur':v=>{const m=Math.round(num(v.m));if(!(m>=5&&m<=180)){toast('اكتب مدة من 5 إلى 180 دقيقة');return false}khS().dur=m;ui.khCustom=false},
+  'kh-book':v=>{const t=(v.t||'').trim(),n=Math.round(num(v.n));if(!t||!(n>0)){toast('اكتب اسم الكتاب وعدد صفحاته');return false}const k=khS();k.bookP={title:t,total:n,page:0};k.detail.read=t;toast(`بالتوفيق في «${t}» 📖`)},
+  'kh-page':v=>{const k=khS(),b=k.bookP,n=Math.round(num(v.p));if(!b||!(n>=0)){toast('اكتب رقم الصفحة');return false}b.page=Math.min(b.total,n);if(b.page>=b.total)toast('🎉 مبروك، خلصت الكتاب!')},
   'kh-note':v=>{const t=(v.text||'').trim();if(!t)return false;khS().notes.push({id:uid(),text:t,date:dkey()})},
   'rashan-pay':v=>{const amount=num(v.amount);if(!(amount>0)){toast('اكتب المبلغ رقماً');return false}const n=S.groceries.filter(g=>g.done).length;
     S.expenses.push({id:uid(),amount,cat:'راشن البيت',sub:'',note:`راشن البيت (${n} غرض)`,date:dkey()});S.groceries=S.groceries.filter(g=>!g.done);spendAlert(amount,'راشن البيت','')},
