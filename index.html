@@ -2079,7 +2079,6 @@ function pMahfazti(){
     <button class="chip st-open" data-act="stmt-open">🧾 كشف الحساب</button>
   </section>
   ${nearEv.length?`<div class="card note-card ev-alert" style="margin-top:12px"><b>⏰ مناسبة قريبة وناقصها مبلغ</b><p class="sub num">${nearEv.map(([e,i])=>`${esc(e.name)} بعد ${i.days} يوم، ناقص ${fmtMoney(i.need)}`).join(' · ')}</p></div>`:''}
-  <div class="vwrap">${vaultHTML(c,fundTot,m)}</div>
   <div class="deck-w"><div class="deck" id="deck">${BUCKETS.map(bcard).join('')}</div>
     <div class="deck-nav"><button class="icon-btn" data-act="deck-go" data-d="-1" aria-label="السابقة">›</button><div class="deck-dots" id="deck-dots"></div><span class="deck-k num" id="deck-k"></span><button class="icon-btn" data-act="deck-go" data-d="1" aria-label="التالية">‹</button></div></div>
   <div class="ggrid">
@@ -2111,7 +2110,8 @@ function pMahfazti(){
       ${p<100?`<p class="sub num">باقي ${money(g.target-g.saved)}</p>`:'<p class="sub">وصلت للهدف، مبروك</p>'}
       <form class="add" data-form="deposit" data-id="${g.id}"><input name="amount" inputmode="decimal" placeholder="مبلغ" required autocomplete="off"><button class="btn line" style="height:46px" name="dir" value="1">أودع</button><button class="btn line" style="height:46px" name="dir" value="-1">اسحب</button></form></div>`}).join('')||'<div class="list"><div class="empty">أضف هدف ادخار، مثل صندوق طوارئ أو سفرة.</div></div>'}</div>
     <form class="add" data-form="goal"><input name="name" placeholder="هدف جديد" required autocomplete="off"><input class="sm" name="target" inputmode="decimal" placeholder="المبلغ المطلوب" required autocomplete="off"><button class="btn">أضف</button></form>
-  </section>`;
+  </section>
+  <div class="vwrap" style="margin-top:22px">${vaultHTML(c,fundTot,m)}</div>`;
 }
 
 /* ---------- settings sheet ---------- */
