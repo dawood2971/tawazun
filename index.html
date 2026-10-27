@@ -1064,6 +1064,62 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
 .kp-x{border:0;background:none;color:#5A6290;font-size:1.2rem;cursor:pointer;padding:0 4px}
 .kh-nf .kp-n{max-width:80px;flex:none}
 .kh-pg .bar i{background:linear-gradient(90deg,#F5B841,#D98E1F)}
+/* review 2026-10-27 (مسار): tap targets, contrast, small text, focus */
+button,a,label,input,select,textarea,[role=button]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2.5px solid #1F6E78;outline-offset:2px;border-radius:10px}
+:root[data-page="masai"]{--muted:#4E6B71;--q-none:#8A8378}
+:root[data-page="masai"] .chip-b,:root[data-page="masai"] .chip{min-height:40px;padding-block:6px}
+:root[data-page="masai"] .check{width:36px;height:36px}
+:root[data-page="masai"] .del{width:40px;height:40px}
+:root[data-page="masai"] .task-t{min-height:36px;text-align:start}
+:root[data-page="masai"] .link{color:#1F6E78;min-height:40px;padding-block:8px;text-decoration:underline;text-underline-offset:3px}
+:root[data-page="masai"] .banner .link{color:#1F6E78}
+:root[data-page="masai"] .pill{font-size:.8rem;color:#3F5D63;padding:3px 10px}
+:root[data-page="masai"] button.pill{min-height:30px}
+:root[data-page="masai"] .btn.ghost{color:#1F6E78!important}
+:root[data-page="masai"] .nowc .nw-skip{color:#fff!important}
+:root[data-page="masai"] .ring-c span{color:#3F5D63}
+:root[data-page="masai"]{--q-none:#6F685E}
+:root[data-page="masai"] .wadd{background:#1F6E78;width:40px;height:40px}
+:root[data-page="masai"] .mood-grid small{font-size:.78rem}
+:root[data-page="masai"] .dq-next{width:40px;height:40px}
+:root[data-page="masai"] .dq-src,:root[data-page="masai"] .nw-s{font-size:.82rem}
+:root[data-page="masai"] .nw-eye{font-size:.8rem}
+:root[data-page="masai"] .ring-c span{font-size:.82rem}
+:root[data-page="masai"] .dq-mark{color:#7FC0C8}
+:root[data-page="masai"] .num,:root[data-page="masai"] #np-count,:root[data-page="masai"] #m-clock{font-variant-numeric:tabular-nums}
+:root[data-page="masai"] h1,:root[data-page="masai"] h2,:root[data-page="masai"] .nw-t{text-wrap:balance}
+:root[data-page="masai"] .task .grow{min-width:0}:root[data-page="masai"] .task-t{overflow-wrap:anywhere}
+.sheet{overscroll-behavior:contain}
+/* review 2026-10-27 (all pages): 40px tap targets, readable small text, contrast */
+.chip-b{min-height:40px}.del{width:40px;height:40px}
+.link{min-height:40px;padding-block:8px}
+/* خلوة */
+:root[data-page="waha"] .kh-pre button small{font-size:.78rem}:root[data-page="waha"] .kh-g b{font-size:.88rem}
+:root[data-page="waha"] .kh-mid small{font-size:.84rem}:root[data-page="waha"] .kh-pill{font-size:.84rem}
+:root[data-page="waha"] .kp-days small{font-size:.74rem;color:#4A5280}:root[data-page="waha"] .kp-s,:root[data-page="waha"] .kp-g small,:root[data-page="waha"] .kp-h span{color:#4A5280}
+:root[data-page="waha"] .kp-g button{width:40px;height:40px}:root[data-page="waha"] .kp-g button[aria-pressed=true]{background:#6A4FEF;border-color:#6A4FEF}
+:root[data-page="waha"] .kh-snd{width:40px;height:40px}:root[data-page="waha"] .kp-x{min-width:40px;min-height:40px}
+:root[data-page="waha"] .banner .link{color:#5B49D6}
+/* معاش */
+:root[data-page="beiti"] .sh-cart{width:40px;height:40px}:root[data-page="beiti"] .sh-cart i{font-size:.72rem}
+:root[data-page="beiti"] .sh-eye,:root[data-page="beiti"] .sh-top small{font-size:.8rem}
+:root[data-page="beiti"] .pcard .pc-x{width:34px;height:34px;color:#66756D}
+:root[data-page="beiti"] .pc-bar button{min-width:34px;height:34px}
+:root[data-page="beiti"] .pc-n{min-height:30px}
+:root[data-page="beiti"] .bl-x{width:34px;height:34px;top:2px;inset-inline-end:2px;color:#66756D}
+:root[data-page="beiti"] .bl-auto,:root[data-page="beiti"] .bl-st{font-size:.76rem;min-height:28px}
+:root[data-page="beiti"] .bp-sh{min-height:44px}
+:root[data-page="beiti"] .bp-today em{font-size:.7rem}
+:root[data-page="beiti"] .bp-lb,:root[data-page="beiti"] .bp-sum span,:root[data-page="beiti"] .bp-sum b{font-size:.8rem}
+:root[data-page="beiti"] .bl-card.paid,:root[data-page="beiti"] .bl-card.paid .bl-amt,:root[data-page="beiti"] .bl-card.paid b{color:#56635C}
+:root[data-page="beiti"] .bp-dot,:root[data-page="beiti"] .bp-tl span{color:#5E6B64}
+:root[data-page="beiti"]{--muted:#56635C}
+/* غوازي */
+:root[data-page="mahfazti"] button.ring .ring-c small{font-size:.72rem;color:#4F5878}
+:root[data-page="mahfazti"] .gc-n small{font-size:.74rem}:root[data-page="mahfazti"] .gc-s{font-size:.82rem}
+:root[data-page="mahfazti"] .ring-k{min-height:34px}:root[data-page="mahfazti"] .hero .chip{min-height:36px}
+:root[data-page="mahfazti"] .xa-in em{font-size:.8rem}
 </style>
 </head>
 <body>
@@ -1080,7 +1136,7 @@ button.ring .ring-c b{font-family:var(--f-display);font-size:1.12rem;line-height
   </div>
 </nav>
 <div id="sheet" hidden></div>
-<div id="toast" class="toast" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
 
 <script>
@@ -1468,13 +1524,13 @@ function pMasai(){
   <section class="sec" id="m-today" ${hid('tasks')}>
     ${nowCard(k,np)}
     <div class="sec-h"><h2>مهامي</h2><span class="sub num">${today.length?`أنجزت اليوم ${doneN} من ${today.length}`:''}</span></div>
-    <form class="qform one-add" data-form="t-add"><div class="add" style="margin-top:0"><input name="title" id="task-new" placeholder="اكتب المهمة واضغط أضف" required autocomplete="off"><button class="btn">أضف</button></div>
+    <form class="qform one-add" data-form="t-add"><div class="add" style="margin-top:0"><input name="title" id="task-new" aria-label="مهمة جديدة" placeholder="اكتب المهمة واضغط أضف…" required autocomplete="off"><button class="btn">أضف</button></div>
       <div class="chips when-row"><span class="sub">أضيفها إلى:</span>${[['today','اليوم'],['later','لاحقاً']].map(([v,l])=>`<label class="chip-b radio"><input type="radio" name="when" value="${v}" ${(ui.addToday!==false)===(v==='today')?'checked':''}>${l}</label>`).join('')}</div></form>
     <div class="chips mview">${[['all','الكل',mine.length],['today','اليوم',today.length],['later','لاحقاً',inbox.length]].map(([v,n,c])=>`<button class="chip-b" aria-pressed="${view===v}" data-act="m-view" data-v="${v}">${n} <span class="num">${c}</span></button>`).join('')}
       <button class="chip-b sg-toggle" data-act="sugg-toggle" aria-expanded="${ui.sugg}">${ui.sugg?'إخفاء الاقتراحات':'✦ اقتراحات سريعة'}</button></div>
     ${ui.sugg?suggSection():''}
     ${today.length&&view!=='later'?`<div style="margin:12px 0 10px">${bar(doneN/today.length*100,'acc')}</div>`:''}
-    ${mine.length>6?`<input class="field search" id="inbox-q" type="search" placeholder="ابحث في مهامك" autocomplete="off" style="margin:8px 0">`:''}
+    ${mine.length>6?`<input class="field search" id="inbox-q" type="search" aria-label="ابحث في مهامك" placeholder="ابحث في مهامك…" autocomplete="off" style="margin:8px 0">`:''}
     ${shownList.length?todayGroups(k,shownList,true):`<div class="list"><div class="empty">${view==='later'?'ما فيه مهام مؤجلة.':view==='today'&&mine.length?'ما فيه مهام لليوم. اضغط «إلى اليوم» على أي مهمة.':`${cheer}.<br>اكتب أول مهمة فوق واضغط أضف.`}</div></div>`}
     ${doneN&&view!=='later'?`<button class="link" style="margin-top:8px" data-act="t-x-many" data-ids="${today.filter(t=>t.status==='done').map(t=>t.id).join(',')}" data-msg="${doneN===1?'حُذفت مهمة مكتملة':doneN===2?'حُذفت مهمتان مكتملتان':`حُذفت ${doneN} مهام مكتملة`}">امسح المكتملة (${doneN})</button>`:''}
     ${evening&&openToday.length?`<div class="card note-card" style="margin-top:12px"><b>قرّب اليوم يخلص، وباقي ${openToday.length} ${openToday.length>2&&openToday.length<11?'مهام':'مهمة'}</b>
@@ -1516,7 +1572,7 @@ ${weekSection(hid('week'))}
     <div class="sec-h"><h2>خطة الغد</h2><span class="sub">${fmtDay(addDays(now,1))}</span></div>
     ${topCard(tk,'الأهم غداً')}
     <div class="list tasks" data-list="${tk}">${tom.map(t=>taskRow(t,tk)).join('')||'<div class="empty">جهّز غدك من الحين: اختر من مهامك أو انقل اللي ما خلص اليوم.</div>'}</div>
-    <form class="add" data-form="t-tomorrow"><input name="title" placeholder="مهمة جديدة للغد" required autocomplete="off"><button class="btn">أضف</button></form>
+    <form class="add" data-form="t-tomorrow"><input name="title" aria-label="مهمة جديدة للغد" placeholder="مهمة جديدة للغد…" required autocomplete="off"><button class="btn">أضف</button></form>
     <div class="add"><button class="btn line grow-btn" data-act="pick" data-to="tomorrow">+ من «لاحقاً»</button>${openToday.length?`<button class="btn line grow-btn" data-act="eod-move">انقل غير المكتملة من اليوم (${openToday.length})</button>`:''}</div>
     <p class="sub" style="margin-top:6px">اضغط النجمة لتحديد «الأهم غداً».</p>
   </section>
@@ -1581,7 +1637,7 @@ function weekSection(h){const off=S.ui.wk||0,start=addDays(new Date(),off*7),k0=
       <div class="wday-h"><b>${DAYS[d.getDay()]}</b><span class="sub num">${new Intl.DateTimeFormat(LOC,{day:'numeric',month:'short'}).format(d)}${k===k0?' · اليوم':k===tomorrowK()?' · غداً':''}</span><button class="wadd" data-act="wk-add" data-d="${k}" aria-label="أضف ليوم ${DAYS[d.getDay()]}">+</button></div>
       ${ts.length?ts.map(row).join(''):'<p class="sub wempty">فاضي</p>'}</div>`}).join('')}</div>
     <div class="inner" style="margin-top:12px" id="wk-form-box"><b>أضف مهمة أو حدث لأي تاريخ</b>
-      <form class="add" data-form="t-date" id="wk-form"><input name="title" id="wk-title" placeholder="مثلاً: موعد المستشفى، سفر، اختبار" required autocomplete="off">
+      <form class="add" data-form="t-date" id="wk-form"><input name="title" aria-label="اسم المهمة أو الحدث" id="wk-title" placeholder="مثلاً: موعد المستشفى، سفر، اختبار…" required autocomplete="off">
         <input class="sm" type="date" name="date" id="wk-date" value="${dkey(days[0])}" required aria-label="التاريخ"><input class="sm" type="time" name="time" aria-label="الوقت (اختياري)">
         <div class="chips kind"><label class="chip-b radio"><input type="radio" name="kind" value="task" checked>مهمة</label><label class="chip-b radio"><input type="radio" name="kind" value="event">حدث</label></div>
         <button class="btn">أضف</button></form>
@@ -1597,7 +1653,7 @@ function delTasks(ids,msg){const set=new Set(ids),gone=S.tasks.filter(t=>set.has
   for(const k in S.top)if(set.has(S.top[k])){top[k]=S.top[k];S.top[k]=null}
   S.tasks=S.tasks.filter(t=>!set.has(t.id));lastDeleted={tasks:gone,top};commit();toastUndo(msg)}
 function openSheet(html,label){const el=$('#sheet');el.innerHTML=`<div class="sheet-wrap" data-act="sheet-close"><div class="sheet" dir="rtl" role="dialog" aria-label="${label}" data-stop="1">
-  <div class="sec-h"><h2>${label}</h2><button class="icon-btn" data-act="sheet-close" aria-label="إغلاق">×</button></div>${html}</div></div>`;el.hidden=false;enhanceDates(el)}
+  <div class="sec-h"><h2>${label}</h2><button class="icon-btn" data-act="sheet-close" aria-label="إغلاق">×</button></div>${html}</div></div>`;el.hidden=false;enhanceDates(el);labelFields(el)}
 function openPicker(to){const k=to==='today'?todayK():tomorrowK(),list=inboxTasks();
   openSheet(`<p class="sub">اضغط على المهمة لنقلها إلى ${to==='today'?'خطة اليوم':'خطة الغد'}.</p>
     <div class="list" style="margin-top:10px">${list.map(t=>`<button class="item pick-row" data-act="pick-one" data-id="${t.id}" data-to="${to}"><span class="grow">${esc(t.title)}<span class="meta">${taskMeta(t)}</span></span><span class="pill acc">أضف</span></button>`).join('')||'<div class="empty">ما فيه مهام في «لاحقاً».</div>'}</div>`,to==='today'?'اختر لخطة اليوم':'اختر لخطة الغد')}
@@ -2576,6 +2632,8 @@ function enhanceDates(root){(root||document).querySelectorAll('input[type=date]'
     i.addEventListener('click',()=>{try{i.showPicker()}catch(e){}});['input','change'].forEach(ev=>i.addEventListener(ev,()=>{w.querySelector('.dp-t').textContent=dpLabel(i.value)}))}
   w.querySelector('.dp-t').textContent=dpLabel(i.value)})}
 let lastView='',enterT=0;
+/* fields with only a placeholder get it as their accessible name */
+function labelFields(root){root.querySelectorAll('input:not([type=hidden]):not([type=radio]):not([type=checkbox]),textarea,select').forEach(i=>{if(i.getAttribute('aria-label')||i.closest('label')||(i.id&&document.querySelector(`label[for="${i.id}"]`)))return;const t=(i.placeholder||'').replace(/…$/,'').trim();if(t)i.setAttribute('aria-label',t)})}
 function render(){
   autoBills();
   if(page!=='mahfazti')ringShown=0;
@@ -2586,7 +2644,7 @@ function render(){
    if(ui.fx){const t=document.querySelector(`.pcard [data-id="${ui.fx.id}"], .bl-card [data-id="${ui.fx.id}"]`),c=t&&t.closest('.pcard,.bl-card');if(c)c.classList.add('fx-'+ui.fx.k);ui.fx=null}}
   document.querySelectorAll('.nav a').forEach(a=>a.dataset.page===page?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
   if(page==='masai')applyHeroMode();
-  enhanceDates($('#view'));
+  enhanceDates($('#view'));labelFields($('#view'));
   if(page==='mahfazti')deckInit();
   if(refocus){const i=document.querySelector(`form[data-form="${refocus}"] input:not([type=hidden]):not([type=time]):not([type=date])`);refocus=null;if(i)try{i.focus({preventScroll:true})}catch(e){}}
 }
