@@ -1120,6 +1120,8 @@ button,a,label,input,select,textarea,[role=button]{touch-action:manipulation;-we
 :root[data-page="mahfazti"] .gc-n small{font-size:.74rem}:root[data-page="mahfazti"] .gc-s{font-size:.82rem}
 :root[data-page="mahfazti"] .ring-k{min-height:34px}:root[data-page="mahfazti"] .hero .chip{min-height:36px}
 :root[data-page="mahfazti"] .xa-in em{font-size:.8rem}
+.cc-hold{--cc-sh:rgba(28,138,143,.5);background:radial-gradient(ellipse 72% 85% at 88% 62%,rgba(255,255,255,.28) 0 55%,transparent 55.6%),radial-gradient(ellipse 40% 50% at 10% 0%,rgba(140,230,220,.5) 0 60%,transparent 61%),linear-gradient(135deg,#0F6B70,#2FAFA3)}
+.hold-it{gap:8px;align-items:center;flex-wrap:wrap}.hold-it .grow{flex:1 1 100%;min-width:0}.hold-it .btn.sm{min-height:40px;padding-inline:14px}
 </style>
 </head>
 <body>
@@ -1182,7 +1184,7 @@ const MINE='مصروفي',MINE_SUBS=['حلاق','دوبي','أخرى'],CONS_SUBS
 const BUCKETS=[{k:'jam',cat:'الجمعية',name:'الجمعية',hint:'مبلغ ثابت كل شهر وما يتأجل'},{k:'gift',cat:'عطايا',name:'عطايا',hint:'أمي، زوجتي، عمتي، بناتي، مصروف مدرسي'},{k:'mine',cat:'مصروفي',name:'مصروفي',hint:'حلاق، دوبي وأغراضي'},{k:'rashan',cat:'راشن البيت',name:'راشن البيت',hint:'المقاضي والأغراض والأغذية أول الشهر'},
   {k:'commit',cat:'الالتزامات',name:'الالتزامات',hint:'الفواتير، بترولي، الحلاق، الدوبي'},
   {k:'cons',cat:'المواد الاستهلاكية',name:'المصاريف الإضافية للمواد الاستهلاكية',hint:'تتراوح بين 88 و 90 شهرياً'},
-  {k:'visa',cat:'الفيزا',name:'الفيزا',hint:'سداد بطاقة الفيزا'},{k:'zakat',cat:'الزكاة',name:'الزكاة',hint:'الزكاة والصدقات'}];
+  {k:'visa',cat:'الفيزا',name:'الفيزا',hint:'سداد بطاقة الفيزا'},{k:'zakat',cat:'الزكاة',name:'الزكاة',hint:'الزكاة والصدقات'},{k:'hold',cat:'حجز',name:'حجز',hint:'مبلغ تحجزه من المتبقي عشان ما تصرفه'}];
 /* the salary lands on the 23rd: «راتب أكتوبر» runs 23 Oct to 22 Nov */
 const PAYDAY=23;
 const ckey=(d=new Date())=>d.getDate()>=PAYDAY?mkey(d):mkey(new Date(d.getFullYear(),d.getMonth()-1,1));
@@ -1214,10 +1216,10 @@ const giftsOf=()=>((S.plan||{}).gifts||PLAN_DEF.gifts);
 const hPaidOf=m=>((S.hPaid||{})[m]||{});
 function monthCalc(m){const salary=salaryOf(m),applied=!!(S.salaries||{})[m],hasala=Object.values(hPaidOf(m)).reduce((a,v)=>a+v,0);
   const ex=S.expenses.filter(e=>inCycle(e,m)),sp={};BUCKETS.forEach(b=>sp[b.k]=ex.filter(e=>e.cat===b.cat).reduce((a,e)=>a+e.amount,0));
-  const spent=ex.reduce((a,e)=>a+e.amount,0),moves=((S.moved||{})[m]||[]),moved=moves.reduce((a,x)=>a+x.amount,0),rest=salary-hasala-spent-moved;
+  const spent=ex.reduce((a,e)=>a+e.amount,0),moves=((S.moved||{})[m]||[]),moved=moves.reduce((a,x)=>a+x.amount,0),holds=(S.holds||[]).filter(h=>h.m===m),held=holds.reduce((a,h)=>a+h.amount,0),rest=salary-hasala-spent-moved-held;sp.hold+=held;
   const jam=+((S.plan||PLAN_DEF).jamiya??PLAN_DEF.jamiya),jamLeft=Math.max(0,jam-sp.jam),gifts=giftsOf(),given=Object.fromEntries(gifts.map(([n])=>[n,ex.filter(e=>e.cat==='عطايا'&&e.sub===n).reduce((a,e)=>a+e.amount,0)])),giftTot=sumRows(gifts),giftLeft=gifts.reduce((a,[n,v])=>a+Math.max(0,+v-given[n]),0);
   const mine=mineCap(),mineLeft=Math.max(0,mine-sp.mine);
-  return{mine,mineLeft,salary,hasala,applied,sp,ex,spent,left:rest,rest,moves,moved,jam,jamLeft,gifts,given,giftTot,giftLeft,owed:jamLeft+giftLeft+mineLeft}}
+  return{mine,mineLeft,salary,hasala,applied,sp,ex,spent,left:rest,rest,moves,moved,holds,held,jam,jamLeft,gifts,given,giftTot,giftLeft,owed:jamLeft+giftLeft+mineLeft}}
 const planCalc=(m=ckey())=>{const c=monthCalc(m);return{salary:c.salary,fixed:c.hasala,avail:c.salary-c.hasala}};
 /* payday: record the month's salary, set aside حصالة and add each item to its collected total */
 function applyMonth(m,amount){S.monthFixed=S.monthFixed||{};S.salaries=S.salaries||{};S.salaries[m]={amount:amount??salaryOf(m),at:dkey()};
@@ -2023,6 +2025,12 @@ const zakatLive=(due,paid)=>progLive(due,paid,ZK_T);
 /* الجمعية overall: total, paid before the app, and every logged installment */
 function jamInfo(){const j=S.jam||{},jx=S.expenses.filter(e=>e.cat==='الجمعية'),logged=jx.reduce((a,e)=>a+e.amount,0),total=+j.total||0,paid=(+j.prev||0)+logged;
   return{total,prev:+j.prev||0,jx,logged,paid,left:Math.max(0,total-paid)}}
+/* حجز: money set aside from this cycle's المتبقي. «فك» gives it back; «صرفته» turns it into an expense in the same cycle, so it is never counted twice */
+function openHolds(){const m=wMonth,c=monthCalc(m),cur=esc(S.settings.currency),spentH=c.ex.filter(e=>e.cat==='حجز');
+  openSheet(`<p class="sub">المبلغ اللي تحجزه ينخصم من المتبقي على طول، عشان تشوف اللي فعلاً تقدر تصرفه. «فك» يرجّعه للمتبقي، و«صرفته» يسجله مصروف بدون ما ينخصم مرتين.</p>
+    <div class="list">${c.holds.map(h=>`<div class="item hold-it"><div class="grow"><b>${esc(h.name)}</b><div class="sub num">${fmtMoney(h.amount)} ${cur} · من ${fmtDay(parseD(h.date))}</div></div><button class="btn sm" data-act="hold-spend" data-id="${h.id}">صرفته</button><button class="btn ghost sm" data-act="hold-free" data-id="${h.id}">فك</button></div>`).join('')||'<div class="empty">ما فيه مبالغ محجوزة.</div>'}</div>
+    ${spentH.length?`<p class="pf-h">صرفته من المحجوز</p><div class="list">${spentH.map(e=>`<div class="item"><div class="grow">${esc(e.note)}<div class="sub num">${fmtDay(parseD(e.date))}</div></div><b class="num">${fmtMoney(e.amount)}</b></div>`).join('')}</div>`:''}
+    ${m===ckey()?`<form data-form="hold-add" class="add" style="margin-top:12px"><input name="n" placeholder="لأي شي؟ مثلاً تصليح السيارة" required autocomplete="off" aria-label="اسم الحجز"><input name="a" class="num sm" inputmode="decimal" placeholder="المبلغ" required autocomplete="off" aria-label="المبلغ"><button class="btn">احجز</button></form>`:''}`,'حجز')}
 function openZakat(){const z=S.zakat||{},zx=S.expenses.filter(e=>e.cat==='الزكاة').sort((a,b)=>b.date.localeCompare(a.date)),logged=zx.reduce((a,e)=>a+e.amount,0),cur=esc(S.settings.currency);
   openSheet(`<div id="zk-live">${zakatLive(+z.due||0,(+z.prev||0)+logged)}</div>
     <form data-form="zakat" class="plan-f" style="margin-top:12px" id="zk-f">
@@ -2041,14 +2049,14 @@ function openZakat(){const z=S.zakat||{},zx=S.expenses.filter(e=>e.cat==='الز
   f.addEventListener('change',e=>{if(e.target.name==='due'||e.target.name==='prev')render()})}
 /* عطايا: a fixed list of people; tick each one when the money is given this month */
 /* money audit: each save compares this cycle's money with the last snapshot and logs what changed, so a wrong number can be traced later */
-function mSnap(){const m=ckey(),c=monthCalc(m);return{m,salary:c.salary,hasala:c.hasala,moved:c.moved,rest:c.rest,owed:c.owed,jam:c.jam,mine:c.mine,g:Object.fromEntries(c.gifts.map(([n,v])=>[n,+v])),
+function mSnap(){const m=ckey(),c=monthCalc(m);return{m,salary:c.salary,hasala:c.hasala,moved:c.moved,held:c.held,rest:c.rest,owed:c.owed,jam:c.jam,mine:c.mine,g:Object.fromEntries(c.gifts.map(([n,v])=>[n,+v])),
   ex:Object.fromEntries(c.ex.map(e=>[e.id,[e.amount,e.cat,e.sub||'',e.note||'',e.date]]))}}
 const exLbl=x=>`${x[3]||x[2]||x[1]} (${x[1]}${x[2]&&x[2]!==x[3]?' · '+x[2]:''})`;
 function mAudit(){if(!S||!S.expenses)return;let n;try{n=mSnap()}catch(e){return}const o=S.mSnap;S.mSnap=n;if(!o||o.m!==n.m||!o.g)return;
   const L=[],r3=v=>Math.round(v*1000)/1000,ch=(a,b,t)=>{if(r3(a)!==r3(b))L.push(`${t} ${fmtMoney(a)} ← ${fmtMoney(b)}`)};
   for(const id in n.ex)if(!o.ex[id])L.push(`أضفت ${exLbl(n.ex[id])} ${fmtMoney(n.ex[id][0])}`);else if(r3(o.ex[id][0])!==r3(n.ex[id][0]))L.push(`غيّرت ${exLbl(n.ex[id])} ${fmtMoney(o.ex[id][0])} ← ${fmtMoney(n.ex[id][0])}`);
   for(const id in o.ex)if(!n.ex[id])L.push(`حذفت ${exLbl(o.ex[id])} ${fmtMoney(o.ex[id][0])}`);
-  ch(o.salary,n.salary,'الراتب');ch(o.hasala,n.hasala,'الحصالة المدفوعة');ch(o.moved,n.moved,'المحوّل للحصالة');ch(o.jam,n.jam,'قسط الجمعية');ch(o.mine,n.mine,'مصروفي');
+  ch(o.salary,n.salary,'الراتب');ch(o.hasala,n.hasala,'الحصالة المدفوعة');ch(o.moved,n.moved,'المحوّل للحصالة');ch(o.held||0,n.held,'المحجوز (حجز)');ch(o.jam,n.jam,'قسط الجمعية');ch(o.mine,n.mine,'مصروفي');
   for(const k in n.g)if(!(k in o.g))L.push(`أضفت «${k}» لعطايا ${fmtMoney(n.g[k])}`);else ch(o.g[k],n.g[k],`عطية «${k}»`);
   for(const k in o.g)if(!(k in n.g))L.push(`شلت «${k}» من عطايا (كان ${fmtMoney(o.g[k])})`);
   if(!L.length&&r3(o.rest)===r3(n.rest)&&r3(o.owed)===r3(n.owed))return;
@@ -2056,7 +2064,7 @@ function mAudit(){if(!S||!S.expenses)return;let n;try{n=mSnap()}catch(e){return}
 /* statement: salary minus every deduction down to المتبقي, what is reserved from it, odd entries, and the change log */
 function stmtInfo(m){const c=monthCalc(m),hp=Object.entries(hPaidOf(m)),cats={},today=dkey(),names=new Set(c.gifts.map(([n])=>n));
   c.ex.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(e=>(cats[e.cat]=cats[e.cat]||[]).push(e));
-  const calc=c.salary-c.hasala-c.moved-c.ex.reduce((a,e)=>a+e.amount,0),W=[],seen={};
+  const calc=c.salary-c.hasala-c.moved-c.held-c.ex.reduce((a,e)=>a+e.amount,0),W=[],seen={};
   c.ex.forEach(e=>{if(e.cat==='عطايا'&&!names.has(e.sub))W.push([`عطية «${e.sub||e.note}» ${fmtMoney(e.amount)} مسجلة، والاسم مب موجود في قائمة عطايا`,e.id]);
     if(e.date>today)W.push(`«${e.note||e.sub||e.cat}» ${fmtMoney(e.amount)} تاريخه ${e.date} (بعد اليوم)`);
     const k=[e.date,e.amount,e.cat,e.sub||'',e.note||''].join('|');if(seen[k])W.push(`«${e.note||e.sub||e.cat}» ${fmtMoney(e.amount)} مكرر في نفس اليوم ${e.date}`);seen[k]=1});
@@ -2068,6 +2076,7 @@ function openStmt(){const m=wMonth,I=stmtInfo(m),c=I.c,r=(l,v,k='')=>`<div class
   <div class="st-sec"><h3>من الراتب إلى المتبقي</h3>${r(c.applied?'الراتب':'الراتب (من الخطة، ما سجلته بعد)',c.salary,'plus')}
     ${I.hp.length?`<details><summary>${r('الحصالة',c.hasala,'minus')}</summary>${I.hp.map(([n,v])=>r(esc(n),v)).join('')}</details>`:''}
     ${c.moved?`<details><summary>${r('حوّلته من المتبقي للحصالة',c.moved,'minus')}</summary>${c.moves.map(x=>r(esc(x.fund)+' · '+x.date,x.amount)).join('')}</details>`:''}
+    ${c.held?`<details><summary>${r('حجز (مخصوم من المتبقي)',c.held,'minus')}</summary>${c.holds.map(h=>r(esc(h.name),h.amount)).join('')}</details>`:''}
     ${Object.entries(I.cats).map(([k,l])=>`<details><summary>${r(`${esc(k)} <small class="muted num">(${l.length})</small>`,l.reduce((a,e)=>a+e.amount,0),'minus')}</summary>${l.map(e=>r(`${e.date.slice(5)} · ${esc(e.note||e.sub||e.cat)}`,e.amount)).join('')}</details>`).join('')}
     ${r('المتبقي',c.rest,'tot')}
     ${I.ok?'<p class="st-ok">✓ الحساب مطابق: الراتب ناقص كل الخصومات يساوي المتبقي</p>':`<p class="st-bad num">⚠ فيه فرق ${fmtMoney(I.calc-c.rest)} بين الجمع والمتبقي</p>`}
@@ -2079,7 +2088,7 @@ function openStmt(){const m=wMonth,I=stmtInfo(m),c=I.c,r=(l,v,k='')=>`<div class
   <div class="st-sec"><h3>سجل التغييرات</h3>${I.log.length?I.log.slice(0,60).map(x=>`<div class="st-log ${x.r[1]>x.r[0]||x.f[1]>x.f[0]?'up':''}"><div class="t num">${stT(x.t)}</div>${x.L.map(l=>`<div>${esc(l)}</div>`).join('')||'<div>تغيّر المحجوز</div>'}<div class="d num">المتبقي ${fmtMoney(x.r[0])} ← ${fmtMoney(x.r[1])}${x.r[1]>x.r[0]?' ↑':''} · الحر ${fmtMoney(x.f[0])} ← ${fmtMoney(x.f[1])}${x.f[1]>x.f[0]?' ↑':''}</div></div>`).join(''):'<p class="sub">السجل يبدأ من الحين، وكل تغيير على فلوس هذا الشهر بينكتب هنا.</p>'}</div>
   <button class="btn st-copy" data-act="stmt-copy">انسخ الكشف وأرسله</button>`,'كشف الحساب')}
 function stmtText(m){const I=stmtInfo(m),c=I.c,f=fmtMoney,o=[`كشف ${salaryName(m)} (${dkey(cFrom(m))} إلى ${dkey(cTo(m))})`,`الراتب: ${f(c.salary)}${c.applied?'':' (من الخطة)'}`];
-  I.hp.forEach(([n,v])=>o.push(`- حصالة ${n}: ${f(v)}`));(c.moves||[]).forEach(x=>o.push(`- حوّلت لـ${x.fund}: ${f(x.amount)}`));
+  I.hp.forEach(([n,v])=>o.push(`- حصالة ${n}: ${f(v)}`));(c.moves||[]).forEach(x=>o.push(`- حوّلت لـ${x.fund}: ${f(x.amount)}`));(c.holds||[]).forEach(h=>o.push(`- حجز ${h.name}: ${f(h.amount)}`));
   Object.entries(I.cats).forEach(([k,l])=>{o.push(`${k}: ${f(l.reduce((a,e)=>a+e.amount,0))}`);l.forEach(e=>o.push(`  ${e.date} ${e.note||e.sub||''}: ${f(e.amount)}`))});
   o.push(`المتبقي: ${f(c.rest)} ${I.ok?'(مطابق)':'(فيه فرق '+f(I.calc-c.rest)+')'}`);I.res.forEach(([n,v])=>o.push(`محجوز ${n}: ${f(v)}`));o.push(`الحر للصرف: ${f(c.rest-c.owed)}`);
   I.W.forEach(w=>o.push('تنبيه: '+(Array.isArray(w)?w[0]:w)));if(I.log.length){o.push('آخر التغييرات:');I.log.slice(0,30).forEach(x=>o.push(`${stT(x.t)} ${x.L.join('، ')} | المتبقي ${f(x.r[0])} ← ${f(x.r[1])}`))}
@@ -2148,8 +2157,8 @@ function spendAlert(amount,cat,sub){const now=new Date(),m=ckey(now),c=monthCalc
   else if(bk&&isDaily({cat,sub})&&tSpent>allow)msg=`⚠️ تعديت حدك اليوم (${fmtMoney(allow)}). المتبقي ${fmtMoney(c.rest)} لـ ${daysLeft} يوم. خفّف بكرة.`;
   toast(msg,msg.startsWith('⚠️')?6000:2800)}
 /* the salary as a ring: one arc per section, the empty part is what's left; tap an arc to read it */
-const RING_C={jam:'#E91E78',gift:'#5BC236',mine:'#F7931E',hasala:'#F9C80E',rashan:'#F0353B',commit:'#12C9A6',cons:'#FFB627',visa:'#8E44AD',zakat:'#1E9BE8',moved:'#B8BEC9'};
-const RING_G={jam:'#F45FA0',gift:'#A3E048',mine:'#FFC14D',hasala:'#FFE45C',rashan:'#FF7A59',commit:'#5BE3C4',cons:'#FFE07A',visa:'#C06BF0',zakat:'#3DD6F5',moved:'#DDE1E8'};
+const RING_C={jam:'#E91E78',gift:'#5BC236',mine:'#F7931E',hasala:'#F9C80E',rashan:'#F0353B',commit:'#12C9A6',cons:'#FFB627',visa:'#8E44AD',zakat:'#1E9BE8',moved:'#B8BEC9',hold:'#0F8A8F'};
+const RING_G={jam:'#F45FA0',gift:'#A3E048',mine:'#FFC14D',hasala:'#FFE45C',rashan:'#FF7A59',commit:'#5BE3C4',cons:'#FFE07A',visa:'#C06BF0',zakat:'#3DD6F5',moved:'#DDE1E8',hold:'#4FD1C5'};
 let ringShown=0;
 /* one wedge of the wheel: angles in turns (0 = top, clockwise) */
 function wedge(a0,a1,R,r){const p=(a,rad)=>{const t=a*2*Math.PI;return[(64+rad*Math.sin(t)).toFixed(2),(64-rad*Math.cos(t)).toFixed(2)]},big=a1-a0>.5?1:0,[x0,y0]=p(a0,R),[x1,y1]=p(a1,R),[x2,y2]=p(a1,r),[x3,y3]=p(a0,r);
@@ -2196,6 +2205,7 @@ function pMahfazti(){
     if(b.k==='jam'){const ok=c.jamLeft<=0,J=jamInfo(),all=J.total>0&&!J.left;return `<button class="gcard cc cc-jam jam-card ${J.total?all?'done':'open':ok?'done':''}" data-act="jam-open"><span class="gc-n">الجمعية <small>ثابت</small></span><b class="num">${fmtMoney(J.total?J.left:c.jam)}</b><span class="gc-s num">${J.total?(all?'✓ تم سداد كامل الجمعية':`متبقي · دفعت ${Math.round(J.paid/J.total*100)}% من ${fmtMoney(J.total)}`):'القسط الشهري · اضغط واكتب المبلغ الكلي'}</span><span class="gc-s num">${ok?'✓ قسط هذا الشهر مدفوع':`قسط هذا الشهر: باقي ${fmtMoney(c.jamLeft)}`}</span>${bar(J.total?J.paid/J.total*100:(c.jam?sp/c.jam*100:0),all||(!J.total&&ok)?'good':'warn')}</button>`}
     if(b.k==='gift'){const ok=c.giftTot>0&&c.giftLeft<=0,n=c.gifts.filter(([x,v])=>c.given[x]<+v).length;return `<button class="gcard cc cc-gift gift-card ${ok?'done':''}" data-act="gift-open"><span class="gc-n">عطايا</span><b class="num">${fmtMoney(c.giftLeft)}</b><span class="gc-s num">${ok?`✓ أعطيت الكل (${fmtMoney(c.giftTot)})`:`باقي تعطيه · ${n===1?'اسم واحد':n===2?'اسمين':n<11?n+' أسماء':n+' اسم'} · أعطيت ${fmtMoney(sp)} من ${fmtMoney(c.giftTot)}`}</span>${bar(c.giftTot?Math.max(0,c.giftLeft)/c.giftTot*100:0,ok?'good':'warn')}</button>`}
     if(b.k==='mine'){const left=c.mine-sp,over=left<0,by=tops(b);return `<button class="gcard cc cc-mine mine-card ${!over&&sp>=c.mine&&c.mine?'done':''}" data-act="g-pick" data-c="${MINE}"><span class="gc-n">مصروفي <small class="num">${fmtMoney(c.mine)}</small></span><b class="num">${fmtMoney(left)}</b><span class="gc-s num">${over?`تعديته بـ ${fmtMoney(-left)}`:sp?`باقي · صرفت ${by.map(([k,v])=>`${k} ${fmtMoney(v)}`).join('، ')}`:'باقي كله · حلاق، دوبي وأغراضك'}</span>${bar(c.mine?sp/c.mine*100:0,over?'bad':'warn')}</button>`}
+    if(b.k==='hold'){const hs=c.holds,used=sp-c.held;return `<button class="gcard cc cc-hold hold-card" data-act="hold-open"><span class="gc-n">حجز</span><b class="num">${fmtMoney(c.held)}</b><span class="gc-s num">${hs.length?`محجوز ومخصوم من المتبقي · ${hs.length===1?esc(hs[0].name):hs.length+' مبالغ'}`:'احجز مبلغ ينخصم من المتبقي على طول'}</span>${used>0?`<span class="gc-s num">صرفت من المحجوز ${fmtMoney(used)}</span>`:''}${bar(c.salary?c.held/c.salary*100:0,'acc')}</button>`}
     if(b.k==='zakat'){const z=zakatInfo(m),done=z.due>0&&!z.left;return `<button class="gcard cc cc-zakat zk-card ${z.due?done?'done':'open':''}" data-act="zakat-open"><span class="gc-n">الزكاة</span><b class="num">${z.due?fmtMoney(z.left):'—'}</b><span class="gc-s num">${!z.due?'اضغط واكتب إجمالي المستحق':done?'✓ تم إخراج كامل الزكاة':`متبقي · دفعت ${Math.round(z.paid/z.due*100)}% من ${fmtMoney(z.due)}`}</span>${bar(z.due?z.paid/z.due*100:0,done?'good':'warn')}</button>`}
     return `<button class="gcard cc cc-${b.k}" data-act="g-pick" data-c="${b.cat}"><span class="gc-n">${b.k==='cons'?'المواد الاستهلاكية':b.name}</span><b class="num">${fmtMoney(sp)}</b><span class="gc-s num">${s2}</span>${bar(share(sp),'acc')}</button>`};
   return head('غوازي','الراتب والحصالة والمصاريف')+`
@@ -2219,7 +2229,7 @@ function pMahfazti(){
   <section class="sec xadd"><div class="xa-card">
     <div class="xa-head"><h2>أضف مصروف</h2>${xaArt()}</div>
     <form class="xa-f" data-form="expense">
-      <div class="chips xa-chips" id="cat-chips">${BUCKETS.filter(b=>b.k!=='jam'&&b.k!=='gift').map(b=>`<button type="button" class="chip-b" aria-pressed="${walletUI.cat===b.cat}" data-act="cat-pick" data-v="${b.cat}">${b.k==='cons'?'المواد الاستهلاكية':b.name}</button>`).join('')}</div>
+      <div class="chips xa-chips" id="cat-chips">${BUCKETS.filter(b=>b.k!=='jam'&&b.k!=='gift'&&b.k!=='hold').map(b=>`<button type="button" class="chip-b" aria-pressed="${walletUI.cat===b.cat}" data-act="cat-pick" data-v="${b.cat}">${b.k==='cons'?'المواد الاستهلاكية':b.name}</button>`).join('')}</div>
       <input type="hidden" name="cat" id="exp-cat" value="${walletUI.cat}"><input type="hidden" name="sub" id="exp-sub" value="${walletUI.sub}">
       <div class="chips subs xa-chips" id="sub-chips" ${subsOf(walletUI.cat)?'':'hidden'}>${(subsOf(walletUI.cat)||SUBS).map(x=>`<button type="button" class="chip-b" aria-pressed="${walletUI.sub===x}" data-act="sub-pick" data-v="${x}">${x}</button>`).join('')}</div>
       <div class="xa-row"><span class="xa-in"><input name="amount" id="exp-amount" inputmode="decimal" placeholder="المبلغ" required autocomplete="off"><em>${esc(S.settings.currency)}</em></span><input class="field xa-note" name="note" id="exp-note" placeholder="ملاحظة (اختياري)" autocomplete="off"></div>
@@ -2500,6 +2510,10 @@ const A={
   'ev-del':d=>{rm('events',d.id);closeSheet();commit();toast('انحذفت المناسبة')},
   'rest-open':()=>openRest(),
   'zakat-open':()=>openZakat(),
+  'hold-open':()=>openHolds(),
+  'hold-free':d=>{const h=(S.holds||[]).find(x=>x.id===d.id);if(!h)return;S.holds=S.holds.filter(x=>x!==h);commit();openHolds();toast(`فكّيت «${h.name}» ورجع ${fmtMoney(h.amount)} للمتبقي`)},
+  'hold-spend':d=>{const h=(S.holds||[]).find(x=>x.id===d.id);if(!h)return;S.holds=S.holds.filter(x=>x!==h);const date=h.m===ckey()?dkey():dkey(cTo(h.m));
+    S.expenses.push({id:uid(),date,amount:h.amount,cat:'حجز',sub:'',note:h.name});commit();openHolds();toast(`سجّلت «${h.name}» مصروف من المحجوز`)},
   'jam-open':()=>openJamiya(),
   'gift-open':()=>openGifts(),
   'gift-give':d=>{const m=wMonth,[n,v]=giftsOf()[+d.i],mine=S.expenses.filter(e=>e.cat==='عطايا'&&e.sub===n&&inCycle(e,m));
@@ -2555,6 +2569,7 @@ const F={
     S.monthFixed=S.monthFixed||{};const mf=S.monthFixed[m]=S.monthFixed[m]||Object.fromEntries(fixedFor(m));mf[n]=a;
     const p=hPaidOf(m);if(n in p){S.funds[n]=(S.funds[n]||0)+a-p[n];p[n]=a}
     if(v.keep){S.plan=S.plan||JSON.parse(JSON.stringify(PLAN_DEF));const r=S.plan.fixed.find(x=>x[0]===n);if(r)r[1]=a}closeSheet();toast(`صار «${n}» ${fmtMoney(a)}${v.keep?' من الحين وطالع':' لهذا الشهر'}`)},
+  'hold-add':v=>{const n=(v.n||'').trim(),a=num(v.a);if(!n||!(a>0)){toast('اكتب الاسم والمبلغ');return false}const m=ckey();S.holds=S.holds||[];S.holds.push({id:uid(),name:n,amount:a,date:dkey(),m});commit();openHolds();toast(`حجزت ${fmtMoney(a)} لـ«${n}»، وانخصم من المتبقي`);return false},
   zakat:(v,f,sub)=>{const z=S.zakat=S.zakat||{base:0,due:0,prev:0},rd=k=>{const x=num(v[k]||'0');return x>=0?x:NaN};
     if(!sub||sub.value==='pay'){const a=num(v.pay);if(!(a>0)){toast('اكتب مبلغ الدفعة');return false}const due=rd('due'),prev=rd('prev');if(!isNaN(due)&&!isNaN(prev))Object.assign(z,{due,prev});
       S.expenses.push({id:uid(),date:v.date||dkey(),amount:a,cat:'الزكاة',sub:'',note:(v.note||'').trim()||'دفعة زكاة'});commit();openZakat();toast(`أضفت دفعة ${fmtMoney(a)}`);return false}
