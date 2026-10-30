@@ -1122,6 +1122,12 @@ button,a,label,input,select,textarea,[role=button]{touch-action:manipulation;-we
 :root[data-page="mahfazti"] .xa-in em{font-size:.8rem}
 .cc-hold{--cc-sh:rgba(28,138,143,.5);background:radial-gradient(ellipse 72% 85% at 88% 62%,rgba(255,255,255,.28) 0 55%,transparent 55.6%),radial-gradient(ellipse 40% 50% at 10% 0%,rgba(140,230,220,.5) 0 60%,transparent 61%),linear-gradient(135deg,#0F6B70,#2FAFA3)}
 .hold-it{gap:8px;align-items:center;flex-wrap:wrap}.hold-it .grow{flex:1 1 100%;min-width:0}.hold-it .btn.sm{min-height:40px;padding-inline:14px}
+.rs-amt{display:flex;align-items:center;gap:10px}
+.rs-big.hid{letter-spacing:.1em;font-size:2.1rem;line-height:1;display:inline-flex;align-items:center;gap:6px}.rs-big.hid .st{display:inline-block;transform:translateY(.28em)}.rs-big.hid small{letter-spacing:0}
+.rs-eye{flex:none;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;border:1.5px solid #BFD8F5;background:rgba(255,255,255,.75);color:#4A6283;cursor:pointer;transition:background .25s,color .25s,box-shadow .25s}
+.rs-eye svg{width:22px;height:22px}
+.rs-eye.on{background:#4A4FE6;border-color:#4A4FE6;color:#fff;box-shadow:0 0 0 4px rgba(74,79,230,.18),0 0 18px 2px rgba(124,92,255,.55)}
+.vault.cash:focus-visible{outline:2.5px solid #4A4FE6;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -1777,6 +1783,7 @@ const MF={
     Object.assign(t,{title:v.title.trim(),cat:v.cat||'',date:v.date||'',time:v.time||'',remind:v.remind,status:v.status});
     if(t.remind!==''&&!t.time)toast('التذكير يحتاج وقت للمهمة');closeSheet()},
 };
+document.addEventListener('keydown',e=>{const t=e.target;if((e.key==='Enter'||e.key===' ')&&t.matches&&t.matches('[role=button][data-act]:not(button)')){e.preventDefault();t.click()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='sp-title'){e.preventDefault();e.target.blur()}});
 document.addEventListener('input',e=>{if(e.target.id==='kh-det'){khS().detail[e.target.dataset.a]=e.target.value;save();return}if(e.target.id==='rc-in'){rcPrev();return}if(e.target.id==='b-q'){const q=rnorm(e.target.value.trim());document.querySelectorAll('.bl-card').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.bp-tile').forEach(t=>{t.classList.toggle('dim',!!q&&!rnorm(t.textContent).includes(q))});return}if(e.target.id!=='r-q')return;const q=rnorm(e.target.value.trim());rSug(e.target.value.trim());document.querySelectorAll('.pcard').forEach(c=>{c.hidden=!!q&&!c.dataset.t.includes(q)});document.querySelectorAll('.pgrp').forEach(g=>{g.hidden=!g.querySelector('.pcard:not([hidden])')})});
 document.addEventListener('input',e=>{if(e.target.id!=='inbox-q')return;const q=e.target.value.trim();
@@ -2173,11 +2180,11 @@ function xaArt(){return `<svg class="xa-art" viewBox="0 0 130 100" aria-hidden="
   <g fill="#2563EB"><rect x="40" y="44" width="4" height="10" rx="1"/><rect x="47" y="40" width="4" height="14" rx="1"/><rect x="54" y="35" width="4" height="19" rx="1"/><rect x="61" y="42" width="4" height="12" rx="1" fill="#93C5FD"/></g><rect x="8" y="44" width="26" height="10" rx="3" fill="#fff" opacity=".8"/></g>
   <g transform="translate(6 14)"><rect width="30" height="22" rx="6" fill="#2563EB"/><path d="M8 22 l2 6 l5 -6 Z" fill="#2563EB"/><path d="M15 6 v10 M10 11 h10" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></g></svg>`}
 function vaultHTML(c,fundTot,m){const target=sumRows(fixedFor(m)),got=c.hasala,pc=target?Math.min(100,got/target*100):0,open=!!walletUI.hOpen;
-  return `<button class="vault cash" data-act="h-toggle" aria-expanded="${open}">${cashFan()}
+  const show=!!ui.hShow,eye=show?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 5.1A10.5 10.5 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.6 3.6M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a10 10 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="M3 3l18 18"/></svg>';
+  return `<div class="vault cash" data-act="h-toggle" role="button" tabindex="0" aria-expanded="${open}" aria-label="الحصالة، اضغط لعرض البنود">${cashFan()}
     <span class="cash-p"><span class="rs-top"><span class="rs-ic" aria-hidden="true"></span><span class="rs-n">الحصالة</span><span class="rs-pc num">${Math.round(pc)}%</span></span>
-      <b class="rs-big num">${fmtMoney(fundTot)} <small>${esc(S.settings.currency)}</small></b>
-      <span class="rs-bar"><i style="width:${pc}%"></i></span>
-      <span class="rs-f num"><span>دفعت ${fmtMoney(got)} من ${fmtMoney(target)} هذا الشهر</span><span>${pc>=100?'✓ مكتمل':open?'إغلاق ⌃':'البنود ⌄'}</span></span></span></button>
+      <span class="rs-amt"><b class="rs-big num ${show?'':'hid'}">${show?fmtMoney(fundTot):'<span class="st" aria-label="مخفي">********</span>'} <small>${esc(S.settings.currency)}</small></b><button class="rs-eye ${show?'on':''}" data-act="h-eye" aria-pressed="${show}" aria-label="${show?'إخفاء المبلغ':'إظهار المبلغ'}">${eye}</button></span>
+      <span class="rs-bar"><i style="width:${pc}%"></i></span></span></div>
   ${open?hasalaSection(m):''}`}
 function ringSegs(c){const g=[['hasala','الحصالة',c.hasala],...BUCKETS.map(b=>[b.k,b.k==='cons'?'المواد الاستهلاكية':b.name,c.sp[b.k]]),['moved','حوّلته للحصالة',c.moved]];return g.filter(x=>x[2]>0)}
 function ringHTML(c){const segs=ringSegs(c),used=c.salary-c.rest,tot=Math.max(c.salary,used)||1,R=60,r=34,gap=.006;let off=0;
@@ -2510,6 +2517,7 @@ const A={
   'ev-del':d=>{rm('events',d.id);closeSheet();commit();toast('انحذفت المناسبة')},
   'rest-open':()=>openRest(),
   'zakat-open':()=>openZakat(),
+  'h-eye':()=>{ui.hShow=!ui.hShow;render()},
   'hold-open':()=>openHolds(),
   'hold-free':d=>{const h=(S.holds||[]).find(x=>x.id===d.id);if(!h)return;S.holds=S.holds.filter(x=>x!==h);commit();openHolds();toast(`فكّيت «${h.name}» ورجع ${fmtMoney(h.amount)} للمتبقي`)},
   'hold-spend':d=>{const h=(S.holds||[]).find(x=>x.id===d.id);if(!h)return;S.holds=S.holds.filter(x=>x!==h);const date=h.m===ckey()?dkey():dkey(cTo(h.m));
